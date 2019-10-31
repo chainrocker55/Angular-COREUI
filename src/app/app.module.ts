@@ -50,6 +50,7 @@ import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { ToastrModule } from 'ngx-toastr';
 
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -74,6 +75,7 @@ import { ConfirmDialogComponent } from './Flex/Flex/services/Dialog.service';
     HttpClientModule,
     FormsModule,
     MatDialogModule,
+    MatBadgeModule,
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,

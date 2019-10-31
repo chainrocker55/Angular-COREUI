@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DiaglogService } from '../../../Flex/services/Dialog.service';
+import { DiaglogService, DialogData } from '../../../Flex/services/Dialog.service';
 import { TB_CLASS_LIST_MS } from '../../models/tableModel';
 import { PageSizeOptions } from '../../../Flex/constant';
 
@@ -64,14 +64,18 @@ export class MAS090Component implements OnInit {
   }
 
   Save(form) {
-    this.isLoading = true;
-    this.svc.SaveClassList(this.selectedData).subscribe(res => {
-      this.dlg.ShowProcessComplete();
-      this.isLoading = false;
-    },
-    (error: HttpErrorResponse) => {
-      this.dlg.ShowException(error);
-      this.isLoading = false;
+    this.dlg.ShowConfirm('CFM9001').subscribe(d => {
+      if (d && d.DialogResult === 'Yes') {
+        this.isLoading = true;
+        this.svc.SaveClassList(this.selectedData).subscribe(res => {
+          this.dlg.ShowProcessComplete();
+          this.isLoading = false;
+        },
+        (error: HttpErrorResponse) => {
+          this.dlg.ShowException(error);
+          this.isLoading = false;
+        });
+      }
     });
   }
 

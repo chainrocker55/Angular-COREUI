@@ -37,6 +37,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.noti = [];
     if (this.svc.isAuthenticated()) {
       this.mUser = this.svc.getCurrentUser();
       this.svc.GetMenu().subscribe(data => {
@@ -68,6 +69,22 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
 
   GetNoti() {
     this.svc.GetNotiy().subscribe(res => {
+      const n = this.noti;
+      const r = res.filter(function(value) {
+        return value.HasRead === false;
+      });
+      const n_new = [];
+      r.forEach(function(value) {
+        if (!n.includes(value)) {
+          n_new.push(value);
+        }
+      });
+      const d = this.dlg;
+      if (n_new.length > 0) {
+        n_new.forEach(function(value) {
+          d.ShowInformationText(value.Description);
+        });
+      }
       this.noti = res.filter(function(value) {
         return value.HasRead === false;
       });
@@ -82,7 +99,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   Response(n: Notify) {
     this.svc.ResponseNotify(n).subscribe(res => {
       if (res) {
-        this.noti = this.noti.filter(function(value, index, arr) {
+        this.noti = this.noti.filter(function(value) {
           return value !== n;
         });
         n.HasRead = true;

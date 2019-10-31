@@ -42,8 +42,8 @@ export class DiaglogService {
         this.toastr.info(MSG_CD);
     }
   }
-  ShowInformationText(MSG_DESC: string) {
-    this.toastr.info(MSG_DESC);
+  ShowInformationText(MSG_DESC: string, Title?: string) {
+    this.toastr.info(MSG_DESC, Title);
   }
 
   ShowSuccess(MSG_CD: string) {
@@ -54,8 +54,8 @@ export class DiaglogService {
         this.toastr.success(MSG_CD);
     }
   }
-  ShowSuccessText(MSG_DESC: string) {
-    this.toastr.success(MSG_DESC);
+  ShowSuccessText(MSG_DESC: string, Title?: string) {
+    this.toastr.success(MSG_DESC, Title);
   }
 
   ShowWaring(MSG_CD: string) {
@@ -66,8 +66,8 @@ export class DiaglogService {
         this.toastr.warning(MSG_CD);
     }
   }
-  ShowWaringText(MSG_DESC: string) {
-    this.toastr.warning(MSG_DESC);
+  ShowWaringText(MSG_DESC: string, Title?: string) {
+    this.toastr.warning(MSG_DESC, Title);
   }
 
   ShowError(MSG_CD: string) {
@@ -78,8 +78,8 @@ export class DiaglogService {
           this.toastr.error(MSG_CD);
       }
   }
-  ShowErrorText(MSG_DESC: string) {
-    this.toastr.error(MSG_DESC);
+  ShowErrorText(MSG_DESC: string, Title?: string) {
+    this.toastr.error(MSG_DESC, Title);
   }
 
   ShowException(ex: HttpErrorResponse) {
@@ -116,33 +116,36 @@ export class DiaglogService {
     }
   }
 
-  ShowConfirm(MSG_CD: string): Observable<any> {
+  ShowConfirm(MSG_CD: string): Observable<DialogData> {
+    const m = this.svc.GetMessageObj(MSG_CD);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '450px',
       data: {
-        MSG_DESC: this.svc.GetMessageObj(MSG_CD).MSG_DESC,
+        MSG_DESC: m ? m.MSG_DESC : MSG_CD,
         ShowRemark: false,
         ShowNo: false,
       }
     });
     return dialogRef.afterClosed();
   }
-  ShowConfirmYesNo(MSG_CD: string): Observable<any> {
+  ShowConfirmYesNo(MSG_CD: string): Observable<DialogData> {
+    const m = this.svc.GetMessageObj(MSG_CD);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '450px',
       data: {
-        MSG_DESC: this.svc.GetMessageObj(MSG_CD).MSG_DESC,
+        MSG_DESC: m ? m.MSG_DESC : MSG_CD,
         ShowRemark: false,
         ShowNo: true,
       }
     });
     return dialogRef.afterClosed();
   }
-  ShowConfirmWithRemark(MSG_CD: string): Observable<any> {
+  ShowConfirmWithRemark(MSG_CD: string): Observable<DialogData> {
+    const m = this.svc.GetMessageObj(MSG_CD);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '450px',
       data: {
-        MSG_DESC: this.svc.GetMessageObj(MSG_CD).MSG_DESC,
+        MSG_DESC: m ? m.MSG_DESC : MSG_CD,
         ShowRemark: true,
         ShowNo: false,
       }
