@@ -1,0 +1,77 @@
+<app-header
+  [navbarBrandRouterLink]="['/dashboard']"
+  [fixed]="true"
+  [navbarBrandFull]="{src: 'assets/img/brand/flex_logo.png', width: 74, height: 40, alt: 'Flex'}"
+  [navbarBrandMinimized]="{src: 'assets/img/brand/logo_32x21.png', width: 45, height: 30, alt: 'Flex'}"
+  [sidebarToggler]="'lg'"
+  [asideMenuToggler]="'lg'"
+  [mobileAsideMenuToggler]="'lg'">
+  <ul class="nav navbar-nav ml-auto">
+    <!-- <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
+        <i class="icon-bell"></i>
+        <span class="badge badge-pill badge-danger" *ngIf="noti?.length > 0" >{{noti?.length}}</span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+        <a class="dropdown-item" href="#"*ngFor="let n of noti">{{n.Description}}</a>
+      </div>
+    </li> -->
+    <li class="nav-item user-title">
+      <div class="row text-center">{{ mUser?.USER_FULLNAME }}  </div>
+      <div class="row text-center"><small>{{ mUser?.EMAILADDR}}  </small></div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#" (click)="LogOut()">
+        <!-- <img src="assets/img/avatars/6.jpg" class="img-avatar" alt="{{mUser?.EMAILADDR}}"/> -->
+        <i class="cui-account-logout"></i>
+      </a>
+    </li>
+  </ul>
+</app-header>
+<div class="app-body">
+  <app-sidebar [fixed]="true" [display]="'lg'">
+    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized"></app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+  <!-- Main content -->
+  <main class="main">
+    <!-- Breadcrumb -->
+    <!-- breaking change 'cui-breadcrumb' -->
+    <!-- <cui-breadcrumb>
+    </cui-breadcrumb> -->
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div><!-- /.container-fluid -->
+  </main>
+  <app-aside [fixed]="true" [display]="false">
+    <!-- <tabset>
+      <tab>
+        <ng-template tabHeading><i class="icon-list"></i></ng-template> -->
+        <div class="list-group list-group-accent">
+          <div class="list-group-item list-group-item-accent-secondary bg-light text-center font-weight-bold text-muted text-uppercase small">Notification</div>
+          <div class="list-group-item list-group-item-accent-warning list-group-item-divider"
+            *ngFor="let n of noti">
+              <div><strong>{{n.Title}}</strong></div>
+              <div class="row">
+                <div class="col-9">
+                  <div>
+                    <small class="text-muted">{{n.Description}}</small>
+                  </div>
+                  <small class="text-muted mr-3">
+                    <i class="icon-calendar"></i> {{n.InfoDateTime | date:'d/MMM/y H:mm'}}
+                  </small>
+                </div>
+                <div class="col-3">
+                    <button mat-icon-button color="accent" (click)="Response(n)"><i class="fa fa-times" aria-hidden="true"></i></button>
+                </div>
+              </div>
+          </div>
+        </div>
+      <!-- </tab>
+    </tabset> -->
+  </app-aside>
+</div>
+<app-footer>
+  <span><a href="#">Flex-web</a> &copy; 2019 ITPC.</span>
+  <span class="ml-auto">Powered by <a href="https://coreui.io/angular">CoreUI for Angular</a></span>
+</app-footer>

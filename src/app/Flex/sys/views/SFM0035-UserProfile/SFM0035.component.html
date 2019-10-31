@@ -1,0 +1,74 @@
+<div class="animated fadeIn">
+    <div class="card">
+        <div class="card-header">
+            User Profile
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="OnSave()" #form="ngForm" aria-labelledby="title" *ngIf="user">
+                <div class="col-12"> 
+                    <div class="row">
+                        <mat-form-field class="col-md-6">
+                            <input matInput id="USER_ACCOUNT" name="USER_ACCOUNT"
+                            type="text" placeholder="User Account"
+                            [(ngModel)]="user.USER_ACCOUNT"
+                            disabled="user.CREATEUSERID"
+                            minlength="4" maxlength="30" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col-md-6">
+                            <input matInput id="FULL_NAME" name="FULL_NAME"
+                            type="text" placeholder="Name"
+                            [(ngModel)]="user.FULL_NAME"
+                            minlength="4" maxlength="400" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col-md-6">
+                            <input matInput id="EMAILADDR" name="EMAILADDR"
+                            type="text" placeholder="Email"
+                            [(ngModel)]="user.EMAILADDR"
+                            minlength="4" maxlength="200" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col-md-6">
+                            <mat-label>Language</mat-label>
+                            <select matNativeControl id="LANG_CD" name="LANG_CD"
+                                [(ngModel)]="user.LANG_CD" required>
+                                <option *ngFor="let c of comboLang; let i = index" [value]="comboLang[i].LANG_CD">
+                                {{comboLang[i].LANG_NAME}}
+                                </option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col-md-6">
+                            <input matInput id="PASS" name="PASS"
+                            type="password" placeholder="Old Password"
+                            [(ngModel)]="user.PASS"
+                            minlength="4" maxlength="50">
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col-md-6">
+                            <input matInput id="PASS_NEW" name="PASS_NEW"
+                            type="password" placeholder="New Password"
+                            [(ngModel)]="user.PASS_NEW"
+                            minlength="4" maxlength="50">
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field class="col-md-6">
+                            <input matInput id="PASS_CFM" name="PASS_CFM"
+                            type="password" placeholder="Confirm Password"
+                            [(ngModel)]="user.PASS_CFM"
+                            minlength="4" maxlength="50">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+      

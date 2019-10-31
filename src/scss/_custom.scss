@@ -1,0 +1,43 @@
+// Here you can add other styles
+table {
+    width: 100%;
+}
+
+ul li.user-title {
+    color: gray;
+    font-weight: 500;
+}
+
+.mat-card.card-margin {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: -20px;
+    margin-right: -20px;
+}
+.mat-card-title {
+    color: $primary;
+    font-weight: bold;
+}
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+tr.mat-row {
+    cursor: pointer;
+    height: 30px !important;
+}
+tr.mat-row:hover {
+    background-color: $primary;
+    color: #FFF;
+}
+.mat-row:nth-child(even){
+    background-color:#f9f9ff;
+}
+.mat-row:nth-child(odd){
+    background-color:#FFF;
+}
+
+
+.mat-dialog-actions {
+    justify-content: flex-end;
+}

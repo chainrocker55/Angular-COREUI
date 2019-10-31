@@ -1,0 +1,142 @@
+<mat-card [hidden]="selectedData" class="animated fadeIn card-margin">
+  <mat-card-header>
+      <mat-card-title>User List</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field class="col-md-12">
+      <input matInput (keyup)="applyFilter($event.target.value)"
+        [(ngModel)]="filterText" placeholder="Filter">
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="USER_ACCOUNT">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{lblList.USER_ACCOUNT}} </th>
+        <td mat-cell *matCellDef="let row"> {{row.USER_ACCOUNT}} </td>
+      </ng-container>
+      <ng-container matColumnDef="FULL_NAME">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{lblList.FULL_NAME}} </th>
+        <td mat-cell *matCellDef="let row"> {{row.FULL_NAME}} </td>
+      </ng-container>
+      <ng-container matColumnDef="EMAILADDR">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{lblList.EMAILADDR}} </th>
+        <td mat-cell *matCellDef="let row"> {{row.EMAILADDR}} </td>
+      </ng-container>
+      <ng-container matColumnDef="GROUP_CD">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{lblList.GROUP_CD}} </th>
+        <td mat-cell *matCellDef="let row"> {{row.GROUP_CD}} </td>
+      </ng-container>    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        (click)="Edit(row)"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="pageOptions" showFirstLastButtons></mat-paginator>
+  </mat-card-content>
+</mat-card>
+<mat-card *ngIf="selectedData" class="animated fadeIn card-margin">
+    <form (ngSubmit)="Save(form)" #form="ngForm" autocomplete="off">
+        <mat-card-header>
+            <mat-card-title>User Entry</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+              {{errorMessage}}
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                    <mat-form-field class="col-md-6">
+                        <input matInput id="USER_ACCOUNT" name="USER_ACCOUNT"
+                        type="text" placeholder="User Account"
+                        [(ngModel)]="selectedData.USER_ACCOUNT"
+                        disabled="selectedData.CREATEUSERID"
+                        minlength="4" maxlength="30" required>
+                    </mat-form-field>
+                    <mat-form-field class="col-md-6">
+                        <input matInput id="FULL_NAME" name="FULL_NAME"
+                        type="text" placeholder="Name"
+                        [(ngModel)]="selectedData.FULL_NAME"
+                        minlength="4" maxlength="400" required>
+                    </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="col-md-6">
+                      <input matInput id="EMAILADDR" name="EMAILADDR"
+                      type="email" placeholder="Email"
+                      [(ngModel)]="selectedData.EMAILADDR"
+                      minlength="4" maxlength="200">
+                  </mat-form-field>
+                  <mat-form-field class="col-md-6">
+                      <mat-label>Menu Set</mat-label>
+                      <select matNativeControl id="MENU_SET_CD" name="MENU_SET_CD"
+                          [(ngModel)]="selectedData.MENU_SET_CD" required>
+                          <option *ngFor="let c of comboMenuSet; let i = index" [value]="comboMenuSet[i].MENU_SET_CD">
+                          {{comboMenuSet[i].MENU_SET_NAME}}
+                          </option>
+                      </select>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="col-md-6">
+                      <mat-label>Division</mat-label>
+                      <select matNativeControl id="DIVISIONID" name="DIVISIONID"
+                          [(ngModel)]="selectedData.DIVISIONID" required>
+                          <option *ngFor="let c of comboDivision; let i = index" [value]="comboDivision[i].DIVISIONID">
+                          {{comboDivision[i].NAMEENG}}
+                          </option>
+                      </select>
+                  </mat-form-field>
+                  <mat-form-field class="col-md-6">
+                      <mat-label>Position</mat-label>
+                      <select matNativeControl id="POSITIONID" name="POSITIONID"
+                          [(ngModel)]="selectedData.POSITIONID" required>
+                          <option *ngFor="let c of comboPosition; let i = index" [value]="comboPosition[i].POSITIONID">
+                          {{comboPosition[i].POSITIONNAME}}
+                          </option>
+                      </select>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="col-md-6">
+                      <mat-label>Group</mat-label>
+                      <select matNativeControl id="GROUP_CD" name="GROUP_CD"
+                          [(ngModel)]="selectedData.GROUP_CD" required>
+                          <option *ngFor="let c of comboGroup; let i = index" [value]="comboGroup[i].GROUP_CD">
+                          {{comboGroup[i].GROUP_NAME}}
+                          </option>
+                      </select>
+                  </mat-form-field>
+                  <mat-form-field class="col-md-6">
+                      <mat-label>Language</mat-label>
+                      <select matNativeControl id="LANG_CD" name="LANG_CD"
+                          [(ngModel)]="selectedData.LANG_CD" required>
+                          <option *ngFor="let c of comboLang; let i = index" [value]="comboLang[i].LANG_CD">
+                          {{comboLang[i].LANG_NAME}}
+                          </option>
+                      </select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <!-- <div class="row">
+                  <img src="{{selectedData.SIGNATURE_BASE64}}" alt="..." class="img-thumbnail">
+                </div> -->
+                <div class="row">
+                  <mat-checkbox class="col-md-12" id="FLG_ACTIVE" name="FLG_ACTIVE"
+                    [(ngModel)]="selectedData.FLG_ACTIVE">Active</mat-checkbox>
+                  <mat-checkbox class="col-md-12" id="FLG_ABSENCE" name="FLG_ABSENCE"
+                    [(ngModel)]="selectedData.FLG_ABSENCE">Absence</mat-checkbox>
+                  <mat-checkbox class="col-md-12" id="FLG_RESIGN" name="FLG_RESIGN"
+                    [(ngModel)]="selectedData.FLG_RESIGN">Resign</mat-checkbox>
+                </div>
+              </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-flat-button color="primary" type="submit"
+                [disabled] = "selectedData.EDIT_FLAG === 0 || !form.valid || isLoading">Save</button>
+            <button mat-flat-button (click)="Back()">Back</button>
+        </mat-card-actions>
+        <mat-card-footer>
+
+        </mat-card-footer>
+    </form>
+</mat-card>

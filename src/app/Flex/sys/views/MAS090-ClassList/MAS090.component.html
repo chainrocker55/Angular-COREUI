@@ -1,0 +1,89 @@
+<mat-card [hidden]="selectedData" class="animated fadeIn card-margin">
+    <mat-card-header>
+        <mat-card-title>Class List</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-form-field class="col-md-12">
+            <input matInput (keyup)="applyFilter($event.target.value)" 
+                [(ngModel)]="filterText" placeholder="Filter">
+            <button mat-button *ngIf="filterText" matSuffix mat-icon-button aria-label="Clear" (click)="Clear()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+        <table mat-table [dataSource]="dataSource" class="col-md-12" matSort>
+            <ng-container matColumnDef="CLS_INFO_CD">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Info Code </th>
+                <td mat-cell *matCellDef="let row"> {{row.CLS_INFO_CD}} </td>
+            </ng-container>
+            <ng-container matColumnDef="CLS_CD">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Code </th>
+                <td mat-cell *matCellDef="let row"> {{row.CLS_CD}} </td>
+            </ng-container>
+            <ng-container matColumnDef="CLS_DESC">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Description </th>
+                <td mat-cell *matCellDef="let row"> {{row.CLS_DESC}} </td>
+            </ng-container>
+            <ng-container matColumnDef="SEQ">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sequence </th>
+                <td mat-cell *matCellDef="let row"> {{row.SEQ}} </td>
+            </ng-container> 
+            <ng-container matColumnDef="EDIT_FLAG">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Editable </th>
+                <td mat-cell *matCellDef="let row"> {{row.EDIT_FLAG===1?'Yes':'No'}} </td>
+            </ng-container>         
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                (click)="Edit(row)"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageOptions" showFirstLastButtons></mat-paginator>
+    </mat-card-content>
+</mat-card>
+<mat-card *ngIf="selectedData" class="animated fadeIn card-margin">
+    <form (ngSubmit)="Save(form)" #form="ngForm" autocomplete="off">
+        <mat-card-header>
+            <mat-card-title>Class List Entry</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <mat-form-field class="col-md-6">
+                    <input matInput id="CLS_INFO_CD" name="CLS_INFO_CD"
+                    type="text" placeholder="Class Info Code"
+                    [(ngModel)]="selectedData.CLS_INFO_CD"
+                    maxlength="30" disabled required>
+                </mat-form-field>
+                <mat-form-field class="col-md-6">
+                    <input matInput id="CLS_CD" name="CLS_CD"
+                    type="text" placeholder="Class Code"
+                    [(ngModel)]="selectedData.CLS_CD"
+                    maxlength="30" disabled  required>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-form-field class="col-md-6">
+                    <input matInput id="CLS_DESC" name="CLS_DESC"
+                    type="text" placeholder="Class Description"
+                    [(ngModel)]="selectedData.CLS_DESC"
+                    [disabled] = "selectedData.EDIT_FLAG === 0"
+                    maxlength="100" required>
+                </mat-form-field>
+                <mat-form-field class="col-md-6">
+                    <input matInput id="SEQ" name="SEQ"
+                    type="number" placeholder="Sequence"
+                    [(ngModel)]="selectedData.SEQ"
+                    [disabled] = "selectedData.EDIT_FLAG === 0"
+                    required>
+                </mat-form-field>
+            </div>
+            <div class="row">
+                <mat-checkbox class="col-md-6" id="EDIT_FLAG" name="EDIT_FLAG"
+                    [(ngModel)]="selectedData.EDIT_FLAG"
+                    disabled>Editable</mat-checkbox>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-flat-button color="primary" type="submit"
+                [disabled] = "selectedData.EDIT_FLAG === 0 || !form.valid || isLoading">Save</button>
+            <button mat-flat-button (click)="Back()">Back</button>
+        </mat-card-actions>
+    </form>
+</mat-card>

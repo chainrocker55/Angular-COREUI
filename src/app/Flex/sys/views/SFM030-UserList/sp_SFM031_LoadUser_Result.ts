@@ -1,0 +1,30 @@
+// tslint:disable-next-line:class-name
+export class sp_SFM031_LoadUser_Result {
+    USER_ACCOUNT: string;
+    MENU_SET_CD: string;
+    GROUP_CD: string;
+    GROUP_NAME: string;
+    DEPARTMENT_CD: string;
+    LANG_CD: string;
+    DATE_FORMAT: number;
+    PASS: string;
+    OLD_PASS: string;
+    FULL_NAME: string;
+    APPLY_DATE: Date;
+    FLG_RESIGN: number;
+    FLG_ACTIVE: number;
+    FLG_ABSENCE: number;
+    EMAILADDR: string;
+    CRT_BY: string;
+    CRT_DATE: Date;
+    CRT_MACHINE: string;
+    UPD_BY: string;
+    UPD_DATE: Date;
+    UPD_MACHINE: string;
+    UPPER_USER_ACCOUNT: string;
+    LOWER_USER_ACCOUNT: string;
+    SIGNATURE: string;
+    DIVISIONID: number;
+    POSITIONID: number;
+    SIGNATURE_BASE64: string;
+}
