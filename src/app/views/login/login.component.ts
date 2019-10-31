@@ -42,10 +42,8 @@ export class LoginComponent implements OnInit {
       }
   },
   (error: HttpErrorResponse) => {
-      // const errorPayload = JSON.parse(error.message);
-      console.log(error.error);
-      this.dlg.ShowError(error.error);
-      this.isLoading = false;
+    this.dlg.ShowException(error);
+    this.isLoading = false;
   });
   }
 }

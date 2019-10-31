@@ -21,6 +21,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   public mUser: UserInfo;
 
   public noti: Notify[];
+  public notiRead: Notify[];
   interval;
 
   constructor(private router: Router, private svc: FlexService, private dlg: DiaglogService, @Inject(DOCUMENT) _document?: any) {
@@ -66,10 +67,13 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   }
 
   GetNoti() {
-    const n = this.noti;
-    const newN = [];
     this.svc.GetNotiy().subscribe(res => {
-      this.noti = res;
+      this.noti = res.filter(function(value) {
+        return value.HasRead === false;
+      });
+      this.notiRead = res.filter(function(value) {
+        return value.HasRead === true;
+      });
     }, (error: HttpErrorResponse) => {
       this.dlg.ShowException(error);
     });
@@ -81,6 +85,8 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
         this.noti = this.noti.filter(function(value, index, arr) {
           return value !== n;
         });
+        n.HasRead = true;
+        this.notiRead.push(n);
       }
     }, (error: HttpErrorResponse) => {
       this.dlg.ShowException(error);

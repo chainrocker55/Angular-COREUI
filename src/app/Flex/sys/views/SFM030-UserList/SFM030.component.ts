@@ -6,7 +6,7 @@ import { FlexService } from '../../../Flex/services/flex.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { DiaglogService } from '../../../Flex/services/Dialog.service';
+import { DiaglogService, DialogData } from '../../../Flex/services/Dialog.service';
 import { sp_SFM031_LoadUser_Result } from './sp_SFM031_LoadUser_Result';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { TZ_USER_MS, TZ_MENU_SET_MS, TBM_DIVISION, TBM_POSITION, TZ_USER_GROUP_MS, TZ_LANG_MS } from '../../../Flex/models/tableModel';
@@ -109,27 +109,28 @@ export class SFM030Component implements OnInit {
   }
 
   Save(form) {
-    const result = this.dlg.ShowConfirm('CFM9001', false);
-    if (result && result.result === 'Yes') {
-      this.isLoading = true;
-      this.errorMessage = null;
-      this.selectedData.FLG_ABSENCE = this.selectedData.FLG_ABSENCE.toString() === 'true' || this.selectedData.FLG_ABSENCE === 1 ? 1 : 0;
-      this.selectedData.FLG_ACTIVE = this.selectedData.FLG_ACTIVE.toString() === 'true' || this.selectedData.FLG_ACTIVE === 1 ? 1 : 0;
-      this.selectedData.FLG_RESIGN = this.selectedData.FLG_RESIGN.toString() === 'true' || this.selectedData.FLG_RESIGN === 1 ? 1 : 0;
-      this.svc.SaveUser(this.selectedData).subscribe(res => {
-        this.dlg.ShowProcessComplete();
-        this.isLoading = false;
-        this.isDataChange = true;
-      },
-      (error: HttpErrorResponse) => {
-        if (error.status === 400) {
-          this.errorMessage = error.error.Message;
-        } else {
-          this.dlg.ShowException(error);
-        }
-        this.isLoading = false;
-      });
-    }
+    this.dlg.ShowConfirm('CFM9001').subscribe( (result: DialogData) => {
+      if (result && result.DialogResult === 'Yes') {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.selectedData.FLG_ABSENCE = this.selectedData.FLG_ABSENCE.toString() === 'true' || this.selectedData.FLG_ABSENCE === 1 ? 1 : 0;
+        this.selectedData.FLG_ACTIVE = this.selectedData.FLG_ACTIVE.toString() === 'true' || this.selectedData.FLG_ACTIVE === 1 ? 1 : 0;
+        this.selectedData.FLG_RESIGN = this.selectedData.FLG_RESIGN.toString() === 'true' || this.selectedData.FLG_RESIGN === 1 ? 1 : 0;
+        this.svc.SaveUser(this.selectedData).subscribe(res => {
+          this.dlg.ShowProcessComplete();
+          this.isLoading = false;
+          this.isDataChange = true;
+        },
+        (error: HttpErrorResponse) => {
+          if (error.status === 400) {
+            this.errorMessage = error.error.Message;
+          } else {
+            this.dlg.ShowException(error);
+          }
+          this.isLoading = false;
+        });
+      }
+    });
   }
 
   Back() {

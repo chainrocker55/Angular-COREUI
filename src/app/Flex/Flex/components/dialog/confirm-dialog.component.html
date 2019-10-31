@@ -2,15 +2,19 @@
   <div class="col-12">
     <h1 mat-dialog-title>Confirmation</h1>
     <div mat-dialog-content>
-      <p>{{data.MSG_DESC}}</p>
-      <mat-form-field class="col-12" *ngIf="data.ShowRemark">
-        <textarea matInput [(ngModel)]="data.animal"></textarea>
-      </mat-form-field>
+      <div class="col-12">
+        <div class="row"><p>{{data.MSG_DESC}}</p></div>
+        <div class="row">
+          <mat-form-field class="col-12" *ngIf="data.ShowRemark">
+            <textarea matInput placeholder="Remark" [(ngModel)]="data.Remark"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
     </div>
     <div mat-dialog-actions>
-      <button mat-stroked-button [mat-dialog-close]="data.animal" type='submit' cdkFocusInitial>Yes</button>
-      <button mat-stroked-button (click)="onNoClick()">No</button>
-      <button mat-stroked-button (click)="onNoClick()">Cancel</button>
+      <button mat-stroked-button (click)="onYesClick()" [mat-dialog-close]="data" cdkFocusInitial>Yes</button>
+      <button mat-stroked-button (click)="onNoClick()" [mat-dialog-close]="data" *ngIf="data.ShowNo">No</button>
+      <button mat-stroked-button (click)="onCancelClick()" [mat-dialog-close]="data">Cancel</button>
     </div>
   </div>
 </div>

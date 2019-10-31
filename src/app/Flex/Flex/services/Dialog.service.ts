@@ -9,11 +9,12 @@ import { ToastrService } from 'ngx-toastr';
 import { FlexService } from './flex.service';
 import { MatDialog , MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
-export interface DialogData {
-  animal: string;
-  name: string;
+export class DialogData {
+  DialogResult: string;
+  Remark: string;
   MSG_DESC: string;
   ShowRemark: boolean;
+  ShowNo: boolean;
 }
 export class Exception {
   Source: string;
@@ -24,8 +25,6 @@ export class Exception {
 export class DiaglogService {
 
   private baseUrl =  environment.baseUrl + '/flex/';
-  animal: string;
-  name: string;
 
   constructor(private toastr: ToastrService, private svc: FlexService, public dialog: MatDialog) {
   }
@@ -91,7 +90,7 @@ export class DiaglogService {
     });
   }
   GetException(ex: HttpErrorResponse): Exception {
-    if (!ex) { return null; }
+    if (!ex) { return new Exception(); }
     if (ex.status === 500) {
       const er = ex.error.toString();
       const s = er.substring(0, er.indexOf(':'));
@@ -102,24 +101,53 @@ export class DiaglogService {
         Message: m,
       };
       return e;
+    } else if (ex.status === 400) {
+      const e: Exception = {
+        Source: ex.statusText,
+        Message: ex.error,
+      };
+      return e;
+    } else {
+      const e: Exception = {
+        Source: ex.message,
+        Message: ex.error,
+      };
+      return e;
     }
   }
 
-  ShowConfirm(MSG_CD: string, showRemark: boolean): any {
+  ShowConfirm(MSG_CD: string): Observable<any> {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '350px',
+      width: '450px',
       data: {
         MSG_DESC: this.svc.GetMessageObj(MSG_CD).MSG_DESC,
-        ShowRemark: showRemark,
-        name: this.name,
-        animal: this.animal
+        ShowRemark: false,
+        ShowNo: false,
       }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+    return dialogRef.afterClosed();
+  }
+  ShowConfirmYesNo(MSG_CD: string): Observable<any> {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: {
+        MSG_DESC: this.svc.GetMessageObj(MSG_CD).MSG_DESC,
+        ShowRemark: false,
+        ShowNo: true,
+      }
     });
+    return dialogRef.afterClosed();
+  }
+  ShowConfirmWithRemark(MSG_CD: string): Observable<any> {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: {
+        MSG_DESC: this.svc.GetMessageObj(MSG_CD).MSG_DESC,
+        ShowRemark: true,
+        ShowNo: false,
+      }
+    });
+    return dialogRef.afterClosed();
   }
 }
 
@@ -135,8 +163,14 @@ export class ConfirmDialogComponent {
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
+  onYesClick(): void {
+    this.data.DialogResult = 'Yes';
+  }
   onNoClick(): void {
-    this.dialogRef.close();
+    this.data.DialogResult = 'No';
+  }
+  onCancelClick(): void {
+    this.data.DialogResult = 'Cancel';
   }
 
 }
