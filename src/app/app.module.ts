@@ -52,11 +52,16 @@ import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLabelDirective } from './Flex/Flex/components/flexLabel.directive';
 import { ConfirmDialogComponent } from './Flex/Flex/services/Dialog.service';
+import { MatNativeDateModule, MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+
+import { MY_FORMATS } from './Flex/Flex/constant';
 
 @NgModule({
   imports: [
@@ -77,6 +82,8 @@ import { ConfirmDialogComponent } from './Flex/Flex/services/Dialog.service';
     MatDialogModule,
     MatBadgeModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatCheckboxModule,
     MatButtonModule,
     MatCheckboxModule,
@@ -109,6 +116,20 @@ import { ConfirmDialogComponent } from './Flex/Flex/services/Dialog.service';
       useClass: TokenInterceptor,
       multi: true,
     },
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'th-TH'
+    },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: MY_FORMATS
+    },
+    // {
+    //   provide: DateAdapter,
+    //   useClass: MomentDateAdapter,
+    //   deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    // },
+    MatDatepickerModule,
   ],
   bootstrap: [ AppComponent ]
 })

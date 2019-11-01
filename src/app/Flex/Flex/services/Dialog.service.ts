@@ -109,8 +109,8 @@ export class DiaglogService {
       return e;
     } else {
       const e: Exception = {
-        Source: ex.message,
-        Message: ex.error,
+        Source: ex.statusText,
+        Message: ex.message,
       };
       return e;
     }

@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { PMSRoutingModule } from './pms-routing.module';
 
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
@@ -25,6 +26,7 @@ import { PMS060Component } from './views/PMS060-CheckListAndRepairOrder/PMS060.c
     PMSRoutingModule,
 
     MatInputModule,
+    MatDatepickerModule,
     MatButtonModule,
     MatCheckboxModule,
     MatTableModule,

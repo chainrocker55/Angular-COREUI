@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { TZ_LANG_MS, TZ_USER_GROUP_MS, TZ_MENU_SET_MS, TBM_DIVISION, TBM_POSITION } from '../models/tableModel';
+import { ComboStringValue } from '../models/complexModel';
 
 @Injectable({ providedIn: 'root' })
 export class ComboService {
@@ -33,5 +34,9 @@ export class ComboService {
 
   GetComboPosition (): Observable<TBM_POSITION[]> {
     return this.http.get<TBM_POSITION[]>(this.baseUrl + 'GetPosition');
+  }
+
+  GetComboPersonInCharge_KIBUN(): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboPersonInCharge_KIBUN');
   }
 }

@@ -19,3 +19,9 @@ export class Notify {
     Seq: number;
     HasRead: boolean;
 }
+
+export class ComboStringValue {
+    VALUE: string;
+    DISPLAY: string;
+    CODE: string;
+}
