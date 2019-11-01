@@ -1,3 +1,5 @@
+import { ComboStringValue } from './models/complexModel';
+
 export const PageSizeOptions = [10, 20, 50, 100, 500, 1000];
 
 export const MY_FORMATS = {
@@ -11,3 +13,9 @@ export const MY_FORMATS = {
       monthYearA11yLabel: 'MMMM YYYY',
     },
   };
+
+export const ComboStringAll: ComboStringValue = {
+    VALUE: null,
+    DISPLAY: 'All : All',
+    CODE: null,
+};

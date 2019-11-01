@@ -11,7 +11,7 @@ import { ComboService } from '../../../Flex/services/combo.service';
 import { PMSService } from '../../services/pms.service';
 import { PMS060_Search_Criteria } from '../../models/PMS060_Search_Criteria';
 import { PMS060_CheckListAndRepairOrder_Result } from '../../models/PMS060_CheckListAndRepairOrder_Result';
-import { PageSizeOptions } from '../../../Flex/constant';
+import { PageSizeOptions, ComboStringAll } from '../../../Flex/constant';
 
 @Component({
   selector: 'app-pms060',
@@ -25,6 +25,7 @@ export class PMS060Component implements OnInit {
   pageOptions: number[];
   isLoading: boolean;
   criteria: PMS060_Search_Criteria = new PMS060_Search_Criteria;
+  dataList: PMS060_CheckListAndRepairOrder_Result[];
   selectedData: any;
 
   comboPersonInCharge: ComboStringValue[];
@@ -33,10 +34,10 @@ export class PMS060Component implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private dlg: DiaglogService, private combo: ComboService, private svc: PMSService) {
+    this.pageOptions = PageSizeOptions;
   }
 
   ngOnInit() {
-    this.pageOptions = PageSizeOptions;
     this.InitialCombo();
   }
 
@@ -52,10 +53,28 @@ export class PMS060Component implements OnInit {
   }
 
   LoadData() {
+    this.isLoading = true;
+    this.dataList = null;
     this.svc.GetCheckListAndRepairOrderList(this.criteria).subscribe(res => {
-      console.log('LoadData', res);
+      if (!res || res.length === 0) {
+        this.dlg.ShowInformation('INF0001');
+      }
+      this.isLoading = false;
+      this.dataList = res;
     }, error => {
       this.dlg.ShowException(error);
+      this.isLoading = false;
     });
+  }
+
+  OnAddNew() {}
+
+  OnClear() {
+    this.criteria = new PMS060_Search_Criteria();
+    this.dataList = null;
+  }
+
+  OnEdit(data: PMS060_CheckListAndRepairOrder_Result) {
+    console.log('data', data);
   }
 }

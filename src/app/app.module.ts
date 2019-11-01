@@ -55,6 +55,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLabelDirective } from './Flex/Flex/components/flexLabel.directive';
 import { ConfirmDialogComponent } from './Flex/Flex/services/Dialog.service';
@@ -85,8 +86,8 @@ import { MY_FORMATS } from './Flex/Flex/constant';
     MatDatepickerModule,
     MatNativeDateModule,
     MatCheckboxModule,
+    MatSelectModule,
     MatButtonModule,
-    MatCheckboxModule,
     MatIconModule,
     ToastrModule.forRoot(),
     LoadingBarHttpClientModule,

@@ -36,8 +36,21 @@ tr.mat-row:hover {
 .mat-row:nth-child(odd){
     background-color:#FFF;
 }
-
-
 .mat-dialog-actions {
     justify-content: flex-end;
+}
+
+.mat-list-item {
+    cursor: pointer;
+    border-style: solid;
+    border-color: grey;
+    border: 1px;
+}
+.mat-list-item h4 {
+    color: $primary;
+    font-weight: bold;
+}
+.mat-list-item:hover {
+    background-color: skyblue;
+    color: #FFF;
 }

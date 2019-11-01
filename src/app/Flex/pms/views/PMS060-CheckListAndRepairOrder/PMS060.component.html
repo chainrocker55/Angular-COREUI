@@ -9,7 +9,7 @@
         <form (ngSubmit)="LoadData()" #criteriaForm="ngForm" autocomplete="off">
             <div class="col-12">
                 <div class="row">
-                    <mat-form-field class="col-md-6 col-lg-4">
+                    <mat-form-field class="col-md-6 col-lg-3">
                         <mat-label>Request Date  - From</mat-label>
                         <input matInput [matDatepicker]="ReqDateFrom"
                         id="RequestDateFrom" name="RequestDateFrom"
@@ -17,7 +17,7 @@
                         <mat-datepicker-toggle matSuffix [for]="ReqDateFrom"></mat-datepicker-toggle>
                         <mat-datepicker #ReqDateFrom></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-4">
+                    <mat-form-field class="col-md-6 col-lg-3">
                         <mat-label>Request Date  - To</mat-label>
                         <input matInput [matDatepicker]="ReqDateTo"
                         id="RequestDateTo" name="RequestDateTo"
@@ -25,18 +25,41 @@
                         <mat-datepicker-toggle matSuffix [for]="ReqDateTo"></mat-datepicker-toggle>
                         <mat-datepicker #ReqDateTo></mat-datepicker>
                     </mat-form-field>
+                    <mat-form-field class="col-md-6 col-lg-3">
+                        <mat-label>Complete Date  - From</mat-label>
+                        <input matInput [matDatepicker]="CompleteDateFrom"
+                        id="CompleteDateFrom" name="CompleteDateFrom"
+                        [(ngModel)]="criteria.COMPLETE_DATE_FROM">
+                        <mat-datepicker-toggle matSuffix [for]="CompleteDateFrom"></mat-datepicker-toggle>
+                        <mat-datepicker #CompleteDateFrom></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="col-md-6 col-lg-3">
+                        <mat-label>Complete Date  - To</mat-label>
+                        <input matInput [matDatepicker]="CompleteDateTo"
+                        id="CompleteDateTo" name="CompleteDateTo"
+                        [(ngModel)]="criteria.COMPLETE_DATE_TO">
+                        <mat-datepicker-toggle matSuffix [for]="CompleteDateTo"></mat-datepicker-toggle>
+                        <mat-datepicker #CompleteDateTo></mat-datepicker>
+                    </mat-form-field>
                 </div>
                 <div class="row">
-                    <mat-form-field class="col-md-6 col-lg-4">
+                    <mat-form-field class="col-md-6 col-lg-3">
+                        <mat-label>Repair No. From</mat-label>
+                        <input matInput id="REPNoFrom" name="REPNoFrom" type="text" [(ngModel)]="criteria.CHECK_REP_NO_FROM">
+                    </mat-form-field>
+                    <mat-form-field class="col-md-6 col-lg-3">
+                        <mat-label>Repair No. To</mat-label>
+                        <input matInput id="REPNoTo" name="REPNoTo" type="text" [(ngModel)]="criteria.CHECK_REP_NO_TO">
+                    </mat-form-field>
+                    <mat-form-field class="col-md-6 col-lg-3">
                         <mat-label>Person In Charge</mat-label>
                         <select matNativeControl id="PersonInCharge" name="PersonInCharge"
                             [(ngModel)]="criteria.PERSONINCHARGE">
-                            <option *ngFor="let c of comboPersonInCharge; let i = index" [value]="comboPersonInCharge[i].VALUE">
-                            {{comboPersonInCharge[i].DISPLAY}}
-                            </option>
+                            <!-- <option value=""></option> -->
+                            <option *ngFor="let c of comboPersonInCharge" [value]="c.VALUE">{{c.DISPLAY}}</option>
                         </select>
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-4">
+                    <mat-form-field class="col-md-6 col-lg-3">
                         <mat-label>PO Number</mat-label>
                         <input matInput id="PONumber" name="PONumber" type="text" [(ngModel)]="criteria.PONUMBER_FROM">
                     </mat-form-field>
@@ -45,7 +68,8 @@
                     <div class="col-12">
                         <button mat-flat-button color="primary" type="submit"
                             [disabled] = "!criteriaForm.valid || isLoading">Search</button>
-                        <button mat-flat-button (click)="false">Add New</button>
+                        <button mat-stroked-button type="button" [disabled] = "isLoading" (click)="OnAddNew()">Add New</button>
+                        <button mat-stroked-button type="button" [disabled] = "isLoading" (click)="OnClear()">Clear</button>
                     </div>
                 </div>
             </div>
@@ -53,31 +77,18 @@
         <!--
             ################ Detail ################
         -->
-        <table mat-table [dataSource]="dataSource" class="col-md-12" matSort>
-            <ng-container matColumnDef="CLS_INFO_CD">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Info Code </th>
-                <td mat-cell *matCellDef="let row"> {{row.CLS_INFO_CD}} </td>
-            </ng-container>
-            <ng-container matColumnDef="CLS_CD">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Code </th>
-                <td mat-cell *matCellDef="let row"> {{row.CLS_CD}} </td>
-            </ng-container>
-            <ng-container matColumnDef="CLS_DESC">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Class Description </th>
-                <td mat-cell *matCellDef="let row"> {{row.CLS_DESC}} </td>
-            </ng-container>
-            <ng-container matColumnDef="SEQ">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sequence </th>
-                <td mat-cell *matCellDef="let row"> {{row.SEQ}} </td>
-            </ng-container> 
-            <ng-container matColumnDef="EDIT_FLAG">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Editable </th>
-                <td mat-cell *matCellDef="let row"> {{row.EDIT_FLAG===1?'Yes':'No'}} </td>
-            </ng-container>         
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                (click)="Edit(row)"></tr>
-        </table>
-        <mat-paginator [pageSizeOptions]="pageOptions" showFirstLastButtons></mat-paginator>
+        <mat-list *ngIf="dataList">
+            <mat-divider></mat-divider>
+            <h3 mat-subheader>Result: {{dataList?.length}} rows</h3>
+            <mat-divider></mat-divider>
+            <mat-list-item *ngFor="let row of dataList" (click)="OnEdit(row)">
+                <mat-icon mat-list-icon>folder</mat-icon>
+                <h4 mat-line>Checklist/Repair No. : {{row.CHECK_REP_NO}}</h4>
+                <p mat-line>{{row.MACHINE_NO}} : {{row.MACHINE_NAME}}</p>
+                <small mat-line>Schedule Type : {{row.SCHEDULE_NAME}}</small>
+                <small mat-line>{{row.STATUS_DISPLAY}}</small>
+                <!-- <p mat-line> {{row.updated | date}} </p> -->
+            </mat-list-item>
+        </mat-list>
     </mat-card-content>
 </mat-card>
