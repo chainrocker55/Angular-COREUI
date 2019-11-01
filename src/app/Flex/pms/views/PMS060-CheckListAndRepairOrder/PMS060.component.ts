@@ -26,7 +26,7 @@ export class PMS060Component implements OnInit {
   isLoading: boolean;
   criteria: PMS060_Search_Criteria = new PMS060_Search_Criteria;
   dataList: PMS060_CheckListAndRepairOrder_Result[];
-  selectedData: any;
+  data: any;
 
   comboPersonInCharge: ComboStringValue[];
 
@@ -75,6 +75,20 @@ export class PMS060Component implements OnInit {
   }
 
   OnEdit(data: PMS060_CheckListAndRepairOrder_Result) {
-    console.log('data', data);
+    this.isLoading = true;
+    this.svc.GetCheckJob(data).subscribe((res) => {
+      this.isLoading = false;
+      this.data = res;
+    }, error => {
+      this.dlg.ShowException(error);
+      this.isLoading = false;
+    });
+  }
+
+  Back() {
+    this.data = null;
+  }
+
+  SaveOH() {
   }
 }

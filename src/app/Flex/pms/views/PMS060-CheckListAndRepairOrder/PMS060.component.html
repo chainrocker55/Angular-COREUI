@@ -1,4 +1,4 @@
-<mat-card [hidden]="selectedData" class="animated fadeIn card-margin">
+<mat-card [hidden]="data" class="animated fadeIn card-margin">
     <mat-card-header>
         <mat-card-title>Checklist and Repair Order</mat-card-title>
     </mat-card-header>
@@ -9,7 +9,7 @@
         <form (ngSubmit)="LoadData()" #criteriaForm="ngForm" autocomplete="off">
             <div class="col-12">
                 <div class="row">
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Request Date  - From</mat-label>
                         <input matInput [matDatepicker]="ReqDateFrom"
                         id="RequestDateFrom" name="RequestDateFrom"
@@ -17,7 +17,7 @@
                         <mat-datepicker-toggle matSuffix [for]="ReqDateFrom"></mat-datepicker-toggle>
                         <mat-datepicker #ReqDateFrom></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Request Date  - To</mat-label>
                         <input matInput [matDatepicker]="ReqDateTo"
                         id="RequestDateTo" name="RequestDateTo"
@@ -25,7 +25,7 @@
                         <mat-datepicker-toggle matSuffix [for]="ReqDateTo"></mat-datepicker-toggle>
                         <mat-datepicker #ReqDateTo></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Complete Date  - From</mat-label>
                         <input matInput [matDatepicker]="CompleteDateFrom"
                         id="CompleteDateFrom" name="CompleteDateFrom"
@@ -33,7 +33,7 @@
                         <mat-datepicker-toggle matSuffix [for]="CompleteDateFrom"></mat-datepicker-toggle>
                         <mat-datepicker #CompleteDateFrom></mat-datepicker>
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Complete Date  - To</mat-label>
                         <input matInput [matDatepicker]="CompleteDateTo"
                         id="CompleteDateTo" name="CompleteDateTo"
@@ -43,15 +43,15 @@
                     </mat-form-field>
                 </div>
                 <div class="row">
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Repair No. From</mat-label>
                         <input matInput id="REPNoFrom" name="REPNoFrom" type="text" [(ngModel)]="criteria.CHECK_REP_NO_FROM">
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Repair No. To</mat-label>
                         <input matInput id="REPNoTo" name="REPNoTo" type="text" [(ngModel)]="criteria.CHECK_REP_NO_TO">
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Person In Charge</mat-label>
                         <select matNativeControl id="PersonInCharge" name="PersonInCharge"
                             [(ngModel)]="criteria.PERSONINCHARGE">
@@ -59,7 +59,7 @@
                             <option *ngFor="let c of comboPersonInCharge" [value]="c.VALUE">{{c.DISPLAY}}</option>
                         </select>
                     </mat-form-field>
-                    <mat-form-field class="col-md-6 col-lg-3">
+                    <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>PO Number</mat-label>
                         <input matInput id="PONumber" name="PONumber" type="text" [(ngModel)]="criteria.PONUMBER_FROM">
                     </mat-form-field>
@@ -91,4 +91,53 @@
             </mat-list-item>
         </mat-list>
     </mat-card-content>
+</mat-card>
+
+
+
+<mat-card *ngIf="data" class="animated fadeIn card-margin">
+    <form (ngSubmit)="SaveOH()" #formOH="ngForm" autocomplete="off">
+        <mat-card-header>
+            <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="col-12">
+                <div class="row">
+                    <mat-form-field class="col-sm-6 col-lg-3">
+                        <mat-label>Request Date</mat-label>
+                        <input matInput [matDatepicker]="ReqDate"
+                        id="ReqDate" name="ReqDate"
+                        [(ngModel)]="data.Header.REQUEST_DATE">
+                        <mat-datepicker-toggle matSuffix [for]="ReqDate"></mat-datepicker-toggle>
+                        <mat-datepicker #ReqDate></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="col-sm-6 col-lg-3">
+                        <mat-label>Complete Date</mat-label>
+                        <input matInput [matDatepicker]="CompleteDate"
+                        id="CompleteDate" name="CompleteDate"
+                        [(ngModel)]="data.Header.COMPLETE_DATE">
+                        <mat-datepicker-toggle matSuffix [for]="CompleteDate"></mat-datepicker-toggle>
+                        <mat-datepicker #CompleteDate></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="col-sm-6 col-lg-3">
+                        <mat-label>Person In Charge</mat-label>
+                        <select matNativeControl id="PersonInCharge" name="PersonInCharge"
+                            [(ngModel)]="data.Header.PERSONINCHARGE">
+                            <!-- <option value=""></option> -->
+                            <option *ngFor="let c of comboPersonInCharge" [value]="c.VALUE">{{c.DISPLAY}}</option>
+                        </select>
+                    </mat-form-field>
+                    <mat-form-field class="col-sm-6 col-lg-3">
+                        <mat-label>PO Number</mat-label>
+                        <input matInput id="PONumber" name="PONumber" type="text" [(ngModel)]="data.HeaderOverHaul.PONUMBER">
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-flat-button color="primary" type="submit"
+                [disabled] = "!formOH.valid || isLoading">Save</button>
+            <button mat-flat-button (click)="Back()">Back</button>
+        </mat-card-actions>
+    </form>
 </mat-card>

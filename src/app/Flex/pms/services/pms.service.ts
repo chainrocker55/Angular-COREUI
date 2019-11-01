@@ -18,4 +18,7 @@ export class PMSService {
   GetCheckListAndRepairOrderList(criteria: PMS060_Search_Criteria): Observable<PMS060_CheckListAndRepairOrder_Result[]> {
     return this.http.post<PMS060_CheckListAndRepairOrder_Result[]>(this.baseUrl + 'sp_PMS060_GetMachineRepairOrderList', criteria);
   }
+  GetCheckJob(rowData: PMS060_CheckListAndRepairOrder_Result): Observable<any> {
+    return this.http.post<any>(this.baseUrl + 'sp_PMS061_GetCheckJob', rowData);
+  }
 }
