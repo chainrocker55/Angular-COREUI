@@ -1,6 +1,6 @@
 <mat-card [hidden]="selectedData" class="animated fadeIn card-margin">
     <mat-card-header>
-        <mat-card-title>Class List</mat-card-title>
+        <mat-card-title [flexLabel]="'MAS090_ClassList'"></mat-card-title>
     </mat-card-header>
     <mat-card-content>
         <mat-form-field class="col-md-12">
@@ -46,29 +46,33 @@
         <mat-card-content>
             <div class="row">
                 <mat-form-field class="col-md-6">
+                    <mat-label>Class Info Code</mat-label>
                     <input matInput id="CLS_INFO_CD" name="CLS_INFO_CD"
-                    type="text" placeholder="Class Info Code"
+                    type="text"
                     [(ngModel)]="selectedData.CLS_INFO_CD"
                     maxlength="30" disabled required>
                 </mat-form-field>
                 <mat-form-field class="col-md-6">
+                    <mat-label>Class Code</mat-label>
                     <input matInput id="CLS_CD" name="CLS_CD"
-                    type="text" placeholder="Class Code"
+                    type="text"
                     [(ngModel)]="selectedData.CLS_CD"
                     maxlength="30" disabled  required>
                 </mat-form-field>
             </div>
             <div class="row">
                 <mat-form-field class="col-md-6">
+                    <mat-label>Class Description</mat-label>
                     <input matInput id="CLS_DESC" name="CLS_DESC"
-                    type="text" placeholder="Class Description"
+                    type="text"
                     [(ngModel)]="selectedData.CLS_DESC"
                     [disabled] = "selectedData.EDIT_FLAG === 0"
                     maxlength="100" required>
                 </mat-form-field>
                 <mat-form-field class="col-md-6">
+                    <mat-label>Sequence</mat-label>
                     <input matInput id="SEQ" name="SEQ"
-                    type="number" placeholder="Sequence"
+                    type="number"
                     [(ngModel)]="selectedData.SEQ"
                     [disabled] = "selectedData.EDIT_FLAG === 0"
                     required>

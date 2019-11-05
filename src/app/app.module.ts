@@ -48,21 +48,13 @@ import { FormsModule } from '@angular/forms';
 // for HttpClient import:
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { ToastrModule } from 'ngx-toastr';
-
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon';
-import { FlexLabelDirective } from './Flex/Flex/components/flexLabel.directive';
 import { ConfirmDialogComponent } from './Flex/Flex/services/Dialog.service';
-import { MatNativeDateModule, MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
 import { MY_FORMATS } from './Flex/Flex/constant';
+import { FlexModule } from './Flex/Flex/flex.module';
 
 @NgModule({
   imports: [
@@ -80,17 +72,10 @@ import { MY_FORMATS } from './Flex/Flex/constant';
     ChartsModule,
     HttpClientModule,
     FormsModule,
-    MatDialogModule,
-    MatBadgeModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
     ToastrModule.forRoot(),
     LoadingBarHttpClientModule,
+
+    FlexModule,
   ],
   entryComponents: [
     ConfirmDialogComponent,
@@ -102,7 +87,6 @@ import { MY_FORMATS } from './Flex/Flex/constant';
     P500Component,
     LoginComponent,
     RegisterComponent,
-    FlexLabelDirective,
     ConfirmDialogComponent,
   ],
   providers: [
