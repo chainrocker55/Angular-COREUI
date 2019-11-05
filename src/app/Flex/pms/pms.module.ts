@@ -17,6 +17,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 import { PMS060Component } from './views/PMS060-CheckListAndRepairOrder/PMS060.component';
 
@@ -37,6 +39,7 @@ import { PMS060Component } from './views/PMS060-CheckListAndRepairOrder/PMS060.c
     MatCardModule,
     MatIconModule,
     MatListModule,
+    MatExpansionModule,
   ],
   declarations: [
     PMS060Component,

@@ -132,6 +132,6 @@ import { MY_FORMATS } from './Flex/Flex/constant';
     // },
     MatDatepickerModule,
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

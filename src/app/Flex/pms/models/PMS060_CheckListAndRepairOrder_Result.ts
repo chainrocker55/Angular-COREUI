@@ -5,6 +5,7 @@ export class PMS060_CheckListAndRepairOrder_Result {
     CHECK_REP_NO: string;
     MACHINE_NO: string;
     MACHINE_NAME: string;
+    PLAN_DATE: Date;
     REQUEST_DATE: Date;
     TEST_DATE: Date;
     COMPLETE_DATE: Date;

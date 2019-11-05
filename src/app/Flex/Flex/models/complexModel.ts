@@ -25,3 +25,9 @@ export class ComboStringValue {
     DISPLAY: string;
     CODE: string;
 }
+
+export class ComboIntValue {
+    VALUE: number;
+    DISPLAY: string;
+    CODE: string;
+}
