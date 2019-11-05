@@ -5,7 +5,7 @@
 </style>
 <mat-card [hidden]="data" class="animated fadeIn card-margin">
     <mat-card-header>
-        <mat-card-title>Checklist and Repair Order</mat-card-title>
+        <mat-card-title [flexLabel]="'lblHeader'">Checklist and Repair Order</mat-card-title>
     </mat-card-header>
     <mat-card-content>
         <!--
@@ -220,187 +220,185 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12">
-            <mat-accordion [multi]="true">
-                <mat-expansion-panel [expanded]="true" class="col-12">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                        </mat-panel-title>
-                        <!-- <mat-panel-description>
+        <mat-accordion [multi]="true">
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                    </mat-panel-title>
+                    <!-- <mat-panel-description>
                         Type your name and age
                     </mat-panel-description> -->
-                    </mat-expansion-panel-header>
+                </mat-expansion-panel-header>
 
 
-                    <mat-card-content>
-                        <div class="col-12">
-                            <div class="row">
+                <mat-card-content>
+                    <div class="col-12">
+                        <div class="row">
 
-                                <mat-form-field class="col-sm-6 col-lg-3">
-                                    <mat-label>Machine No.</mat-label>
-                                    <select matNativeControl id="MachineNo" name="MachineNo"
-                                        [(ngModel)]="data.Header.MACHINE_NO">
-                                        <!-- <option value=""></option> -->
-                                        <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}</option>
-                                    </select>
-                                </mat-form-field>
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Machine No.</mat-label>
+                                <select matNativeControl id="MachineNo" name="MachineNo"
+                                    [(ngModel)]="data.Header.MACHINE_NO">
+                                    <!-- <option value=""></option> -->
+                                    <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
+                                    </option>
+                                </select>
+                            </mat-form-field>
 
-                                <mat-form-field class="col-sm-6 col-lg-3">
-                                    <mat-label>Machine Name</mat-label>
-                                    <input matInput required id="MachineName" name="MachineName" type="text"
-                                        [(ngModel)]="data.Header.MACHINE_NAME">
-                                </mat-form-field>
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Machine Name</mat-label>
+                                <input matInput required id="MachineName" name="MachineName" type="text"
+                                    [(ngModel)]="data.Header.MACHINE_NAME">
+                            </mat-form-field>
 
-                                <mat-form-field class="col-sm-6 col-lg-3">
-                                    <mat-label>Request Date</mat-label>
-                                    <input matInput required [matDatepicker]="ReqDate" id="ReqDate" name="ReqDate"
-                                        [(ngModel)]="data.Header.REQUEST_DATE">
-                                    <mat-datepicker-toggle matSuffix [for]="ReqDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #ReqDate></mat-datepicker>
-                                </mat-form-field>
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Request Date</mat-label>
+                                <input matInput required [matDatepicker]="ReqDate" id="ReqDate" name="ReqDate"
+                                    [(ngModel)]="data.Header.REQUEST_DATE">
+                                <mat-datepicker-toggle matSuffix [for]="ReqDate"></mat-datepicker-toggle>
+                                <mat-datepicker #ReqDate></mat-datepicker>
+                            </mat-form-field>
 
-                                <mat-form-field class="col-sm-6 col-lg-3">
-                                    <mat-label>Complete Date</mat-label>
-                                    <input matInput [matDatepicker]="CompleteDate" id="CompleteDate" name="CompleteDate"
-                                        [(ngModel)]="data.Header.COMPLETE_DATE">
-                                    <mat-datepicker-toggle matSuffix [for]="CompleteDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #CompleteDate></mat-datepicker>
-                                </mat-form-field>
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Complete Date</mat-label>
+                                <input matInput [matDatepicker]="CompleteDate" id="CompleteDate" name="CompleteDate"
+                                    [(ngModel)]="data.Header.COMPLETE_DATE">
+                                <mat-datepicker-toggle matSuffix [for]="CompleteDate"></mat-datepicker-toggle>
+                                <mat-datepicker #CompleteDate></mat-datepicker>
+                            </mat-form-field>
 
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-12 col-lg-6">
-                                    <div class="row">
-                                        <mat-form-field class="col-sm-6 col-lg-6">
-                                            <mat-label>Person In Charge</mat-label>
-                                            <select matNativeControl id="PersonInCharge" name="PersonInCharge"
-                                                [(ngModel)]="SelectexPersonInCharge">
-                                                <!-- <option value=""></option> -->
-                                                <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
-                                                    {{c.DISPLAY}}
-                                                </option>
-                                            </select>
-                                        </mat-form-field>
-                                        <div class="col-sm-6 col-lg-6">
-                                            <button type="button" mat-stroked-button
-                                                (click)="AddPersonIncharge()">Add</button>
-                                            <button type="button" mat-stroked-button
-                                                (click)="RemovePersonIncharge()">Remove</button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <table class="border" mat-table [dataSource]="dataSourcePersonInCharge">
-                                            <ng-container matColumnDef="DISPLAY">
-                                                <td mat-cell *matCellDef="let row"> {{row.DISPLAY}} </td>
-                                            </ng-container>
-
-                                            <tr mat-row
-                                                *matRowDef="let row; let i = index; columns: displayedColumnsPersonInCharge;"
-                                                [ngClass]="{'highlight': selectedRowIndex === i}"
-                                                (click)="highlight(i)">
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-lg-6">
-                                    <div class="row">
-
-                                        <mat-form-field class="col-sm-6 col-lg-6">
-                                            <mat-label>Supplier</mat-label>
-                                            <select matNativeControl id="Supplier" name="Supplier"
-                                                [(ngModel)]="data.HeaderOverHaul.VENDORID">
-                                                <!-- <option value=""></option> -->
-                                                <option *ngFor="let c of comboSupplier" [value]="c.VALUE">{{c.DISPLAY}}
-                                                </option>
-                                            </select>
-                                        </mat-form-field>
-
-                                        <mat-form-field class="col-sm-6 col-lg-6">
-                                            <mat-label>PO Number</mat-label>
-                                            <select matNativeControl id="PONumber" name="PONumber"
-                                                [(ngModel)]="data.HeaderOverHaul.POHID">
-                                                <!-- <option value=""></option> -->
-                                                <option *ngFor="let c of comboPoNumber" [value]="c.VALUE">{{c.DISPLAY}}
-                                                </option>
-                                            </select>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="row">
-                                        <mat-form-field class="col-sm-6 col-lg-6">
-                                            <mat-label>Machine Location</mat-label>
-                                            <input matInput id="MachineLocation" name="MachineLocation" type="text"
-                                                [(ngModel)]="data.Header.MACHINE_LOC">
-                                        </mat-form-field>
-
-                                        <mat-form-field class="col-sm-6 col-lg-6">
-                                            <mat-label>Total Time of Operation (hr.)</mat-label>
-                                            <input matInput id="TotalTimeOfOperation" name="TotalTimeOfOperation"
-                                                type="number" [(ngModel)]="data.HeaderOverHaul.TOTAL_TIME_OPERATION">
-                                        </mat-form-field>
-
-                                    </div>
-                                </div>
-
-
-                            </div>
                         </div>
-                    </mat-card-content>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="row">
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Person In Charge</mat-label>
+                                        <select matNativeControl id="PersonInCharge" name="PersonInCharge"
+                                            [(ngModel)]="SelectexPersonInCharge">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </mat-form-field>
+                                    <div class="col-sm-6 col-lg-6">
+                                        <button type="button" mat-stroked-button
+                                            (click)="AddPersonIncharge()">Add</button>
+                                        <button type="button" mat-stroked-button
+                                            (click)="RemovePersonIncharge()">Remove</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table class="border" mat-table [dataSource]="dataSourcePersonInCharge">
+                                        <ng-container matColumnDef="DISPLAY">
+                                            <td mat-cell *matCellDef="let row"> {{row.DISPLAY}} </td>
+                                        </ng-container>
+
+                                        <tr mat-row
+                                            *matRowDef="let row; let i = index; columns: displayedColumnsPersonInCharge;"
+                                            [ngClass]="{'highlight': selectedRowIndex === i}" (click)="highlight(i)">
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="row">
+
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Supplier</mat-label>
+                                        <select matNativeControl id="Supplier" name="Supplier"
+                                            [(ngModel)]="data.HeaderOverHaul.VENDORID">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboSupplier" [value]="c.VALUE">
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>PO Number</mat-label>
+                                        <select matNativeControl id="PONumber" name="PONumber"
+                                            [(ngModel)]="data.HeaderOverHaul.POHID">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboPoNumber" [value]="c.VALUE">
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="row">
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Machine Location</mat-label>
+                                        <input matInput id="MachineLocation" name="MachineLocation" type="text"
+                                            [(ngModel)]="data.Header.MACHINE_LOC">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Total Time of Operation (hr.)</mat-label>
+                                        <input matInput id="TotalTimeOfOperation" name="TotalTimeOfOperation"
+                                            type="number" [(ngModel)]="data.HeaderOverHaul.TOTAL_TIME_OPERATION">
+                                    </mat-form-field>
+
+                                </div>
+                            </div>
 
 
-                </mat-expansion-panel>
-                <mat-expansion-panel [expanded]="true">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                        </mat-panel-title>
-                        <!-- <mat-panel-description>
+                        </div>
+                    </div>
+                </mat-card-content>
+
+
+            </mat-expansion-panel>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                    </mat-panel-title>
+                    <!-- <mat-panel-description>
                         Currently I am {{panelOpenState ? 'open' : 'closed'}}
                     </mat-panel-description> -->
-                    </mat-expansion-panel-header>
+                </mat-expansion-panel-header>
 
-                    <mat-card-content>
-                        <div class="col-12">
-                            <div class="row">
+                <mat-card-content>
+                    <div class="col-12">
+                        <div class="row">
 
-                                <mat-form-field class="col-sm-12 col-lg-12">
-                                    <mat-label>Detail of Problems or Disorder</mat-label>
-                                    <textarea matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"
-                                        [(ngModel)]="criteria.PROBLEM_DESC">
+                            <mat-form-field class="col-sm-12 col-lg-12">
+                                <mat-label>Detail of Problems or Disorder</mat-label>
+                                <textarea matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"
+                                    [(ngModel)]="criteria.PROBLEM_DESC">
                                     </textarea>
-                                </mat-form-field>
+                            </mat-form-field>
 
-                                <mat-form-field class="col-sm-12 col-lg-12">
-                                    <mat-label>Repair Method</mat-label>
-                                    <textarea matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"
-                                        [(ngModel)]="criteria.REPAIR_METHOD">
+                            <mat-form-field class="col-sm-12 col-lg-12">
+                                <mat-label>Repair Method</mat-label>
+                                <textarea matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"
+                                    [(ngModel)]="criteria.REPAIR_METHOD">
                                     </textarea>
-                                </mat-form-field>
+                            </mat-form-field>
 
 
-                                <mat-form-field class="col-sm-12 col-lg-12">
-                                    <mat-label>Cause of Delay</mat-label>
-                                    <input matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
-                                        [(ngModel)]="criteria.CAUSE_DELAY">
-                                </mat-form-field>
+                            <mat-form-field class="col-sm-12 col-lg-12">
+                                <mat-label>Cause of Delay</mat-label>
+                                <input matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
+                                    [(ngModel)]="criteria.CAUSE_DELAY">
+                            </mat-form-field>
 
 
-                                <mat-form-field class="col-sm-12 col-lg-12">
-                                    <mat-label>Ref. Checklist/Repair No.</mat-label>
-                                    <input matInput id="CHECK_REP_NO_REF" name="CHECK_REP_NO_REF" type="text"
-                                        [(ngModel)]="criteria.CHECK_REP_NO_REF">
-                                </mat-form-field>
+                            <mat-form-field class="col-sm-12 col-lg-12">
+                                <mat-label>Ref. Checklist/Repair No.</mat-label>
+                                <input matInput id="CHECK_REP_NO_REF" name="CHECK_REP_NO_REF" type="text"
+                                    [(ngModel)]="criteria.CHECK_REP_NO_REF">
+                            </mat-form-field>
 
 
-                            </div>
                         </div>
-                    </mat-card-content>
+                    </div>
+                </mat-card-content>
 
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-    </div>
+            </mat-expansion-panel>
+        </mat-accordion>
 
 
 

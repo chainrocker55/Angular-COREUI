@@ -1,0 +1,53 @@
+// Angular
+
+import { NgModule } from '@angular/core';
+
+// Components Routing
+import { PMSRoutingModule } from './pms-routing.module';
+
+<<<<<<< HEAD
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
+
+=======
+import { FlexModule } from '../Flex/flex.module';
+>>>>>>> 59148a780a3b456ad165e76e3a91fd981438ee8b
+
+import { PMS060Component } from './views/PMS060-CheckListAndRepairOrder/PMS060.component';
+
+@NgModule({
+  imports: [
+    PMSRoutingModule,
+<<<<<<< HEAD
+
+    MatInputModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatDividerModule,
+    MatCardModule,
+    MatIconModule,
+    MatListModule,
+    MatExpansionModule,
+=======
+    FlexModule,
+>>>>>>> 59148a780a3b456ad165e76e3a91fd981438ee8b
+  ],
+  declarations: [
+    PMS060Component,
+  ]
+})
+export class PMSModule { }

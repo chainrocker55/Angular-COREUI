@@ -90,16 +90,28 @@ export class FlexService {
         });
     }
 
+    GetScreenDetailObj (CONTROL_CD: string): TZ_SCREEN_DETAIL_LANG_MS {
+        const scn = this.GetScreenObj();
+        const msg: TZ_SCREEN_DETAIL_LANG_MS[] = JSON.parse(localStorage.getItem('flexScreenDetail'));
+        return msg.find(function(item) {
+            return item.CONTROL_CD === CONTROL_CD && item.SCREEN_CD === scn.ScreenCd;
+        });
+    }
+
     GetScreenDetail (): Observable<TZ_SCREEN_DETAIL_LANG_MS[]> {
         return this.http.post<TZ_SCREEN_DETAIL_LANG_MS[]>(this.baseUrl + 'GetScreenDetail', {
             LangCd: this.getCurrentUser().LANG_CD,
         });
     }
 
-    GetScreenDetailDesc (): any {
+    InsertScreenDetail (data: TZ_SCREEN_DETAIL_LANG_MS) {
+        return this.http.post(this.baseUrl + 'InsertScreenDetail', data);
+    }
+
+    GetScreenDetailDesc (): TZ_SCREEN_DETAIL_LANG_MS {
         const scn = this.GetScreenObj();
         const text: TZ_SCREEN_DETAIL_LANG_MS[] = JSON.parse(localStorage.getItem('flexScreenDetail'));
-        const lbl: any = {};
+        const lbl: TZ_SCREEN_DETAIL_LANG_MS = new TZ_SCREEN_DETAIL_LANG_MS;
         text.forEach(function(e) {
             if (e.SCREEN_CD === scn.ScreenCd) {
                 lbl[e.CONTROL_CD] = e.CONTROL_CAPTION;
