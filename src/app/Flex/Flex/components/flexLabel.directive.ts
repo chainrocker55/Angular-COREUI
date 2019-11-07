@@ -28,10 +28,10 @@ export class FlexLabelDirective implements OnInit {
                 SCREEN_CD: this.svc.GetScreenObj().ScreenCd,
                 CONTROL_CAPTION: this.el.nativeElement.textContent.trim(),
                 CRT_BY: this.svc.getCurrentUser().USER_CD,
-                CRT_DATE: new Date,
+                CRT_DATE: new Date(),
                 CRT_MACHINE: 'Web',
                 UPD_BY: this.svc.getCurrentUser().USER_CD,
-                UPD_DATE: new Date,
+                UPD_DATE: new Date(),
                 UPD_MACHINE: 'Web',
                 IS_USED: 1,
               };

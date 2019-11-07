@@ -105,7 +105,13 @@ export class FlexService {
     }
 
     InsertScreenDetail (data: TZ_SCREEN_DETAIL_LANG_MS) {
-        return this.http.post(this.baseUrl + 'InsertScreenDetail', data);
+        const tbs: TZ_SCREEN_DETAIL_LANG_MS[] = [];
+        tbs.push(data);
+        this.http.post(this.baseUrl + 'InsertScreenDetail', tbs).subscribe(res => {
+            console.log(res);
+        }, error => {
+            console.log(error);
+        });
     }
 
     GetScreenDetailDesc (): TZ_SCREEN_DETAIL_LANG_MS {
