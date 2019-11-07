@@ -38,10 +38,7 @@ export class SystemService {
   GetUserGroupList(): Observable<TZ_USER_GROUP_MS[]> {
     return this.http.get<TZ_USER_GROUP_MS[]>(this.baseUrl + 'GetUserGroupList');
   }
-  sp_SFM0061_GetStandardPermission(userGroup: string): Observable<SFM0061_GetStandardPermission_Result[]> {
-    return this.http.get<SFM0061_GetStandardPermission_Result[]>(this.baseUrl + 'sp_SFM0061_GetStandardPermission/' + userGroup);
-  }
-  sp_SFM0061_GetSpecialPermission(userGroup: string): Observable<SFM0061_GetSpecialPermission_Result[]> {
-    return this.http.get<SFM0061_GetSpecialPermission_Result[]>(this.baseUrl + 'sp_SFM0061_GetSpecialPermission/' + userGroup);
+  sp_SFM0061_GetPermission(userGroup: string): Observable<any[]> {
+    return this.http.get<any[]>(this.baseUrl + 'sp_SFM0061_GetPermission/' + userGroup);
   }
 }
