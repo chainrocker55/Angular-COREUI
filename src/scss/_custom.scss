@@ -43,8 +43,10 @@ tr.mat-row:hover {
 .mat-list-item {
     cursor: pointer;
     border-style: solid;
-    border-color: grey;
-    border: 1px;
+    border-color: lightgrey;
+    border-width: 1px;
+    border-radius: 5px;
+    margin-top: 5px;
 }
 .mat-list-item h4 {
     color: $primary;
@@ -52,5 +54,4 @@ tr.mat-row:hover {
 }
 .mat-list-item:hover {
     background-color: skyblue;
-    color: #FFF;
 }
