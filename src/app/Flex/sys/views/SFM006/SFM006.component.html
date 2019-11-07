@@ -1,0 +1,18 @@
+<mat-card [hidden]="selectedData" class="animated fadeIn card-margin">
+    <mat-card-header>
+        <mat-card-title [flexLabel]="'SFM006_AuthorizedMaintenance'"></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="col-md-4">
+            <mat-list *ngIf="obj.Result">
+                <mat-divider></mat-divider>
+                <h3 mat-subheader>Result: {{obj.Result?.length}} rows</h3>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let row of obj.Result" (click)="OnEdit(row)">
+                    <mat-icon mat-list-icon>folder</mat-icon>
+                    <h4 mat-line>{{row.GROUP_CD}} : {{row.GROUP_NAME}}</h4>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </mat-card-content>
+</mat-card>

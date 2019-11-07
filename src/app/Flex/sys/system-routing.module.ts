@@ -4,6 +4,7 @@ import { MAS090Component } from './views/MAS090-ClassList/MAS090.component';
 import { CardsComponent } from '../../views/base/cards.component';
 import { SFM0035Component } from './views/SFM0035-UserProfile/SFM0035.component';
 import { SFM030Component } from './views/SFM030-UserList/SFM030.component';
+import { SFM006Component } from './views/SFM006/SFM006.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,13 @@ const routes: Routes = [
         component: SFM0035Component,
         data: {
           title: 'User Profile'
+        }
+      },
+      {
+        path: 'auth_maintenance',
+        component: SFM006Component,
+        data: {
+          title: 'Authorized Maintenance'
         }
       },
       {

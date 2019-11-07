@@ -7,7 +7,9 @@ import { environment } from '../../../../environments/environment';
 import { NavData } from '../../../_nav';
 import { TB_CLASS_LIST_MS } from '../models/tableModel';
 import { sp_SFM031_LoadUser_Result } from '../views/SFM030-UserList/sp_SFM031_LoadUser_Result';
-import { TZ_USER_MS } from '../../Flex/models/tableModel';
+import { TZ_USER_MS, TZ_USER_GROUP_MS } from '../../Flex/models/tableModel';
+import { SFM0061_GetStandardPermission_Result } from '../models/SFM0061_GetStandardPermission_Result';
+import { SFM0061_GetSpecialPermission_Result } from '../models/SFM0061_GetSpecialPermission_Result';
 
 @Injectable({ providedIn: 'root' })
 export class SystemService {
@@ -31,5 +33,15 @@ export class SystemService {
   }
   SaveUser(user: sp_SFM031_LoadUser_Result): Observable<string> {
     return this.http.post<string>(this.baseUrl + 'SaveUser', user);
+  }
+
+  GetUserGroupList(): Observable<TZ_USER_GROUP_MS[]> {
+    return this.http.get<TZ_USER_GROUP_MS[]>(this.baseUrl + 'GetUserGroupList');
+  }
+  sp_SFM0061_GetStandardPermission(userGroup: string): Observable<SFM0061_GetStandardPermission_Result[]> {
+    return this.http.get<SFM0061_GetStandardPermission_Result[]>(this.baseUrl + 'sp_SFM0061_GetStandardPermission/' + userGroup);
+  }
+  sp_SFM0061_GetSpecialPermission(userGroup: string): Observable<SFM0061_GetSpecialPermission_Result[]> {
+    return this.http.get<SFM0061_GetSpecialPermission_Result[]>(this.baseUrl + 'sp_SFM0061_GetSpecialPermission/' + userGroup);
   }
 }
