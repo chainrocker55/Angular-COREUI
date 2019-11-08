@@ -417,7 +417,34 @@
 </mat-card>
 
 <!-- pm -->
+
 <mat-card *ngIf="!tempPmData && data && data.Header.SCHEDULE_TYPEID===2" class="animated fadeIn card-margin">
+    <mat-card-actions>
+        <button
+            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_NEW || data.Header.STATUSID===STATUS_REVISE"
+            class="button" mat-flat-button color="primary" [disabled]="!formOH.valid || isLoading"
+            (click)="onSendToApprovePM()">
+            Send to Approve
+        </button>
+        <button
+            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_DURING_APPROVE "
+            class="button" mat-flat-button color="primary" [disabled]="!formOH.valid || isLoading"
+            (click)="onApprovePM()">
+            Approve
+        </button>
+        <button
+            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_DURING_APPROVE"
+            class="button" mat-flat-button color="basic" [disabled]="!formOH.valid || isLoading"
+            (click)="onRevisePM()">
+            Revise
+        </button>
+        <button
+            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL"
+            class="button" mat-flat-button color="warn" [disabled]="!formOH.valid || isLoading"
+            (click)="onCancelPM()">
+            Cancel
+        </button>
+    </mat-card-actions>
     <form (ngSubmit)="SavePM()" #formOH="ngForm" autocomplete="off">
 
         <div class="row">
@@ -664,21 +691,23 @@
                 <mat-card-content>
                     <div class="col-12">
                         <div class="row">
-
-                            <mat-form-field class="col-sm-6 col-lg-3" floatLabel="always">
-                                <mat-label>Machine Component</mat-label>
-                                <select matNativeControl id="MachineComponent" name="MachineComponent"
-                                    (change)="MachineComponentChange()" [(ngModel)]="selectedMachineComponent">
-                                    <!-- <option value=""></option> -->
-                                    <option *ngFor="let c of comboMachineComponent" [value]="c.VALUE">{{c.DISPLAY}}
-                                    </option>
-                                </select>
-                            </mat-form-field>
-
-                            <div class="col-sm-6 col-lg-9" align="end">
-                                <button type="button" mat-flat-button color="primary" (click)="addPart()" >Add Parts</button>
+                            <div class="col-sm-6 col-lg-3">
+                                <mat-form-field *ngIf="!data.Header.CHECK_REPH_ID" class="col-12" floatLabel="always">
+                                    <mat-label>Machine Component</mat-label>
+                                    <select matNativeControl id="MachineComponent" name="MachineComponent"
+                                        (change)="MachineComponentChange()" [(ngModel)]="selectedMachineComponent">
+                                        <!-- <option value=""></option> -->
+                                        <option *ngFor="let c of comboMachineComponent" [value]="c.VALUE">{{c.DISPLAY}}
+                                        </option>
+                                    </select>
+                                </mat-form-field>
                             </div>
-
+                            <div class="col-sm-6 col-lg-9" align="end">
+                                <button type="button" mat-flat-button color="primary" (click)="addPart()">Add
+                                    Parts</button>
+                            </div>
+                        </div>
+                        <div class="row">
                             <table class="border" mat-table [dataSource]="dataSourcePmParts">
 
                                 <ng-container matColumnDef="ACTION">

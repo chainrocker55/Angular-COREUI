@@ -38,8 +38,17 @@ export class PMSService {
     }
 
     SavePM(data: any): Observable<string> {
-        console.log(data);
         return this.http.post(this.baseUrl + 'PMS062_SaveData', data, { responseType: "text" });
+    }
+
+    SendToApprovePM(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS062_SendToApprove', data, { responseType: "text" });
+    }
+    RevisePM(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS062_Revise', data, { responseType: "text" });
+    }
+    CancelPM(data: any): Observable<any> {
+        return this.http.post(this.baseUrl + 'PMS062_Cancel', data);
     }
 
     GetItemFindDialogWithParam(data: any): Observable<any[]> {

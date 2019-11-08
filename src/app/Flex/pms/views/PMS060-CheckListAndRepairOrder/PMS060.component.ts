@@ -54,6 +54,16 @@ export class PMS060Component implements OnInit {
     multiSelectPersonInCharge: boolean = false;
     selectionPersonInCharge = new SelectionModel<PMS060_CheckJobPersonInCharge_Result>(this.multiSelectPersonInCharge, []);
 
+    STATUS_ACTIVE_PLAN = "F01"; // Active Plan
+    STATUS_CANCEL_PLAN = "F02"; // Cancelled Plan
+    STATUS_NEW = "F03"; // New Check/Repair Order
+    STATUS_DURING_ASSIGN = "F04"; // During Assign
+    STATUS_RECEIVED = "F05"; // Received Check/Repair Order
+    STATUS_DURING_APPROVE = "F06"; // During Approve
+    STATUS_REVISE = "F07"; // Revised
+    STATUS_PARTIAL = "F08"; // Partial Check/Repair Order
+    STATUS_COMPLETE = "F09"; // Completed Check/Repair Order
+    STATUS_CANCEL = "F10"; // Cancelled Check/Repair Order
 
 
     comboUserWithPosition: ComboStringValue[];
@@ -254,7 +264,7 @@ export class PMS060Component implements OnInit {
             return;
 
         this.isLoading = true;
-        this.data.CurrentUser=this.flex.getCurrentUser().USER_CD;
+        this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
         this.svc.SaveOH(this.data).subscribe((res: string) => {
             this.isLoading = false;
             this.isDataChange = true;
@@ -270,12 +280,120 @@ export class PMS060Component implements OnInit {
         });
     }
 
+    onCancelPM()
+    {
+        this.dlg.ShowConfirmWithRemark('CFM9002').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidatePM() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.data.Header.CANCEL_REMARK = d.Remark;
+                this.svc.CancelPM(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
+    }
+
+    onApprovePM()
+    {
+        this.dlg.ShowConfirm('CFM9021').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidatePM() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.svc.SendToApprovePM(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
+    }
+
+    onRevisePM()
+    {
+        this.dlg.ShowConfirmWithRemark('CFM9023').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidatePM() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.data.Header.REVISE_REMARK = d.Remark;
+                this.svc.RevisePM(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
+    }
+
+    onSendToApprovePM() {
+        this.dlg.ShowConfirm('CFM9020').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidatePM() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.svc.SendToApprovePM(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
+    }
+
     SavePM() {
         if (this.ValidatePM() == false)
             return;
 
         this.isLoading = true;
-        this.data.CurrentUser=this.flex.getCurrentUser().USER_CD;
+        this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
         this.svc.SavePM(this.data).subscribe((res: string) => {
             this.isLoading = false;
             this.isDataChange = true;
@@ -299,17 +417,15 @@ export class PMS060Component implements OnInit {
         }
     }
 
-    ValidatePM()
-    {
-        if(this.ValidateOH()==false)
+    ValidatePM() {
+        if (this.ValidateOH() == false)
             return false;
 
-        if(!this.data.Header.TEST_DATE)
-        {
-            let item= this.data.PmParts.find(p =>
-                p.USED_QTY>0
+        if (!this.data.Header.TEST_DATE) {
+            let item = this.data.PmParts.find(p =>
+                p.USED_QTY > 0
             );
-            this.dlg.ShowWaring("Test Date is required.");
+            this.dlg.ShowWaring("VLM0773");//"Test Date is required.");
             return false;
         }
     }
@@ -426,7 +542,6 @@ export class PMS060Component implements OnInit {
             ITEMS: data
         }).subscribe(res => {
 
-            console.log(res);
             res.forEach(function (row) {
                 let item = data.find(i =>
                     i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
