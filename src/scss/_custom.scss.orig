@@ -54,6 +54,8 @@ tr.mat-row:hover {
 }
 .mat-list-item:hover {
     background-color: skyblue;
+<<<<<<< HEAD
+    color: #FFF;
 }
 
 .grid-checkbox-column{
@@ -94,4 +96,6 @@ tr.mat-row:hover {
 .checkbox-row
 {
     padding-bottom: 17.5px;;
+=======
+>>>>>>> b7af334c05d74237f33a189779e80d0cb425aef8
 }

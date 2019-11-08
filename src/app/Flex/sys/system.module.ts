@@ -11,6 +11,7 @@ import { FlexModule } from '../Flex/flex.module';
 import { SFM030Component } from './views/SFM030-UserList/SFM030.component';
 import { MAS090Component } from './views/MAS090-ClassList/MAS090.component';
 import { SFM0035Component } from './views/SFM0035-UserProfile/SFM0035.component';
+import { SFM006Component } from './views/SFM006/SFM006.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { SFM0035Component } from './views/SFM0035-UserProfile/SFM0035.component'
     SFM030Component,
     MAS090Component,
     SFM0035Component,
+    SFM006Component
   ],
 })
 export class SystemModule { }
