@@ -41,4 +41,7 @@ export class SystemService {
   sp_SFM0061_GetPermission(userGroup: string): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl + 'sp_SFM0061_GetPermission/' + userGroup);
   }
+  UpdatePermission(data) {
+    return this.http.post(this.baseUrl + 'UpdatePermission', data);
+  }
 }

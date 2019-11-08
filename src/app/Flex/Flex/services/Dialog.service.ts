@@ -84,10 +84,14 @@ export class DiaglogService {
 
   ShowException(ex: HttpErrorResponse) {
     console.log('Error', ex);
-    const e = this.GetException(ex);
-    this.toastr.error(e.Message, e.Source, {
-      timeOut: 10 * 1000
-    });
+    if (ex.status === 400) {
+      this.ShowWaring(ex.error);
+    } else {
+      const e = this.GetException(ex);
+      this.toastr.error(e.Message, e.Source, {
+        timeOut: 10 * 1000
+      });
+    }
   }
   GetException(ex: HttpErrorResponse): Exception {
     if (!ex) { return new Exception(); }
