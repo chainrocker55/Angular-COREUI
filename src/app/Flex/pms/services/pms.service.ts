@@ -20,6 +20,11 @@ export class PMSService {
         return this.http.post<PMS060_CheckListAndRepairOrder_Result[]>(this.baseUrl + 'sp_PMS060_GetMachineRepairOrderList', criteria);
     }
 
+    GetComponentParts(mcbom_cd: string, parts_loc_cd: string): Observable<any[]> {
+        return this.http.post<any[]>(this.baseUrl + 'sp_PMS062_GetJobPmPart', { "MCBOM_CD": mcbom_cd, "PARTS_LOC_CD": parts_loc_cd });
+    }
+
+
     GetCheckJob(rowData: PMS060_CheckListAndRepairOrder_Result): Observable<any> {
         return this.http.post<any>(this.baseUrl + 'sp_PMS061_GetCheckJob', rowData);
     }
@@ -28,7 +33,19 @@ export class PMSService {
         return this.http.post<any>(this.baseUrl + 'sp_PMS062_GetJobPmChecklist', rowData);
     }
 
-    SaveOH(data: any) : Observable<string> {
-        return this.http.post(this.baseUrl + 'PMS061_SaveData', data, {responseType: "text"});
+    SaveOH(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS061_SaveData', data, { responseType: "text" });
+    }
+
+    SavePM(data: any): Observable<string> {
+        console.log(data);
+        return this.http.post(this.baseUrl + 'PMS062_SaveData', data, { responseType: "text" });
+    }
+
+    GetItemFindDialogWithParam(data: any): Observable<any[]> {
+        return this.http.post<any[]>(this.baseUrl + 'GetItemFindDialogWithParam', data);
+    }
+    GetInQty(data: any): Observable<any[]> {
+        return this.http.post<any[]>(this.baseUrl + 'sp_PMS062_GetInQty', data);
     }
 }

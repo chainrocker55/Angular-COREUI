@@ -54,3 +54,43 @@ tr.mat-row:hover {
     background-color: skyblue;
     color: #FFF;
 }
+
+.grid-checkbox-column{
+    padding-top: 0.35rem !important;
+}
+
+.grid-switch-column{
+    vertical-align: top;
+    text-align: center;
+}
+
+.switch-column
+{
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.button-column
+{
+   height: 100%;
+}
+
+.text-column
+{
+    height: 100%;
+    padding-left: 2px;
+    padding-right: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+    word-break: break-all;
+}
+
+.checkbox-label
+{
+    vertical-align: super;
+}
+
+.checkbox-row
+{
+    padding-bottom: 17.5px;;
+}

@@ -67,4 +67,20 @@ export class ComboService {
   GetComboPoNumber(): Observable<ComboIntValue[]> {
     return this.http.get<ComboIntValue[]>(this.baseUrl + 'GetComboPoNumber');
   }
+
+  GetComboMachinePeriod(): Observable<ComboIntValue[]> {
+    return this.http.get<ComboIntValue[]>(this.baseUrl + 'GetComboMachinePeriod');
+  }
+
+  GetComboMachineComponent(machineNo): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachineComponent?MACHINE_NO='+machineNo);
+  }
+
+  GetComboItemUnit(itemCd): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboItemUnit?ITEM_CD='+itemCd);
+  }
+
+  GetComboUnit(showCode): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboUnit?SHOW_CODE='+showCode);
+  }
 }

@@ -1,8 +1,4 @@
-<style>
-    .highlight {
-        background: #54C1F0;
-    }
-</style>
+<!-- list -->
 <mat-card [hidden]="data" class="animated fadeIn card-margin">
     <mat-card-header>
         <mat-card-title [flexLabel]="'lblHeader'">Checklist and Repair Order</mat-card-title>
@@ -204,7 +200,8 @@
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="data" class="animated fadeIn card-margin">
+<!-- over haul -->
+<mat-card *ngIf="data && data.Header.SCHEDULE_TYPEID===1" class="animated fadeIn card-margin">
     <form (ngSubmit)="SaveOH()" #formOH="ngForm" autocomplete="off">
 
         <div class="row">
@@ -275,7 +272,7 @@
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Person In Charge</mat-label>
                                         <select matNativeControl id="PersonInCharge" name="PersonInCharge"
-                                            [(ngModel)]="SelectexPersonInCharge">
+                                            [(ngModel)]="SelectedPersonInCharge">
                                             <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
@@ -291,13 +288,23 @@
                                 </div>
                                 <div class="row">
                                     <table class="border" mat-table [dataSource]="dataSourcePersonInCharge">
+                                        <!-- checkbox colunm -->
+                                        <ng-container matColumnDef="SELECT">
+                                            <td mat-cell *matCellDef="let row" class="grid-checkbox-column">
+                                                <mat-checkbox (click)="$event.stopPropagation()"
+                                                    (change)="$event ? selectionPersonInCharge.toggle(row) : null"
+                                                    [checked]="selectionPersonInCharge.isSelected(row)">
+                                                </mat-checkbox>
+                                            </td>
+                                        </ng-container>
+
                                         <ng-container matColumnDef="DISPLAY">
                                             <td mat-cell *matCellDef="let row"> {{row.DISPLAY}} </td>
                                         </ng-container>
 
                                         <tr mat-row
                                             *matRowDef="let row; let i = index; columns: displayedColumnsPersonInCharge;"
-                                            [ngClass]="{'highlight': selectedRowIndex === i}" (click)="highlight(i)">
+                                            (click)="selectionPersonInCharge.toggle(row)">
                                         </tr>
                                     </table>
                                 </div>
@@ -401,11 +408,363 @@
         </mat-accordion>
 
 
+        <mat-card-actions>
+            <button mat-flat-button color="primary" type="submit" [disabled]="!formOH.valid || isLoading">Save</button>
+            <button mat-flat-button (click)="Back()">Back</button>
+        </mat-card-actions>
+
+    </form>
+</mat-card>
+
+<!-- pm -->
+<mat-card *ngIf="!tempPmData && data && data.Header.SCHEDULE_TYPEID===2" class="animated fadeIn card-margin">
+    <form (ngSubmit)="SavePM()" #formOH="ngForm" autocomplete="off">
+
+        <div class="row">
+            <div class="col-lg-10">
+                <mat-card-header>
+                    <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
+                </mat-card-header>
+            </div>
+            <div class="col-lg-2 text-right">
+                <mat-card-header>
+                    <mat-card-title>Status. : {{data.Header.STATUSID}}</mat-card-title>
+                </mat-card-header>
+            </div>
+        </div>
+
+        <mat-accordion [multi]="true">
+
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                    </mat-panel-title>
+                    <!-- <mat-panel-description>
+                            Type your name and age
+                        </mat-panel-description> -->
+                </mat-expansion-panel-header>
+
+                <mat-card-content>
+                    <div class="col-12">
+                        <div class="row">
+
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Machine No.</mat-label>
+                                <select matNativeControl id="MachineNo" name="MachineNo"
+                                    [(ngModel)]="data.Header.MACHINE_NO">
+                                    <!-- <option value=""></option> -->
+                                    <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
+                                    </option>
+                                </select>
+                            </mat-form-field>
+
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Machine Name</mat-label>
+                                <input matInput required id="MachineName" name="MachineName" type="text"
+                                    [(ngModel)]="data.Header.MACHINE_NAME">
+                            </mat-form-field>
+
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Request Date</mat-label>
+                                <input matInput required [matDatepicker]="ReqDate" id="ReqDate" name="ReqDate"
+                                    [(ngModel)]="data.Header.REQUEST_DATE">
+                                <mat-datepicker-toggle matSuffix [for]="ReqDate"></mat-datepicker-toggle>
+                                <mat-datepicker #ReqDate></mat-datepicker>
+                            </mat-form-field>
+
+                            <mat-form-field class="col-sm-6 col-lg-3">
+                                <mat-label>Test Date</mat-label>
+                                <input matInput [matDatepicker]="TestDate" id="TestDate" name="TestDate"
+                                    [(ngModel)]="data.Header.TEST_DATE">
+                                <mat-datepicker-toggle matSuffix [for]="TestDate"></mat-datepicker-toggle>
+                                <mat-datepicker #TestDate></mat-datepicker>
+                            </mat-form-field>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="row">
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Person In Charge</mat-label>
+                                        <select matNativeControl id="PersonInCharge" name="PersonInCharge"
+                                            [(ngModel)]="SelectexPersonInCharge">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </mat-form-field>
+                                    <div class="col-sm-6 col-lg-6">
+                                        <button type="button" mat-stroked-button
+                                            (click)="AddPersonIncharge()">Add</button>
+                                        <button type="button" mat-stroked-button
+                                            (click)="RemovePersonIncharge()">Remove</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table class="border" mat-table [dataSource]="dataSourcePersonInCharge">
+
+                                        <!-- checkbox colunm -->
+                                        <ng-container matColumnDef="SELECT">
+                                            <td mat-cell *matCellDef="let row" class="grid-checkbox-column">
+                                                <mat-checkbox (click)="$event.stopPropagation()"
+                                                    (change)="$event ? selectionPersonInCharge.toggle(row) : null"
+                                                    [checked]="selectionPersonInCharge.isSelected(row)">
+                                                </mat-checkbox>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="DISPLAY">
+                                            <td mat-cell *matCellDef="let row"> {{row.DISPLAY}} </td>
+                                        </ng-container>
+
+                                        <tr mat-row
+                                            *matRowDef="let row; let i = index; columns: displayedColumnsPersonInCharge;"
+                                            (click)="selectionPersonInCharge.toggle(row)">
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-lg-6">
+
+                                <div class="row">
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Period</mat-label>
+                                        <input matInput id="Period" name="Period" type="number"
+                                            [(ngModel)]="data.Header.PERIOD">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label></mat-label>
+                                        <select matNativeControl id="PeriodId" name="PeriodId"
+                                            [(ngModel)]="data.Header.PERIOD_ID">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboMachinePeriod" [value]="c.VALUE">
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </mat-form-field>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Approver #1</mat-label>
+                                        <select matNativeControl id="Approver1" name="Approver1"
+                                            [(ngModel)]="data.Header.Approver1">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Approver #2</mat-label>
+                                        <select matNativeControl id="Approver2" name="Approver2"
+                                            [(ngModel)]="data.Header.Approver2">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
 
 
+                        </div>
+                    </div>
+                </mat-card-content>
 
 
+            </mat-expansion-panel>
 
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                    </mat-panel-title>
+                    <!-- <mat-panel-description>
+                            Currently I am {{panelOpenState ? 'open' : 'closed'}}
+                        </mat-panel-description> -->
+                </mat-expansion-panel-header>
+
+                <mat-card-content>
+                    <div class="col-12">
+                        <div class="row">
+
+                            <table mat-table [dataSource]="dataSourcePmChecklist">
+
+                                <ng-container matColumnDef="BTN">
+                                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                    <mat-cell *matCellDef="let row" class="button-column">
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                            data-target="#exampleModal" (click)="EditPmCheckList(row)">Edit</button>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="PM_CHECKLIST_DESC">
+                                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                                    <td mat-cell *matCellDef="let row"> {{row.PM_CHECKLIST_DESC}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="NORMAL_CHECK_BOOL">
+                                    <th mat-header-cell *matHeaderCellDef>Normal</th>
+                                    <td mat-cell *matCellDef="let row" class="grid-switch-column">
+                                        <label class="switch-sm switch-pill switch-primary switch-column">
+                                            <input type="checkbox" class="switch-input"
+                                                (change)="row.NORMAL_CHECK_BOOL=$event.target.checked"
+                                                [checked]="row.NORMAL_CHECK_BOOL">
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="PROBLEM_DESC">
+                                    <th mat-header-cell *matHeaderCellDef class="text-center">Detail of Problems or
+                                        Disorder</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <div class="text-column" *ngIf="row.PROBLEM_DESC">{{row.PROBLEM_DESC}}</div>
+                                        <!-- <textarea #textbox (change)="row.PROBLEM_DESC = textbox.value">{{row.PROBLEM_DESC}}</textarea> -->
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="REPAIR_METHOD">
+                                    <th mat-header-cell *matHeaderCellDef class="text-center">Repair Method</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <div class="text-column" *ngIf="row.REPAIR_METHOD">{{row.REPAIR_METHOD}}</div>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsChecklist; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumnsChecklist;">
+                                </tr>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </mat-card-content>
+
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                    </mat-panel-title>
+                    <!-- <mat-panel-description>
+                                Currently I am {{panelOpenState ? 'open' : 'closed'}}
+                            </mat-panel-description> -->
+                </mat-expansion-panel-header>
+
+                <mat-card-content>
+                    <div class="col-12">
+                        <div class="row">
+
+                            <mat-form-field class="col-sm-6 col-lg-3" floatLabel="always">
+                                <mat-label>Machine Component</mat-label>
+                                <select matNativeControl id="MachineComponent" name="MachineComponent"
+                                    (change)="MachineComponentChange()" [(ngModel)]="selectedMachineComponent">
+                                    <!-- <option value=""></option> -->
+                                    <option *ngFor="let c of comboMachineComponent" [value]="c.VALUE">{{c.DISPLAY}}
+                                    </option>
+                                </select>
+                            </mat-form-field>
+
+                            <div class="col-sm-6 col-lg-9" align="end">
+                                <button type="button" mat-flat-button color="primary" (click)="addPart()" >Add Parts</button>
+                            </div>
+
+                            <table class="border" mat-table [dataSource]="dataSourcePmParts">
+
+                                <ng-container matColumnDef="ACTION">
+                                    <th mat-header-cell *matHeaderCellDef>Action</th>
+                                    <td mat-cell *matCellDef="let row" class="button-column">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            (click)="deletePart(row)">Delete</button>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="PARTS_LOC_CD">
+                                    <th mat-header-cell *matHeaderCellDef>Parts Location</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <select matNativeControl [(ngModel)]="row.PARTS_LOC_CD"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="PARTS_ITEM_CD">
+                                    <th mat-header-cell *matHeaderCellDef>Parts Code</th>
+                                    <td mat-cell *matCellDef="let row"> {{row.PARTS_ITEM_CD}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="BTN">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let row" class="button-column">
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            (click)="openDialog(row)">...</button>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="PARTS_ITEM_DESC">
+                                    <th mat-header-cell *matHeaderCellDef>Parts Name</th>
+                                    <td mat-cell *matCellDef="let row"> {{row.PARTS_ITEM_DESC}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="REQUEST_QTY">
+                                    <th mat-header-cell *matHeaderCellDef>Request Quantity</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <input matInput type="number" [(ngModel)]="row.REQUEST_QTY"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="IN_QTY">
+                                    <th mat-header-cell *matHeaderCellDef>In Quantity</th>
+                                    <td mat-cell *matCellDef="let row"> {{row.IN_QTY}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="USED_QTY">
+                                    <th mat-header-cell *matHeaderCellDef>Used Quantity</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <input matInput type="number" [(ngModel)]="row.USED_QTY"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="UNITCODE">
+                                    <th mat-header-cell *matHeaderCellDef>Unit</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <select matNativeControl [(ngModel)]="row.UNITCODE"
+                                            [ngModelOptions]="{standalone: true}">
+                                            <!-- <option value=""></option> -->
+                                            <option *ngFor="let c of comboItemUnit" [value]="c.VALUE" selected>
+                                                {{c.DISPLAY}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="REMARK">
+                                    <th mat-header-cell *matHeaderCellDef>Remark</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <input matInput type="text" [(ngModel)]="row.REMARK"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsPart; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumnsPart;">
+                                </tr>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </mat-card-content>
+
+            </mat-expansion-panel>
+
+        </mat-accordion>
 
 
         <mat-card-actions>
@@ -417,15 +776,51 @@
 </mat-card>
 
 
+<form *ngIf="tempPmData" (ngSubmit)="SaveChecklist()" #formChecklist="ngForm" autocomplete="off">
+    <mat-card class="animated fadeIn card-margin">
+        <mat-card-header>
+            <mat-card-title>Edit PM Checklist</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
 
-<!-- pm -->
-<!-- <mat-card class="animated fadeIn card-margin">
-    <mat-card-content>
-        <table mat-table matSort [dataSource]="dataCheckList" >
-            <ng-container matColumnDef="SEQ">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> abc </th>
-                <td mat-cell *matCellDef="let row"> {{row.SEQ}} </td>
-            </ng-container>
-        </table>
-    </mat-card-content>
-</mat-card> -->
+            <div class="col-12">
+                <div class="row">
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput disabled id="Description" name="Description"
+                            [(ngModel)]="tempPmData.PM_CHECKLIST_DESC"></textarea>
+                    </mat-form-field>
+
+                    <div class="col-12 checkbox-row">
+                        <label class="switch-sm switch-pill switch-primary switch-column">
+                            <input #chkNormal type="checkbox" class="switch-input"
+                                (change)="tempPmData.NORMAL_CHECK_BOOL = chkNormal.checked"
+                                [checked]="tempPmData.NORMAL_CHECK_BOOL===true">
+                            <span class="switch-slider"></span>
+                        </label>
+                        <mat-label class="checkbox-label">Normal</mat-label>
+                    </div>
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Detail of Problems or Disorder</mat-label>
+                        <textarea #PROBLEM_DESC matInput id="PROBLEM_DESC" name="PROBLEM_DESC" rows="3"
+                            [(ngModel)]="tempPmData.PROBLEM_DESC"></textarea>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Repair Method required</mat-label>
+                        <textarea #REPAIR_METHOD matInput id="REPAIR_METHOD" name="REPAIR_METHOD" rows="3"
+                            [(ngModel)]="tempPmData.REPAIR_METHOD"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-flat-button color="primary" type="submit"
+                [disabled]="!formChecklist.valid || isLoading">Save</button>
+            <button mat-flat-button type="button" (click)="CloseFormChecklist()">Back</button>
+        </mat-card-actions>
+    </mat-card>
+</form>

@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>Item Find Dialog</h2>
+<mat-dialog-content class="mat-typography">
+    <div *ngIf="!dataList">Loading data...</div>
+    <table *ngIf="dataList" class="border" mat-table [dataSource]="dataSource">
+        <!-- checkbox colunm -->
+        <ng-container matColumnDef="SELECT">
+            <th mat-header-cell *matHeaderCellDef class="text-center"></th>
+            <td mat-cell *matCellDef="let row" class="grid-checkbox-column">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ITEM_CD">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Item Code</th>
+            <td mat-cell *matCellDef="let row"> {{row.ITEM_CD}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ITEM_DESC">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Item Name</th>
+            <td mat-cell *matCellDef="let row"> {{row.ITEM_DESC}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ITEM_CLS_DESC">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Item Type</th>
+            <td mat-cell *matCellDef="let row"> {{row.ITEM_CLS_DESC}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ITEMCATEGORY_DESC">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Category</th>
+            <td mat-cell *matCellDef="let row"> {{row.ITEMCATEGORY_DESC}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ITEMCONDITION_DESC">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Incoterm</th>
+            <td mat-cell *matCellDef="let row"> {{row.ITEMCONDITION_DESC}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ITEMTYPE_DESC">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Control Stock</th>
+            <td mat-cell *matCellDef="let row"> {{row.ITEMTYPE_DESC}} </td>
+        </ng-container>
+        <ng-container matColumnDef="LOT_CONTROL_CLS_DESC">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Lot Control</th>
+            <td mat-cell *matCellDef="let row"> {{row.LOT_CONTROL_CLS_DESC}} </td>
+        </ng-container>
+        <ng-container matColumnDef="CONSUMTION_CLS_DESC">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Consumption</th>
+            <td mat-cell *matCellDef="let row"> {{row.CONSUMTION_CLS_DESC}} </td>
+        </ng-container>
+        <ng-container matColumnDef="INVENTORY_UNIT">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Inventory Unit</th>
+            <td mat-cell *matCellDef="let row"> {{row.INVENTORY_UNIT}} </td>
+        </ng-container>
+        <ng-container matColumnDef="PURCHASE_UNIT">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Purchase Unit</th>
+            <td mat-cell *matCellDef="let row"> {{row.PURCHASE_UNIT}} </td>
+        </ng-container>
+        <ng-container matColumnDef="SALES_UNIT">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Sales Unit</th>
+            <td mat-cell *matCellDef="let row"> {{row.SALES_UNIT}} </td>
+        </ng-container>
+        <ng-container matColumnDef="STOCK_UNIT">
+            <th mat-header-cell *matHeaderCellDef class="text-center">Stock Unit</th>
+            <td mat-cell *matCellDef="let row"> {{row.STOCK_UNIT}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;" (click)="selection.toggle(row)">
+        </tr>
+    </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button type="button" [mat-dialog-close]="selection.selected" [disabled]="!dataList" cdkFocusInitial>Select</button>
+</mat-dialog-actions>
