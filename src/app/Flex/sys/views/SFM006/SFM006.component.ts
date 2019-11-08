@@ -31,12 +31,21 @@ export class SFM006Component implements OnInit {
       this.obj.SelectedData = data;
       this.svc.sp_SFM0061_GetPermission(data.GROUP_CD).subscribe(res => {
           this.obj.Screen = res;
+          this.obj.SelectedScreen = null;
       }, error => {
           this.dlg.ShowException(error);
       });
   }
   OnEditScreen(data) {
       this.obj.SelectedScreen = data;
-      console.log(data);
+  }
+  OnChecked(data) {
+      data.CAN_EXECUTE = data.CAN_EXECUTE === true ? 1 : 0;
+      data.GROUP_CD = this.obj.SelectedData.GROUP_CD;
+      this.svc.UpdatePermission(data).subscribe(res => {
+          this.dlg.ShowProcessComplete();
+      }, error => {
+          this.dlg.ShowException(error);
+      });
   }
 }
