@@ -19,6 +19,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
+import {MatRadioModule} from '@angular/material/radio';
 
 import { FlexLabelDirective } from './components/flexLabel.directive';
 
@@ -39,6 +40,7 @@ import { FlexLabelDirective } from './components/flexLabel.directive';
     MatCardModule,
     MatIconModule,
     MatExpansionModule,
+    MatRadioModule,
   ],
   declarations: [
     FlexLabelDirective,
@@ -65,6 +67,7 @@ import { FlexLabelDirective } from './components/flexLabel.directive';
     MatNativeDateModule,
     MatSelectModule,
     MatExpansionModule,
+    MatRadioModule,
   ]
 })
 export class FlexModule { }
