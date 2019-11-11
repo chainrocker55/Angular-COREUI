@@ -31,14 +31,11 @@ export class LoginComponent implements OnInit {
         this.dlg.ShowInformationText('Login success');
         localStorage.setItem('flexToken', user.TOKEN);
         localStorage.setItem('flexUserCd', user.USER_CD);
-        this.svc.GetMessage().subscribe(res => {
-          localStorage.setItem('flexMessage', JSON.stringify(res));
-          this.svc.GetScreenDetail().subscribe(scn => {
-            localStorage.setItem('flexScreenDetail', JSON.stringify(scn));
-            this.router.navigate(['/']);
-            this.isLoading = false;
-          });
-        });
+
+        if (this.svc.GetDataToLocal()) {
+          this.router.navigate(['/']);
+          this.isLoading = false;
+        }
       }
   },
   (error: HttpErrorResponse) => {

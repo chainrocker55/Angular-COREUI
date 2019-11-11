@@ -9,7 +9,7 @@
                     <mat-divider></mat-divider>
                     <h3 mat-subheader>User Group Result: {{obj.Result?.length}} rows</h3>
                     <mat-divider></mat-divider>
-                    <mat-list-item *ngFor="let row of obj.Result" (click)="OnEdit(row)">
+                    <mat-list-item *ngFor="let row of obj.Result" (click)="OnEdit(row)" [class.list-item-active]="row.GROUP_CD === obj.SelectedData?.GROUP_CD">
                         <mat-icon mat-list-icon>folder</mat-icon>
                         <h4 mat-line>{{row.GROUP_NAME}}</h4>
                         <p mat-line>{{row.GROUP_CD}}</p>
@@ -21,7 +21,7 @@
                     <mat-divider></mat-divider>
                     <h3 mat-subheader>Screen Result: {{obj.Screen?.length}} rows</h3>
                     <mat-divider></mat-divider>
-                    <mat-list-item *ngFor="let row of obj.Screen" (click)="OnEditScreen(row)">
+                    <mat-list-item *ngFor="let row of obj.Screen" (click)="OnEditScreen(row)" [class.list-item-active]="row.SCREEN_CD === obj.SelectedScreen?.SCREEN_CD">
                         <mat-icon mat-list-icon>folder</mat-icon>
                         <h4 mat-line>{{row.SCREEN_NAME}}</h4>
                         <p mat-line>{{row.SCREEN_CD}}</p>
@@ -33,7 +33,7 @@
                     <mat-divider></mat-divider>
                     <h3 mat-subheader>Standard Result: {{obj.SelectedScreen.Standard.length}} rows</h3>
                     <mat-divider></mat-divider>
-                    <mat-list-item *ngFor="let row of obj.SelectedScreen.Standard">
+                    <mat-list-item *ngFor="let row of obj.SelectedScreen.Standard" (click)="OnClick(row)">
                         <mat-checkbox (change)="OnChecked(row)" [(ngModel)]="row.CAN_EXECUTE">{{row.METHOD}}</mat-checkbox>
                     </mat-list-item>
                     <mat-divider></mat-divider>
@@ -41,7 +41,7 @@
                         <h3 mat-subheader>Special Result: {{obj.SelectedScreen.Special.length}} rows</h3>
                         <mat-divider></mat-divider>
                         <mat-list-item *ngFor="let row of obj.SelectedScreen.Special">
-                            <mat-checkbox (change)="OnChecked(row)" [(ngModel)]="row.CAN_EXECUTE">{{row.METHOD_NAME || row.METHOD}}</mat-checkbox>
+                            <mat-checkbox [(ngModel)]="row.CAN_EXECUTE">{{row.METHOD_NAME || row.METHOD}}</mat-checkbox>
                         </mat-list-item>
                     </div>
                 </mat-list>
