@@ -29,6 +29,10 @@ export class PMSService {
         return this.http.post<any>(this.baseUrl + 'sp_PMS061_GetCheckJob', rowData);
     }
 
+    GetCheckJobCr(rowData: PMS060_CheckListAndRepairOrder_Result): Observable<any> {
+        return this.http.post<any>(this.baseUrl + 'sp_PMS063_LoadData', rowData);
+    }
+
     GetJobPmChecklist(rowData: PMS060_CheckListAndRepairOrder_Result): Observable<any> {
         return this.http.post<any>(this.baseUrl + 'sp_PMS062_GetJobPmChecklist', rowData);
     }
@@ -56,5 +60,9 @@ export class PMSService {
     }
     GetInQty(data: any): Observable<any[]> {
         return this.http.post<any[]>(this.baseUrl + 'sp_PMS062_GetInQty', data);
+    }
+
+    SaveCR(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS063_SaveData', data, { responseType: "text" });
     }
 }

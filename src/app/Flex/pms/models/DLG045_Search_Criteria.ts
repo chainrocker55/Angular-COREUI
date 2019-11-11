@@ -4,4 +4,5 @@ export class DLG045_Search_Criteria {
     FilterItemCls: string[];
     FilterItemCategory: number[];
     MultiSelect: boolean;
+    Data: any;
 }
