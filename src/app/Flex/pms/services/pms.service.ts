@@ -65,4 +65,24 @@ export class PMSService {
     SaveCR(data: any): Observable<string> {
         return this.http.post(this.baseUrl + 'PMS063_SaveData', data, { responseType: "text" });
     }
+
+    ConfirmCR(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS063_Confirm', data, { responseType: "text" });
+    }
+
+    SendToApproveCR(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS063_SendToApprove', data, { responseType: "text" });
+    }
+
+    ApproveCR(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS063_Approve', data, { responseType: "text" });
+    }
+
+    ReviseCR(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS063_Revise', data, { responseType: "text" });
+    }
+
+    CancelCR(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS063_Cancel', data, { responseType: "text" });
+    }
 }

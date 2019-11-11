@@ -21,6 +21,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DLG045Component } from '../DLG045-ItemFindDialogWithParam/DLG045.component';
 import { DLG045_Search_Criteria } from '../../models/DLG045_Search_Criteria';
 import { TBM_POSITION } from '../../../Flex/models/tableModel';
+import { NoopScrollStrategy } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-pms060',
@@ -269,6 +270,9 @@ export class PMS060Component implements OnInit {
             this.svc.GetCheckJobCr(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
+                if (!this.data.Header.STATUSID)
+                    this.data.Header.STATUSID = this.STATUS_NEW;
+
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
                 this.dataSourceCrTools = new MatTableDataSource(this.data.Tools);
                 this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
@@ -309,7 +313,7 @@ export class PMS060Component implements OnInit {
         criteria.MultiSelect = true;
         criteria.ShowDeleted = false;
         criteria.ShowStopItem = false;
-        this.svc.GetItemFindDialogWithParam(criteria).subscribe(res => {   
+        this.svc.GetItemFindDialogWithParam(criteria).subscribe(res => {
             this.dialogData = res;
         }, error => {
         });
@@ -498,16 +502,24 @@ export class PMS060Component implements OnInit {
     }
 
     ValidateCR() {
-        // if (this.ValidatePersonInCharge() == false)
-        //     return false;
+
+        if (this.data.Header.STATUSID == this.STATUS_DURING_ASSIGN) {
+            if (this.ValidatePersonInCharge() == false)
+                return false;
+        }
 
         if (!this.data.Header.COMPLETE_DATE) {
-            let item = this.data.PmParts.find(p =>
+            let item = this.data.Parts.find(p =>
                 p.USED_QTY > 0
             );
-            this.dlg.ShowWaring("VLM0773");//"Test Date is required.");
-            return false;
+
+            if (item) {
+                this.dlg.ShowWaring("VLM0773");//"Test Date is required.");
+                return false;
+            }
         }
+
+        return true;
     }
 
     ValidatePM() {
@@ -518,9 +530,14 @@ export class PMS060Component implements OnInit {
             let item = this.data.PmParts.find(p =>
                 p.USED_QTY > 0
             );
-            this.dlg.ShowWaring("VLM0773");//"Test Date is required.");
-            return false;
+
+            if (item) {
+                this.dlg.ShowWaring("VLM0773");//"Test Date is required.");
+                return false;
+            }
         }
+
+        return true;
     }
 
     EditPmCheckList(row) {
@@ -566,16 +583,19 @@ export class PMS060Component implements OnInit {
                 this.dlg.ShowInformation('INF0001');
             }
             this.isLoading = false;
-            this.data.Parts=[];
+            console.log(res);
+            let data = [];
+            let loc_cd = this.data.Header.MACHINE_LOC_CD;
             res.forEach(function (row) {
-                this.data.push({
-                    LOC_CD      : row.PARTS_LOC_CD,
-                    ITEM_CD     : row.PARTS_ITEM_CD,
-                    ITEM_DESC   : row.PARTS_ITEM_DESC,
-                    IN_QTY      : row.IN_QTY,
-                    UNITCODE    : row.UNITCODE
+                data.push({
+                    LOC_CD: loc_cd,
+                    ITEM_CD: row.PARTS_ITEM_CD,
+                    ITEM_DESC: row.PARTS_ITEM_DESC,
+                    IN_QTY: row.IN_QTY,
+                    UNITCODE: row.UNITCODE
                 });
             });
+            this.data.Parts = data;
             this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
         }, error => {
             this.dlg.ShowException(error);
@@ -636,7 +656,7 @@ export class PMS060Component implements OnInit {
         criteria.MultiSelect = true;
         criteria.ShowDeleted = false;
         criteria.ShowStopItem = false;
-        criteria.Data=this.dialogData;
+        criteria.Data = this.dialogData;
 
         const dialogRef = this.popup.open(DLG045Component, {
             data: criteria
@@ -680,7 +700,7 @@ export class PMS060Component implements OnInit {
         criteria.MultiSelect = true;
         criteria.ShowDeleted = false;
         criteria.ShowStopItem = false;
-        criteria.Data=this.dialogData;
+        criteria.Data = this.dialogData;
 
         const dialogRef = this.popup.open(DLG045Component, {
             data: criteria
@@ -702,7 +722,7 @@ export class PMS060Component implements OnInit {
                 if (pData.length > 1) {
                     for (let i = 1; i < pData.length; i++) {
                         this.data.PmParts.push({
-                            LOC_CD: pData[0].PARTS_LOC_CD,
+                            LOC_CD: pData[i].PARTS_LOC_CD,
                             ITEM_CD: pData[i].PARTS_ITEM_CD,
                             ITEM_DESC: pData[i].PARTS_ITEM_DESC,
                             IN_QTY: pData[i].IN_QTY,
@@ -761,6 +781,148 @@ export class PMS060Component implements OnInit {
             return "Y";
         else
             return "N";
+    }
+
+    getUserPosition(e) {
+        let item = this.comboUserWithPosition.find(p =>
+            p.VALUE === e.target.value
+        );
+
+        if (item)
+            return item.CODE;
+        else
+            return null;
+    }
+
+    onConfirmCR() {
+        this.dlg.ShowConfirm('CFM9024').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidateCR() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.svc.ConfirmCR(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+            }
+        });
+
+    }
+
+    onSendToApproveCR() {
+        this.dlg.ShowConfirm('CFM9020').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidateCR() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.svc.SendToApproveCR(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+            }
+        });
+
+    }
+
+    onApproveCR() {
+        this.dlg.ShowConfirm('CFM9021').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidateCR() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.svc.ApproveCR(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
+    }
+
+    onReviseCR() {
+        this.dlg.ShowConfirmWithRemark('CFM9023').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidateCR() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.data.Header.REVISE_REMARK = d.Remark;
+                this.svc.ReviseCR(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
+    }
+
+    onCancelCR() {
+        this.dlg.ShowConfirmWithRemark('CFM9002').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidateCR() == false)
+                    return;
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.data.Header.CANCEL_REMARK = d.Remark;
+                this.svc.CancelCR(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
     }
 
 }
