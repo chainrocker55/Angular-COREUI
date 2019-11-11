@@ -8,7 +8,7 @@ import { NavData } from '../../../_nav';
 import { RouterLinkWithHref, Router } from '@angular/router';
 import * as jwt_decode from 'jwt-decode';
 import { ObserveOnMessage } from 'rxjs/internal/operators/observeOn';
-import { UserInfo, Notify } from '../models/complexModel';
+import { UserInfo, Notify, ActivePermissionValue } from '../models/complexModel';
 import { TZ_MESSAGE_MS, TZ_SCREEN_DETAIL_LANG_MS, TZ_USER_MS } from '../models/tableModel';
 
 @Injectable({ providedIn: 'root' })
@@ -75,6 +75,20 @@ export class FlexService {
             UserCd: this.getCurrentUser().USER_CD,
             Password: null,
         });
+    }
+
+    GetDataToLocal (): boolean {
+
+        this.GetMessage().subscribe(res => {
+            localStorage.setItem('flexMessage', JSON.stringify(res));
+        });
+        this.GetScreenDetail().subscribe(scn => {
+            localStorage.setItem('flexScreenDetail', JSON.stringify(scn));
+        });
+        this.GetActivePermission().subscribe(res => {
+            localStorage.setItem('flexPermission', JSON.stringify(res));
+        });
+        return true;
     }
 
     GetMessage (): Observable<TZ_MESSAGE_MS[]> {
@@ -163,5 +177,20 @@ export class FlexService {
 
     ResponseNotify (noti: Notify): Observable<boolean> {
         return this.http.post<boolean>(this.baseUrl + 'ResponseNotify', noti);
+    }
+
+    private GetActivePermission (): Observable<ActivePermissionValue[]> {
+        const userGroup: string = this.getCurrentUser().GROUP_CD;
+        return this.http.get<ActivePermissionValue[]>(this.baseUrl + 'GetActivePermission/' + userGroup);
+    }
+
+    ActivePermission(ScreenCd: string = null): ActivePermissionValue {
+        if (!ScreenCd) {
+            ScreenCd = this.GetScreenObj().ScreenCd;
+        }
+        const P: ActivePermissionValue[] = JSON.parse(localStorage.getItem('flexPermission'));
+        return P.find(function(value) {
+            return value.SCREEN_CD === ScreenCd;
+        });
     }
 }

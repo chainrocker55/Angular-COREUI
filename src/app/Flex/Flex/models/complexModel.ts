@@ -31,3 +31,13 @@ export class ComboIntValue {
     DISPLAY: string;
     CODE: string;
 }
+
+export class ActivePermissionValue {
+    SCREEN_CD: string;
+    VIEW: boolean;
+    ADD: boolean;
+    EDIT: boolean;
+    DELETE: boolean;
+    PRINT: boolean;
+    CANCEL: boolean;
+}

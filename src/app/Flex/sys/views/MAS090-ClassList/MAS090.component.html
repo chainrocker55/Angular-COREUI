@@ -44,7 +44,6 @@
             <mat-card-title>Class List Entry</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div class="row">
                 <mat-form-field class="col-md-6">
                     <mat-label>Class Info Code</mat-label>
                     <input matInput id="CLS_INFO_CD" name="CLS_INFO_CD"
@@ -59,8 +58,6 @@
                     [(ngModel)]="selectedData.CLS_CD"
                     maxlength="30" disabled  required>
                 </mat-form-field>
-            </div>
-            <div class="row">
                 <mat-form-field class="col-md-6">
                     <mat-label>Class Description</mat-label>
                     <input matInput id="CLS_DESC" name="CLS_DESC"
@@ -77,12 +74,9 @@
                     [disabled] = "selectedData.EDIT_FLAG === 0"
                     required>
                 </mat-form-field>
-            </div>
-            <div class="row">
                 <mat-checkbox class="col-md-6" id="EDIT_FLAG" name="EDIT_FLAG"
                     [(ngModel)]="selectedData.EDIT_FLAG"
                     disabled>Editable</mat-checkbox>
-            </div>
         </mat-card-content>
         <mat-card-actions>
             <button mat-flat-button color="primary" type="submit"
