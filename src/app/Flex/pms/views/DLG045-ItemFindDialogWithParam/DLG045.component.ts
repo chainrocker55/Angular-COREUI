@@ -54,7 +54,15 @@ export class DLG045Component {
     }
 
     ngOnInit() {
-        this.loadData();
+        this.dataList=this.criteria.Data;
+        if(this.dataList)
+        {
+            this.dataSource = new MatTableDataSource(this.dataList);
+        }
+        else
+        {
+            this.loadData();
+        }
     }
 
     loadData() {
