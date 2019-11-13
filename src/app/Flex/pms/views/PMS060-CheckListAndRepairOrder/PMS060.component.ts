@@ -795,6 +795,13 @@ export class PMS060Component implements OnInit {
     }
 
     onConfirmCR() {
+        
+        if(this.data.Header.APPROVE_RQ=="N")
+        {
+            this.onCancelCR();
+            return;
+        }
+
         this.dlg.ShowConfirm('CFM9024').subscribe(d => {
             if (d && d.DialogResult === 'Yes') {
                 if (this.ValidateCR() == false)

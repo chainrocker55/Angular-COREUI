@@ -1013,7 +1013,8 @@
                                 <mat-checkbox
                                     [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN"
                                     labelPosition="before" name="SKIP_APPROVAL" id="SKIP_APPROVAL"
-                                    [(ngModel)]="data.Header.SKIP_APPROVAL" [ngModelOptions]="{standalone: true}">
+                                    [checked]="data.Header.SKIP_APPROVAL==='Y'"
+                                    (change)="data.Header.SKIP_APPROVAL=GetCheckedYn($event)">
                                     Skip Approval
                                 </mat-checkbox>
                             </div>
