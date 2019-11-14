@@ -232,7 +232,8 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine No.</mat-label>
                                 <select matNativeControl id="MachineNo" name="MachineNo"
-                                    [(ngModel)]="data.Header.MACHINE_NO">
+                                    [(ngModel)]="data.Header.MACHINE_NO"
+                                    (change)="data.Header.MACHINE_NAME=getSelectedMachineName($event)">
                                     <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
@@ -242,7 +243,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Name</mat-label>
                                 <input matInput required id="MachineName" name="MachineName" type="text"
-                                    [(ngModel)]="data.Header.MACHINE_NAME">
+                                    [(ngModel)]="data.Header.MACHINE_NAME" >
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
@@ -468,7 +469,8 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine No.</mat-label>
                                 <select matNativeControl id="MachineNo" name="MachineNo"
-                                    [(ngModel)]="data.Header.MACHINE_NO">
+                                    [(ngModel)]="data.Header.MACHINE_NO"
+                                    (change)="data.Header.MACHINE_NAME=getSelectedMachineName($event)">
                                     <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
@@ -799,28 +801,32 @@
     <mat-card-actions>
         <button
             *ngIf="data.Header.CHECK_REPH_ID && (data.Header.STATUSID===STATUS_NEW || data.Header.STATUSID===STATUS_DURING_ASSIGN)"
-            class="button" mat-flat-button color="primary" [disabled]="!formCR.valid || isLoading"
+            class="button" mat-flat-button color="primary" [disabled]="!formCR.valid || isLoading || notHavePermission"
             (click)="onConfirmCR()">
             Confirm
         </button>
         <button
             *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_RECEIVED || data.Header.STATUSID===STATUS_REVISE"
-            class="button" mat-flat-button color="primary" [disabled]="!formCR.valid || isLoading"
+            class="button" mat-flat-button color="primary" [disabled]="!formCR.valid || isLoading || notHavePermission"
             (click)="onSendToApproveCR()">
             Send to Approve
         </button>
         <button *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_DURING_APPROVE " class="button"
-            mat-flat-button color="primary" [disabled]="!formCR.valid || isLoading" (click)="onApproveCR()">
+            mat-flat-button color="primary" [disabled]="!formCR.valid || isLoading || notHavePermission"
+            (click)="onApproveCR()">
             Approve
         </button>
         <button *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_DURING_APPROVE" class="button"
-            mat-flat-button color="basic" [disabled]="!formCR.valid || isLoading" (click)="onReviseCR()">
+            mat-flat-button color="basic" [disabled]="!formCR.valid || isLoading || notHavePermission"
+            (click)="onReviseCR()">
             Revise
         </button>
-        
-        
-        <button *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL && data.Header.STATUSID!=STATUS_DURING_APPROVE && data.Header.STATUSID!=STATUS_COMPLETE" class="button" mat-flat-button
-            color="warn" [disabled]="!formCR.valid || isLoading" (click)="onCancelCR()">
+
+
+        <button
+            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL && data.Header.STATUSID!=STATUS_DURING_APPROVE && data.Header.STATUSID!=STATUS_COMPLETE"
+            class="button" mat-flat-button color="warn" [disabled]="!formCR.valid || isLoading || notHavePermission"
+            (click)="onCancelCR()">
             Cancel
         </button>
     </mat-card-actions>
@@ -857,8 +863,8 @@
                         <div class="row">
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Request Date</mat-label>
-                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW" matInput required
-                                    [matDatepicker]="REQUEST_DATE" id="REQUEST_DATE" name="REQUEST_DATE"
+                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
+                                    required [matDatepicker]="REQUEST_DATE" id="REQUEST_DATE" name="REQUEST_DATE"
                                     [(ngModel)]="data.Header.REQUEST_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="REQUEST_DATE"></mat-datepicker-toggle>
                                 <mat-datepicker #REQUEST_DATE></mat-datepicker>
@@ -866,7 +872,7 @@
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Start Require Date</mat-label>
-                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW" matInput
+                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
                                     [matDatepicker]="START_REQ_DATE" id="START_REQ_DATE" name="START_REQ_DATE"
                                     [(ngModel)]="data.Header.START_REQ_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="START_REQ_DATE"></mat-datepicker-toggle>
@@ -876,8 +882,8 @@
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Start Time</mat-label>
-                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW" matInput id="START_REQ_TIME"
-                                    name="START_REQ_TIME" type="time" placeholder="Time"
+                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
+                                    id="START_REQ_TIME" name="START_REQ_TIME" type="time" placeholder="Time"
                                     [(ngModel)]="data.Header.START_REQ_TIME">
                             </mat-form-field>
 
@@ -887,8 +893,10 @@
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine No.</mat-label>
-                                <select [disabled]="data.Header.STATUSID!=STATUS_NEW" matNativeControl id="MACHINE_NO"
-                                    name="MACHINE_NO" [(ngModel)]="data.Header.MACHINE_NO">
+                                <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission"
+                                    matNativeControl id="MACHINE_NO" name="MACHINE_NO"
+                                    [(ngModel)]="data.Header.MACHINE_NO"
+                                    (change)="data.Header.MACHINE_NAME=getSelectedMachineName($event)">
                                     <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
@@ -897,21 +905,24 @@
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Name</mat-label>
-                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW" matInput required id="MACHINE_NAME"
-                                    name="MACHINE_NAME" type="text" [(ngModel)]="data.Header.MACHINE_NAME">
+                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
+                                    required id="MACHINE_NAME" name="MACHINE_NAME" type="text"
+                                    [(ngModel)]="data.Header.MACHINE_NAME">
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Location</mat-label>
-                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW" matInput id="MACHINE_LOC"
-                                    name="MACHINE_LOC" type="text" [(ngModel)]="data.Header.MACHINE_LOC">
+                                <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
+                                    id="MACHINE_LOC" name="MACHINE_LOC" type="text"
+                                    [(ngModel)]="data.Header.MACHINE_LOC">
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Part Location</mat-label>
-                                <select [disabled]="data.Header.STATUSID!=STATUS_NEW" required matNativeControl
-                                    id="MACHINE_LOC_CD" name="MACHINE_LOC_CD" [(ngModel)]="data.Header.MACHINE_LOC_CD">
-                                    <option *ngFor="let c of comboLocation" [value]="c.VALUE">
+                                <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" required
+                                    matNativeControl id="MACHINE_LOC_CD" name="MACHINE_LOC_CD"
+                                    [(ngModel)]="data.Header.MACHINE_LOC_CD">
+                                    <option *ngFor="let c of comboUserApproveLocation" [value]="c.VALUE">
                                         {{c.DISPLAY}}
                                     </option>
                                 </select>
@@ -922,9 +933,9 @@
                         <div class="row">
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Requester</mat-label>
-                                <select [disabled]="data.Header.STATUSID!=STATUS_NEW" matNativeControl id="REQUESTER"
-                                    name="REQUESTER" [(ngModel)]="data.Header.REQUESTER"
-                                    (change)="data.Header.POSITIONID=getUserPosition($event)">
+                                <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission"
+                                    matNativeControl id="REQUESTER" name="REQUESTER" [(ngModel)]="data.Header.REQUESTER"
+                                    (change)="onRequesterChange()">
                                     <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                         {{c.DISPLAY}}
@@ -943,8 +954,9 @@
                             </mat-form-field>
                             <mat-form-field class="col-sm-6 col-lg-6">
                                 <mat-label>Trouble</mat-label>
-                                <textarea [disabled]="data.Header.STATUSID!=STATUS_NEW" matInput id="TROUBLE"
-                                    name="TROUBLE" type="text" [(ngModel)]="data.Header.TROUBLE"></textarea>
+                                <textarea [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
+                                    id="TROUBLE" name="TROUBLE" type="text"
+                                    [(ngModel)]="data.Header.TROUBLE"></textarea>
                             </mat-form-field>
                         </div>
 
@@ -968,7 +980,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Received Request Date</mat-label>
                                 <input
-                                    [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                    [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)  || notHavePermission"
                                     matInput [matDatepicker]="REC_REQUEST_DATE" id="REC_REQUEST_DATE"
                                     name="REC_REQUEST_DATE" [(ngModel)]="data.Header.REC_REQUEST_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="REC_REQUEST_DATE">
@@ -980,7 +992,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Received Time</mat-label>
                                 <input
-                                    [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                    [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     matInput id="REC_REQUEST_TIME" name="REC_REQUEST_TIME" type="time"
                                     [(ngModel)]="data.Header.REC_REQUEST_TIME">
                             </mat-form-field>
@@ -988,7 +1000,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Complete Date</mat-label>
                                 <input
-                                    [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                    [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     matInput [matDatepicker]="COMPLETE_DATE" id="COMPLETE_DATE" name="COMPLETE_DATE"
                                     [(ngModel)]="data.Header.COMPLETE_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="COMPLETE_DATE">
@@ -1000,7 +1012,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Complete Time</mat-label>
                                 <input
-                                    [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                    [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     matInput id="COMPLETE_TIME" name="COMPLETE_TIME" type="time"
                                     [(ngModel)]="data.Header.COMPLETE_TIME">
                             </mat-form-field>
@@ -1011,7 +1023,7 @@
                         <div class="row">
                             <div class="col-sm-6 col-lg-3">
                                 <mat-checkbox
-                                    [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN"
+                                    [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
                                     labelPosition="before" name="SKIP_APPROVAL" id="SKIP_APPROVAL"
                                     [checked]="data.Header.SKIP_APPROVAL==='Y'"
                                     (change)="data.Header.SKIP_APPROVAL=GetCheckedYn($event)">
@@ -1020,7 +1032,8 @@
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                 <mat-label>Approve</mat-label>
-                                <mat-radio-group [disabled]="data.Header.STATUSID!=STATUS_DURING_ASSIGN"
+                                <mat-radio-group
+                                    [disabled]="data.Header.STATUSID!=STATUS_DURING_ASSIGN || notHavePermission"
                                     [(ngModel)]="data.Header.APPROVE_RQ" [ngModelOptions]="{standalone: true}">
                                     <mat-radio-button value="Y">
                                         Allow
@@ -1034,7 +1047,7 @@
                             <div class="col-sm-12 col-lg-6">
                                 <mat-label>Location</mat-label>
                                 <mat-radio-group
-                                    [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                    [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     [(ngModel)]="data.Header.IN_OUT_PROD_LINE" [ngModelOptions]="{standalone: true}">
                                     <mat-radio-button value="Y">
                                         In Production Line
@@ -1057,7 +1070,7 @@
                                         <mat-label>Assigner</mat-label>
                                         <select disabled matNativeControl id="ASSIGNER" name="ASSIGNER"
                                             [(ngModel)]="data.Header.ASSIGNER"
-                                            (change)="data.Header.ASSIGN_POSITIONID=getUserPosition($event)">
+                                            (change)="data.Header.ASSIGN_POSITIONID=getUserPosition($event.target.value)">
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
@@ -1080,7 +1093,7 @@
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Person In Charge</mat-label>
                                         <select
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN"
+                                            [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN) || notHavePermission"
                                             matNativeControl id="PersonInCharge" name="PersonInCharge"
                                             [(ngModel)]="SelectedPersonInCharge">
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
@@ -1090,10 +1103,10 @@
                                     </mat-form-field>
                                     <div class="col-sm-6 col-lg-6">
                                         <button
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
                                             type="button" mat-stroked-button (click)="AddPersonIncharge()">Add</button>
                                         <button
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
                                             type="button" mat-stroked-button
                                             (click)="RemovePersonIncharge()">Remove</button>
                                     </div>
@@ -1126,28 +1139,28 @@
                                     <mat-form-field class="col-12">
                                         <mat-label>Cause of Problem</mat-label>
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"
                                             [(ngModel)]="data.Header.PROBLEM_DESC">
                                     </mat-form-field>
                                     <mat-form-field class="col-12">
                                         <mat-label>Repair Method</mat-label>
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"
                                             [(ngModel)]="data.Header.REPAIR_METHOD">
                                     </mat-form-field>
                                     <mat-form-field class="col-12">
                                         <mat-label>Preventive Method</mat-label>
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput id="PREVENTIVE_METHOD" name="PREVENTIVE_METHOD" type="text"
                                             [(ngModel)]="data.Header.PREVENTIVE_METHOD">
                                     </mat-form-field>
                                     <mat-form-field class="col-12">
                                         <mat-label>Cause of Delay</mat-label>
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
                                             [(ngModel)]="data.Header.CAUSE_DELAY">
                                     </mat-form-field>
@@ -1162,10 +1175,10 @@
                                     <mat-form-field class="col-sm-12 col-lg-4">
                                         <mat-label>Cleaner (Basic)</mat-label>
                                         <select
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matNativeControl id="CLEAN_PERSON" name="CLEAN_PERSON"
                                             [(ngModel)]="data.Header.CLEAN_PERSON"
-                                            (change)="data.Header.CLEAN_POSITIONID=getUserPosition($event)">
+                                            (change)="data.Header.CLEAN_POSITIONID=getUserPosition($event.target.value)">
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
@@ -1193,10 +1206,10 @@
                                     <mat-form-field class="col-sm-12 col-lg-4">
                                         <mat-label>Cleaner the Machine</mat-label>
                                         <select
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matNativeControl id="CHECK_MC_PERSON" name="CHECK_MC_PERSON"
                                             [(ngModel)]="data.Header.CHECK_MC_PERSON"
-                                            (change)="data.Header.CHECK_MC_POSITIONID=getUserPosition($event)">
+                                            (change)="data.Header.CHECK_MC_POSITIONID=getUserPosition($event.target.value)">
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
@@ -1260,7 +1273,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Qty</th>
                                     <td mat-cell *matCellDef="let row">
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.IN_QTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
@@ -1269,7 +1282,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
                                         <mat-checkbox
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             [(ngModel)]="row.IN_CLEAN_BOOL" [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
@@ -1278,7 +1291,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
                                         <mat-checkbox
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             [(ngModel)]="row.IN_APPEARANCE_BOOL" [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
@@ -1287,7 +1300,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Use Qty</th>
                                     <td mat-cell *matCellDef="let row">
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.OUT_USEDQTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
@@ -1296,7 +1309,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Return Qty</th>
                                     <td mat-cell *matCellDef="let row">
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.OUT_RETURNQTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
@@ -1304,7 +1317,7 @@
                                 <ng-container matColumnDef="OUT_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [(ngModel)]="row.OUT_CLEAN_BOOL"
+                                        <mat-checkbox [(ngModel)]="row.OUT_CLEAN_BOOL" [disabled]="notHavePermission"
                                             [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
@@ -1313,7 +1326,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
                                         <mat-checkbox [(ngModel)]="row.OUT_APPEARANCE_BOOL"
-                                            [ngModelOptions]="{standalone: true}">
+                                            [disabled]="notHavePermission" [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
@@ -1377,7 +1390,7 @@
                             </div>
                             <div class="col-sm-6 col-lg-9" align="end">
                                 <button
-                                    [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                    [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                     type="button" mat-flat-button color="primary" (click)="addPartCr()">
                                     Add Parts
                                 </button>
@@ -1393,7 +1406,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Action</th>
                                     <td mat-cell *matCellDef="let row" class="button-column">
                                         <button
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             type="button" class="btn btn-danger btn-sm"
                                             (click)="deletePartCr(row)">Delete</button>
                                     </td>
@@ -1402,7 +1415,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Parts Location</th>
                                     <td mat-cell *matCellDef="let row">
                                         <select
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matNativeControl [(ngModel)]="row.LOC_CD"
                                             [ngModelOptions]="{standalone: true}">
                                             <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}
@@ -1418,7 +1431,7 @@
                                     <th mat-header-cell *matHeaderCellDef></th>
                                     <td mat-cell *matCellDef="let row" class="button-column">
                                         <button
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             type="button" class="btn btn-primary btn-sm"
                                             (click)="openDialogCr(row)">...</button>
                                     </td>
@@ -1431,7 +1444,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Unit</th>
                                     <td mat-cell *matCellDef="let row">
                                         <select
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matNativeControl [(ngModel)]="row.UNITCODE"
                                             [ngModelOptions]="{standalone: true}">
                                             <option *ngFor="let c of comboItemUnit" [value]="c.VALUE">{{c.DISPLAY}}
@@ -1443,7 +1456,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Request Quantity</th>
                                     <td mat-cell *matCellDef="let row">
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.REQUEST_QTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
@@ -1452,7 +1465,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Qty</th>
                                     <td mat-cell *matCellDef="let row">
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.IN_QTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
@@ -1461,7 +1474,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
                                         <mat-checkbox
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             [(ngModel)]="row.IN_CLEAN_BOOL" [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
@@ -1470,7 +1483,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
                                         <mat-checkbox
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             [(ngModel)]="row.IN_APPEARANCE_BOOL" [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
@@ -1479,7 +1492,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Used Qty</th>
                                     <td mat-cell *matCellDef="let row">
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.OUT_USEDQTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
@@ -1488,7 +1501,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Return Qty</th>
                                     <td mat-cell *matCellDef="let row">
                                         <input
-                                            [disabled]="data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.OUT_RETURNQTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
@@ -1496,7 +1509,7 @@
                                 <ng-container matColumnDef="OUT_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [(ngModel)]="row.OUT_CLEAN_BOOL"
+                                        <mat-checkbox [(ngModel)]="row.OUT_CLEAN_BOOL" [disabled]="notHavePermission"
                                             [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
@@ -1505,7 +1518,7 @@
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
                                         <mat-checkbox [(ngModel)]="row.OUT_APPEARANCE_BOOL"
-                                            [ngModelOptions]="{standalone: true}">
+                                            [disabled]="notHavePermission" [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
@@ -1567,7 +1580,8 @@
                             <ng-container matColumnDef="PASS">
                                 <th mat-header-cell *matHeaderCellDef></th>
                                 <td mat-cell *matCellDef="let row">
-                                    <mat-radio-group [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    <mat-radio-group
+                                        [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                         [(ngModel)]="row.PASS_CHECK" [ngModelOptions]="{standalone: true}">
                                         <mat-radio-button value="Y">
                                             Pass
@@ -1598,7 +1612,8 @@
                     <div class="col-12">
                         <div class="row">
                             <div class="col-sm-12 col-lg-4">
-                                <mat-radio-group [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                <mat-radio-group
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     id="CHECK_MC_ID" name="CHECK_MC_ID" [(ngModel)]="data.Check.CHECK_MC_ID"
                                     [ngModelOptions]="{standalone: true}">
                                     <mat-radio-button class="example-radio-button"
@@ -1610,7 +1625,7 @@
 
                             <mat-form-field class="col-sm-6 col-lg-4">
                                 <mat-label>Period From</mat-label>
-                                <input [disabled]="data.Check.CHECK_MC_ID!=3" matInput
+                                <input [disabled]="notHavePermission || data.Check.CHECK_MC_ID!=3" matInput
                                     [matDatepicker]="CHECK_MC_DATE_FR" id="CHECK_MC_DATE_FR" name="CHECK_MC_DATE_FR"
                                     [(ngModel)]="data.Check.CHECK_MC_DATE_FR">
                                 <mat-datepicker-toggle matSuffix [for]="CHECK_MC_DATE_FR"></mat-datepicker-toggle>
@@ -1619,7 +1634,7 @@
 
                             <mat-form-field class="col-sm-6 col-lg-4">
                                 <mat-label>To</mat-label>
-                                <input [disabled]="data.Check.CHECK_MC_ID!=3" matInput
+                                <input [disabled]="notHavePermission || data.Check.CHECK_MC_ID!=3" matInput
                                     [matDatepicker]="CHECK_MC_DATE_TO" id="CHECK_MC_DATE_TO" name="CHECK_MC_DATE_TO"
                                     [(ngModel)]="data.Check.CHECK_MC_DATE_TO">
                                 <mat-datepicker-toggle matSuffix [for]="CHECK_MC_DATE_TO"></mat-datepicker-toggle>
@@ -1634,10 +1649,10 @@
 
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Received by</mat-label>
-                                <select [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE" matNativeControl
-                                    id="CHECK_MC_PERSON_C" name="CHECK_MC_PERSON_C"
+                                <select [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    matNativeControl id="CHECK_MC_PERSON_C" name="CHECK_MC_PERSON_C"
                                     [(ngModel)]="data.Check.CHECK_MC_PERSON"
-                                    (change)="data.Header.CHECK_MC_POSITIONID=getUserPosition($event)">
+                                    (change)="data.Header.CHECK_MC_POSITIONID=getUserPosition($event.target.value)">
                                     <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                         {{c.DISPLAY}}
                                     </option>
@@ -1654,9 +1669,9 @@
                             </mat-form-field>
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Date</mat-label>
-                                <input [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE" matInput
-                                    [matDatepicker]="CHECK_MC_DATE_C" id="CHECK_MC_DATE_C" name="CHECK_MC_DATE_C"
-                                    [(ngModel)]="data.Check.CHECK_MC_DATE">
+                                <input [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    matInput [matDatepicker]="CHECK_MC_DATE_C" id="CHECK_MC_DATE_C"
+                                    name="CHECK_MC_DATE_C" [(ngModel)]="data.Check.CHECK_MC_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="CHECK_MC_DATE_C"></mat-datepicker-toggle>
                                 <mat-datepicker #CHECK_MC_DATE_C></mat-datepicker>
                             </mat-form-field>
@@ -1680,15 +1695,18 @@
 
                             <div class="col-sm-12 col-lg-4">
                                 <span class="col-2">
-                                    <mat-checkbox [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    <mat-checkbox
+                                        [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                         [checked]="data.Check.CLEAN_FLAG==='Y'"
                                         (change)="data.Check.CLEAN_FLAG=GetCheckedYn($event)"></mat-checkbox>
                                 </span>
                                 <mat-form-field class="col-10">
                                     <mat-label>Person in Charge</mat-label>
-                                    <select [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE" matNativeControl
-                                        id="CLEAN_PERSON_C" name="CLEAN_PERSON_C" [(ngModel)]="data.Check.CLEAN_PERSON"
-                                        (change)="data.Header.CLEAN_POSITIONID=getUserPosition($event)">
+                                    <select
+                                        [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                        matNativeControl id="CLEAN_PERSON_C" name="CLEAN_PERSON_C"
+                                        [(ngModel)]="data.Check.CLEAN_PERSON"
+                                        (change)="data.Header.CLEAN_POSITIONID=getUserPosition($event.target.value)">
                                         <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                             {{c.DISPLAY}}
                                         </option>
@@ -1706,8 +1724,8 @@
                             </mat-form-field>
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Date</mat-label>
-                                <input [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE" matInput
-                                    [matDatepicker]="CLEAN_DATE_C" id="CLEAN_DATE_C" name="CLEAN_DATE_C"
+                                <input [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    matInput [matDatepicker]="CLEAN_DATE_C" id="CLEAN_DATE_C" name="CLEAN_DATE_C"
                                     [(ngModel)]="data.Check.CLEAN_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="CLEAN_DATE_C"></mat-datepicker-toggle>
                                 <mat-datepicker #CLEAN_DATE_C></mat-datepicker>
@@ -1729,7 +1747,8 @@
                     <div class="col-12">
                         <div class="row">
                             <div class="col-sm-12 col-lg-4">
-                                <mat-radio-group [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                <mat-radio-group
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     [(ngModel)]="data.Check.QC_CHECK" [ngModelOptions]="{standalone: true}">
                                     <mat-radio-button value="N">Not Found Defect</mat-radio-button>
                                     <mat-radio-button value="Y">Found Defect</mat-radio-button>
@@ -1737,8 +1756,8 @@
                             </div>
 
                             <mat-form-field class="col-sm-12 col-lg-8">
-                                <input [disabled]="data.Header.STATUSID!=STATUS_DURING_APPROVE" matInput
-                                    id="QC_CHECK_DESC" name="QC_CHECK_DESC" type="text"
+                                <input [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    matInput id="QC_CHECK_DESC" name="QC_CHECK_DESC" type="text"
                                     [(ngModel)]="data.Check.QC_CHECK_DESC">
                             </mat-form-field>
 
@@ -1750,9 +1769,9 @@
 
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Received by</mat-label>
-                                <select matNativeControl id="QC_PERSON" name="QC_PERSON"
+                                <select matNativeControl id="QC_PERSON" name="QC_PERSON" [disabled]="notHavePermission"
                                     [(ngModel)]="data.Check.QC_PERSON"
-                                    (change)="data.Header.QC_POSITIONID=getUserPosition($event)">
+                                    (change)="data.Header.QC_POSITIONID=getUserPosition($event.target.value)">
                                     <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                         {{c.DISPLAY}}
                                     </option>
@@ -1770,7 +1789,7 @@
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Date</mat-label>
                                 <input matInput [matDatepicker]="QC_DATE_C" id="QC_DATE_C" name="QC_DATE_C"
-                                    [(ngModel)]="data.Check.QC_DATE">
+                                    [disabled]="notHavePermission" [(ngModel)]="data.Check.QC_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="QC_DATE_C"></mat-datepicker-toggle>
                                 <mat-datepicker #QC_DATE_C></mat-datepicker>
                             </mat-form-field>
@@ -1827,7 +1846,7 @@
 
 
         <mat-card-actions>
-            <button mat-flat-button color="primary" type="submit" [disabled]="!formCR.valid || isLoading">Save</button>
+            <button mat-flat-button color="primary" type="submit" [disabled]="notHavePermission || !formCR.valid || isLoading">Save</button>
             <button mat-flat-button (click)="Back()">Back</button>
         </mat-card-actions>
 

@@ -22,6 +22,7 @@ import { DLG045Component } from '../DLG045-ItemFindDialogWithParam/DLG045.compon
 import { DLG045_Search_Criteria } from '../../models/DLG045_Search_Criteria';
 import { TBM_POSITION } from '../../../Flex/models/tableModel';
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
+import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.component';
 
 @Component({
     selector: 'app-pms060',
@@ -29,6 +30,7 @@ import { NoopScrollStrategy } from '@angular/cdk/overlay';
 })
 export class PMS060Component implements OnInit {
 
+    notHavePermission: boolean = false;
     displayedColumns: string[] = ['CLS_INFO_CD', 'CLS_CD', 'CLS_DESC', 'SEQ', 'EDIT_FLAG'];
     displayedColumnsPersonInCharge: string[] = ['SELECT', 'DISPLAY'];
     displayedColumnsChecklist: string[] = ['BTN', 'PM_CHECKLIST_DESC', 'NORMAL_CHECK_BOOL', 'PROBLEM_DESC', 'REPAIR_METHOD'];
@@ -77,6 +79,7 @@ export class PMS060Component implements OnInit {
 
     comboUserWithPosition: ComboStringValue[];
     comboLocation: ComboStringValue[];
+    comboUserApproveLocation: ComboStringValue[];
     comboSupplier: ComboIntValue[];
     comboSchduleType: ComboIntValue[];
     comboStatus: ComboStringValue[];
@@ -113,6 +116,10 @@ export class PMS060Component implements OnInit {
 
     ngOnInit() {
         this.InitialCombo();
+        // console.log(this.flex.ActivePermission("PMS060"));
+        // console.log(this.flex.ActivePermission("PMS061"));
+        // console.log(this.flex.ActivePermission("PMS062"));
+        // console.log(this.flex.ActivePermission("PMS063"));
     }
 
     InitialCriteria() {
@@ -128,6 +135,13 @@ export class PMS060Component implements OnInit {
 
         this.combo.GetComboLocation().subscribe(res => {
             this.comboLocation = res;
+        }, error => {
+            this.dlg.ShowException(error);
+        });
+
+        this.combo.GetComboUserApproveLocation(this.flex.getCurrentUser().USER_CD).subscribe(res => {
+            res.splice(0, 0, new ComboStringValue());
+            this.comboUserApproveLocation = res;
         }, error => {
             this.dlg.ShowException(error);
         });
@@ -152,6 +166,7 @@ export class PMS060Component implements OnInit {
         });
 
         this.combo.GetComboMachine().subscribe(res => {
+            res.splice(0, 0, new ComboStringValue());
             this.comboMachine = res;
         }, error => {
             this.dlg.ShowException(error);
@@ -251,7 +266,18 @@ export class PMS060Component implements OnInit {
         });
     }
 
-    OnAddNew() { }
+    OnAddNew() {
+
+        const dialogRef = this.popup.open(DLGPMS060Component);
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                let data = new PMS060_CheckListAndRepairOrder_Result();
+                data.SCHEDULE_TYPEID = +result;
+                this.OnEdit(data);
+            }
+        });
+
+    }
 
     OnClear() {
         this.criteria = new PMS060_Search_Criteria();
@@ -273,6 +299,8 @@ export class PMS060Component implements OnInit {
                 if (!this.data.Header.STATUSID)
                     this.data.Header.STATUSID = this.STATUS_NEW;
 
+                this.InitialPermission_CR(this.data.Header.STATUSID);
+
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
                 this.dataSourceCrTools = new MatTableDataSource(this.data.Tools);
                 this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
@@ -286,6 +314,7 @@ export class PMS060Component implements OnInit {
             });
         }
         else {
+            this.notHavePermission = false;
             this.svc.GetCheckJob(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
@@ -306,6 +335,40 @@ export class PMS060Component implements OnInit {
         }
 
     }
+    InitialPermission_CR(STATUSID: string) {
+        if(STATUSID === this.STATUS_NEW)
+        {
+            this.notHavePermission = false;
+            this.data.Header.REQUESTER=this.flex.getCurrentUser().USER_CD;
+           
+        }
+        else if (STATUSID === this.STATUS_DURING_ASSIGN) {
+            let p = this.flex.SpecialPermission("PMS063");
+            if (p["ASSIGN"] != true)
+            {
+                this.notHavePermission = true;
+            }
+            else
+            {
+                this.notHavePermission = false;
+                this.data.Header.ASSIGNER=this.flex.getCurrentUser().USER_CD;
+                this.data.Header.ASSIGN_POSITIONID=this.getUserPosition(this.data.Header.ASSIGNER);
+            }
+        }
+        else if (STATUSID === this.STATUS_RECEIVED) {
+            let exists = this.data.PersonInCharge.find(u => u.PERSONINCHARGE === this.flex.getCurrentUser().USER_CD);
+            if (exists)
+                this.notHavePermission = false;
+            else
+                this.notHavePermission = true;
+        }
+        else {
+            this.notHavePermission = false;
+        }
+
+        this.onRequesterChange();
+    }
+
     InitialDialogData() {
         let criteria = new DLG045_Search_Criteria();
         criteria.FilterItemCategory = null;
@@ -783,8 +846,19 @@ export class PMS060Component implements OnInit {
             return "N";
     }
 
-    getUserPosition(e) {
+    getUserPosition(userCd) {
         let item = this.comboUserWithPosition.find(p =>
+            p.VALUE === userCd
+        );
+
+        if (item)
+            return item.CODE;
+        else
+            return null;
+    }
+
+    getSelectedMachineName(e) {
+        let item = this.comboMachine.find(p =>
             p.VALUE === e.target.value
         );
 
@@ -795,9 +869,8 @@ export class PMS060Component implements OnInit {
     }
 
     onConfirmCR() {
-        
-        if(this.data.Header.APPROVE_RQ=="N")
-        {
+
+        if (this.data.Header.STATUSID == this.STATUS_DURING_ASSIGN && this.data.Header.APPROVE_RQ == "N") {
             this.onCancelCR();
             return;
         }
@@ -929,6 +1002,21 @@ export class PMS060Component implements OnInit {
                 });
 
             }
+        });
+    }
+
+    onRequesterChange()
+    {
+        this.data.Header.POSITIONID = this.getUserPosition(this.data.Header.REQUESTER);
+        this.loadUserApproveLocation();
+    }
+
+    loadUserApproveLocation() {
+        this.combo.GetComboUserApproveLocation(this.data.Header.REQUESTER).subscribe(res => {
+            res.splice(0, 0, new ComboStringValue());
+            this.comboUserApproveLocation = res;
+        }, error => {
+            this.dlg.ShowException(error);
         });
     }
 

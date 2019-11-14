@@ -41,3 +41,11 @@ export class ActivePermissionValue {
     PRINT: boolean;
     CANCEL: boolean;
 }
+
+
+export class SpecialPermissionResult {
+    SCREEN_CD: string;
+    CAN_EXECUTE: boolean;
+    METHOD: string;
+    METHOD_NAME: string;
+}

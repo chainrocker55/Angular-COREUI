@@ -8,7 +8,7 @@ import { NavData } from '../../../_nav';
 import { RouterLinkWithHref, Router } from '@angular/router';
 import * as jwt_decode from 'jwt-decode';
 import { ObserveOnMessage } from 'rxjs/internal/operators/observeOn';
-import { UserInfo, Notify, ActivePermissionValue } from '../models/complexModel';
+import { UserInfo, Notify, ActivePermissionValue, SpecialPermissionResult } from '../models/complexModel';
 import { TZ_MESSAGE_MS, TZ_SCREEN_DETAIL_LANG_MS, TZ_USER_MS } from '../models/tableModel';
 
 @Injectable({ providedIn: 'root' })
@@ -87,6 +87,9 @@ export class FlexService {
         });
         this.GetActivePermission().subscribe(res => {
             localStorage.setItem('flexPermission', JSON.stringify(res));
+        });
+        this.GetSpecialPermission(this.getCurrentUser().GROUP_CD, null).subscribe(res => {
+            localStorage.setItem('flexSpecialPermission', JSON.stringify(res));
         });
         return true;
     }
@@ -192,5 +195,27 @@ export class FlexService {
         return P.find(function(value) {
             return value.SCREEN_CD === ScreenCd;
         });
+    }
+
+    SpecialPermission(ScreenCd: string = null): any {
+        if (!ScreenCd) {
+            ScreenCd = this.GetScreenObj().ScreenCd;
+        }
+
+        let ScreenPermission : any ={};
+        const allPermission: SpecialPermissionResult[] = JSON.parse(localStorage.getItem('flexSpecialPermission'));
+        
+        allPermission.forEach(function (item) {
+            if (item.SCREEN_CD === ScreenCd) {
+                ScreenPermission[item.METHOD]=item.CAN_EXECUTE;
+            }
+            
+        });
+
+        return ScreenPermission;
+    }
+
+    GetSpecialPermission(groupCd: string,screenCd: string):  Observable<SpecialPermissionResult[]>  {
+        return this.http.get<SpecialPermissionResult[]>(this.baseUrl + 'GetSpecialPermission/' + groupCd);
     }
 }
