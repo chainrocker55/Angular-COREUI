@@ -9,7 +9,7 @@ import { RouterLinkWithHref, Router } from '@angular/router';
 import * as jwt_decode from 'jwt-decode';
 import { ObserveOnMessage } from 'rxjs/internal/operators/observeOn';
 import { UserInfo, Notify, ActivePermissionValue, SpecialPermissionResult } from '../models/complexModel';
-import { TZ_MESSAGE_MS, TZ_SCREEN_DETAIL_LANG_MS, TZ_USER_MS } from '../models/tableModel';
+import { TZ_MESSAGE_MS, TZ_SCREEN_DETAIL_LANG_MS, TZ_USER_MS, TBM_STATUS } from '../models/tableModel';
 
 @Injectable({ providedIn: 'root' })
 export class FlexService {
@@ -91,7 +91,22 @@ export class FlexService {
         this.GetSpecialPermission(this.getCurrentUser().GROUP_CD, null).subscribe(res => {
             localStorage.setItem('flexSpecialPermission', JSON.stringify(res));
         });
+
+        this.GetStatusList().subscribe(res => {
+            localStorage.setItem('flexStatus', JSON.stringify(res));
+        });
         return true;
+    }
+    
+    GetStatusList(): Observable<TBM_STATUS[]> {
+        return this.http.get<TBM_STATUS[]>(this.baseUrl + 'GetStatusList');
+    }
+
+    GetStatus (STATUSID: string): TBM_STATUS {
+        const data: TBM_STATUS[] = JSON.parse(localStorage.getItem('flexStatus'));
+        return data.find(function(item) {
+            return item.STATUSID === STATUSID;
+        });
     }
 
     GetMessage (): Observable<TZ_MESSAGE_MS[]> {

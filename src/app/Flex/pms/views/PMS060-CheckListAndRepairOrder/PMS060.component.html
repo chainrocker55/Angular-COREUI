@@ -162,7 +162,7 @@
 
                     <mat-form-field class="col-sm-6 col-lg-3">
                         <mat-label>Status</mat-label>
-                        <select matNativeControl id="Status" name="Status" [(ngModel)]="criteria.STATUS">
+                        <select matNativeControl id="Status" name="Status" [(ngModel)]="criteria.STATUSID">
                             <!-- <option value=""></option> -->
                             <option *ngFor="let c of comboStatus" [value]="c.VALUE">{{c.DISPLAY}}</option>
                         </select>
@@ -193,6 +193,7 @@
                 <h4 mat-line>Checklist/Repair No. : {{row.CHECK_REP_NO}}</h4>
                 <p mat-line>{{row.MACHINE_NO}} : {{row.MACHINE_NAME}}</p>
                 <small mat-line>Schedule Type : {{row.SCHEDULE_NAME}}</small>
+                <small mat-line>Req./Comp. Date : {{row.DISPLAY_DATE}}</small>
                 <small mat-line>{{row.STATUS_DISPLAY}}</small>
                 <!-- <p mat-line> {{row.updated | date}} </p> -->
             </mat-list-item>
@@ -205,14 +206,14 @@
     <form (ngSubmit)="SaveOH()" #formOH="ngForm" autocomplete="off">
 
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-6">
                 <mat-card-header>
                     <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
                 </mat-card-header>
             </div>
-            <div class="col-lg-2 text-right">
-                <mat-card-header>
-                    <mat-card-title>Status. : {{data.Header.STATUSID}}</mat-card-title>
+            <div class="col-lg-6">
+                <mat-card-header class="text-right">
+                    <mat-card-title>Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</mat-card-title>
                 </mat-card-header>
             </div>
         </div>
@@ -232,6 +233,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine No.</mat-label>
                                 <select matNativeControl id="MachineNo" name="MachineNo"
+                                    [disabled]="data.Header.MACHINE_SCHEDULEID!=null"
                                     [(ngModel)]="data.Header.MACHINE_NO"
                                     (change)="data.Header.MACHINE_NAME=getSelectedMachineName($event)">
                                     <!-- <option value=""></option> -->
@@ -243,7 +245,8 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Name</mat-label>
                                 <input matInput required id="MachineName" name="MachineName" type="text"
-                                    [(ngModel)]="data.Header.MACHINE_NAME" >
+                                [disabled]="data.Header.MACHINE_SCHEDULEID!=null"
+                                    [(ngModel)]="data.Header.MACHINE_NAME">
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
@@ -439,14 +442,14 @@
     <form (ngSubmit)="SavePM()" #formOH="ngForm" autocomplete="off">
 
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-6">
                 <mat-card-header>
                     <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
                 </mat-card-header>
             </div>
-            <div class="col-lg-2 text-right">
-                <mat-card-header>
-                    <mat-card-title>Status. : {{data.Header.STATUSID}}</mat-card-title>
+            <div class="col-lg-6">
+                <mat-card-header class="text-right">
+                    <mat-card-title>Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</mat-card-title>
                 </mat-card-header>
             </div>
         </div>
@@ -835,14 +838,16 @@
 
         <!-- header -->
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-6">
                 <mat-card-header>
                     <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
                 </mat-card-header>
             </div>
-            <div class="col-lg-2 text-right">
+            <div class="col-lg-6">
                 <mat-card-header>
-                    <mat-card-title>Status. : {{data.Header.STATUSID}}</mat-card-title>
+                    <mat-card-title class=flex-status>
+                        Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}
+                    </mat-card-title>
                 </mat-card-header>
             </div>
         </div>
@@ -1378,7 +1383,7 @@
                         <div class="row">
                             <div class="col-sm-6 col-lg-3">
                                 <mat-form-field
-                                    *ngIf="data.Header.STATUSID==STATUS_RECEIVED || data.Header.STATUSID==STATUS_REVISE"
+                                    *ngIf="!notHavePermission && (data.Header.STATUSID==STATUS_RECEIVED || data.Header.STATUSID==STATUS_REVISE)"
                                     class="col-12" floatLabel="always">
                                     <mat-label>Machine Component</mat-label>
                                     <select matNativeControl id="MachineComponent" name="MachineComponent"
@@ -1464,10 +1469,7 @@
                                 <ng-container matColumnDef="IN_QTY">
                                     <th mat-header-cell *matHeaderCellDef>Qty</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <input
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput type="number" [(ngModel)]="row.IN_QTY"
-                                            [ngModelOptions]="{standalone: true}">
+                                        {{row.IN_QTY}}
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="IN_CLEAN_BOOL">
@@ -1494,7 +1496,8 @@
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.OUT_USEDQTY"
-                                            [ngModelOptions]="{standalone: true}">
+                                            [ngModelOptions]="{standalone: true}"
+                                            (change)="row.OUT_RETURNQTY=calCulateReturnQty(row)">
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="OUT_RETURNQTY">
@@ -1506,10 +1509,18 @@
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
-                                <ng-container matColumnDef="OUT_CLEAN_BOOL">
+                                <!-- <ng-container matColumnDef="OUT_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
                                         <mat-checkbox [(ngModel)]="row.OUT_CLEAN_BOOL" [disabled]="notHavePermission"
+                                            [ngModelOptions]="{standalone: true}">
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container> -->
+                                <ng-container matColumnDef="OUT_CLEAN_BOOL">
+                                    <th mat-header-cell *matHeaderCellDef>Clean</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <mat-checkbox [(ngModel)]="row.OUT_CLEAN_BOOL" disabled
                                             [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
@@ -1517,8 +1528,8 @@
                                 <ng-container matColumnDef="OUT_APPEARANCE_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [(ngModel)]="row.OUT_APPEARANCE_BOOL"
-                                            [disabled]="notHavePermission" [ngModelOptions]="{standalone: true}">
+                                        <mat-checkbox [(ngModel)]="row.OUT_APPEARANCE_BOOL" disabled
+                                            [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
@@ -1846,7 +1857,8 @@
 
 
         <mat-card-actions>
-            <button mat-flat-button color="primary" type="submit" [disabled]="notHavePermission || !formCR.valid || isLoading">Save</button>
+            <button mat-flat-button color="primary" type="submit"
+                [disabled]="notHavePermission || !formCR.valid || isLoading">Save</button>
             <button mat-flat-button (click)="Back()">Back</button>
         </mat-card-actions>
 

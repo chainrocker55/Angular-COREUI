@@ -20,7 +20,7 @@ import { ThemeRoutingModule } from '../../../../views/theme/theme-routing.module
 import { SelectionModel } from '@angular/cdk/collections';
 import { DLG045Component } from '../DLG045-ItemFindDialogWithParam/DLG045.component';
 import { DLG045_Search_Criteria } from '../../models/DLG045_Search_Criteria';
-import { TBM_POSITION } from '../../../Flex/models/tableModel';
+import { TBM_POSITION, TBM_STATUS } from '../../../Flex/models/tableModel';
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
 import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.component';
 
@@ -30,6 +30,7 @@ import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.co
 })
 export class PMS060Component implements OnInit {
 
+    status : TBM_STATUS;
     notHavePermission: boolean = false;
     displayedColumns: string[] = ['CLS_INFO_CD', 'CLS_CD', 'CLS_DESC', 'SEQ', 'EDIT_FLAG'];
     displayedColumnsPersonInCharge: string[] = ['SELECT', 'DISPLAY'];
@@ -273,6 +274,7 @@ export class PMS060Component implements OnInit {
             if (result) {
                 let data = new PMS060_CheckListAndRepairOrder_Result();
                 data.SCHEDULE_TYPEID = +result;
+                data.STATUSID=this.STATUS_NEW;
                 this.OnEdit(data);
             }
         });
@@ -299,15 +301,23 @@ export class PMS060Component implements OnInit {
                 if (!this.data.Header.STATUSID)
                     this.data.Header.STATUSID = this.STATUS_NEW;
 
+                this.status=this.flex.GetStatus(this.data.Header.STATUSID);
+         
                 this.InitialPermission_CR(this.data.Header.STATUSID);
 
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
                 this.dataSourceCrTools = new MatTableDataSource(this.data.Tools);
                 this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
+                // console.log(this.data);
+                // console.log(this.data.Parts);
+                // console.log(this.dataSourceCrParts);
                 this.dataSourceCrPH = new MatTableDataSource(this.data.PersonalChecklist);
 
                 this.OnMachineChange(this.data.Header.MACHINE_NO);
                 this.selectedMachineComponent = this.data.DefaultComponent;
+                if (!this.data.Parts || this.data.Parts.length == 0)
+                    this.MachineComponentChangeCR();
+
             }, error => {
                 this.dlg.ShowException(error);
                 this.isLoading = false;
@@ -318,6 +328,7 @@ export class PMS060Component implements OnInit {
             this.svc.GetCheckJob(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
+                this.status=this.flex.GetStatus(this.data.Header.STATUSID);
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
 
                 if (this.data.Header.SCHEDULE_TYPEID === 2) {
@@ -334,25 +345,49 @@ export class PMS060Component implements OnInit {
             });
         }
 
+        
+
     }
     InitialPermission_CR(STATUSID: string) {
-        if(STATUSID === this.STATUS_NEW)
-        {
-            this.notHavePermission = false;
-            this.data.Header.REQUESTER=this.flex.getCurrentUser().USER_CD;
-           
+        if (STATUSID === this.STATUS_NEW) {
+
+            if (!this.data.Header.CHECK_REPH_ID) {
+                this.notHavePermission = false;
+                this.data.Header.REQUESTER = this.flex.getCurrentUser().USER_CD;
+            }
+            else {
+                // can edit only if user is request user or in approve route of selected location
+                if (this.flex.getCurrentUser().USER_CD == this.data.Header.REQUESTER) {
+                    this.notHavePermission = false;
+                }
+                else {
+                    this.combo.GetComboUserApproveLocation(this.flex.getCurrentUser().USER_CD).subscribe(res => {
+                        let location = res.findIndex(r => r.VALUE === this.data.Header.MACHINE_LOC_CD);
+                        if (location === -1) {
+                            this.notHavePermission = true;
+                        }
+                        else {
+                            this.notHavePermission = false;
+                        }
+
+                    }, error => {
+                        this.dlg.ShowException(error);
+                    });
+                }
+
+
+            }
+
         }
         else if (STATUSID === this.STATUS_DURING_ASSIGN) {
             let p = this.flex.SpecialPermission("PMS063");
-            if (p["ASSIGN"] != true)
-            {
+            if (p["ASSIGN"] != true) {
                 this.notHavePermission = true;
             }
-            else
-            {
+            else {
                 this.notHavePermission = false;
-                this.data.Header.ASSIGNER=this.flex.getCurrentUser().USER_CD;
-                this.data.Header.ASSIGN_POSITIONID=this.getUserPosition(this.data.Header.ASSIGNER);
+                this.data.Header.ASSIGNER = this.flex.getCurrentUser().USER_CD;
+                this.data.Header.ASSIGN_POSITIONID = this.getUserPosition(this.data.Header.ASSIGNER);
             }
         }
         else if (STATUSID === this.STATUS_RECEIVED) {
@@ -646,7 +681,6 @@ export class PMS060Component implements OnInit {
                 this.dlg.ShowInformation('INF0001');
             }
             this.isLoading = false;
-            console.log(res);
             let data = [];
             let loc_cd = this.data.Header.MACHINE_LOC_CD;
             res.forEach(function (row) {
@@ -1005,8 +1039,7 @@ export class PMS060Component implements OnInit {
         });
     }
 
-    onRequesterChange()
-    {
+    onRequesterChange() {
         this.data.Header.POSITIONID = this.getUserPosition(this.data.Header.REQUESTER);
         this.loadUserApproveLocation();
     }
@@ -1018,6 +1051,14 @@ export class PMS060Component implements OnInit {
         }, error => {
             this.dlg.ShowException(error);
         });
+    }
+
+    calCulateReturnQty(row) {
+        let result = row.IN_QTY - row.OUT_USEDQTY;
+        if (result < 0)
+            return 0;
+        else
+            return result;
     }
 
 }

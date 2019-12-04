@@ -134,3 +134,11 @@ export class TBM_POSITION {
     DELETEDATETIME: Date;
     DELETEMACHINE: string;
 }
+
+export class TBM_STATUS {
+    STATUSID: string;
+    STATUS_SEQ: number;
+    STATUSNAME: string;
+    STATUS_ICON: string;
+}
+
