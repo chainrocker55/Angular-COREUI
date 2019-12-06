@@ -37,7 +37,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.noti = [];
     if (this.svc.isAuthenticated()) {
       this.mUser = this.svc.getCurrentUser();
       this.svc.GetMenu().subscribe(data => {
@@ -69,13 +68,22 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
 
   GetNoti() {
     this.svc.GetNotiy().subscribe(res => {
+      if (!this.noti) {
+        this.noti = [];
+      }
       const n = this.noti;
       const r = res.filter(function(value) {
         return value.HasRead === false;
       });
       const n_new = [];
       r.forEach(function(value) {
-        if (!n.includes(value)) {
+        let found = false;
+        n.forEach(function(valuen) {
+          if (value.Seq === valuen.Seq) {
+            found = true;
+          }
+        })
+        if (!found) {
           n_new.push(value);
         }
       });
