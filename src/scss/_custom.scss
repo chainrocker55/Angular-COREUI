@@ -14,10 +14,50 @@ ul li.user-title {
     margin-left: -20px;
     margin-right: -20px;
 }
-.mat-card-title {
-    color: $primary;
-    font-weight: bold;
+.mat-expansion-panel-header {
+    background-color: rgba(32, 168, 216, 1) !important;
+    color:white;
+    font-weight: normal;
+    height: 34px;
+    margin-top: -5px;
+    margin-bottom: -5px;
 }
+
+.mat-expansion-panel-header:hover {
+    background: #1E96C1 !important;
+    font-weight: 500;
+}
+
+.mat-expansion-indicator {
+    position: absolute;
+    left: 32px;
+    color: white;
+}
+
+.mat-expansion-indicator::after {
+    color: white;
+}
+
+.mat-card-content {
+    padding-top: 15px;
+}
+
+.mat-expansion-panel-header-title {
+    color:white;
+    padding-left: 10px;
+}
+
+.mat-card-header {
+    background: $primary !important;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+
+.mat-card-title {
+    padding-top: 10px;
+    color: white;
+}
+
 th.mat-sort-header-sorted {
     color: black;
 }
@@ -27,7 +67,7 @@ tr.mat-row {
     height: 30px !important;
 }
 tr.mat-row:hover {
-    background-color: $primary;
+    background-color: lightgrey;
     color: #FFF;
 }
 .mat-row:nth-child(even){
@@ -53,7 +93,7 @@ tr.mat-row:hover {
     font-weight: bold;
 }
 .mat-list-item:hover {
-    background-color: skyblue;
+    background-color: lightgrey;
 }
 .list-item-active {
     background-color: powderblue;
@@ -101,6 +141,10 @@ tr.mat-row:hover {
 
 .flex-status
 {
-    width: 100%;
+    color: rgba(32, 168, 216, 1) !important;
     text-align: right;
+}
+
+.flex-title {
+    color: rgba(32, 168, 216, 1) !important;
 }
