@@ -30,7 +30,7 @@ import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.co
 })
 export class PMS060Component implements OnInit {
 
-    status : TBM_STATUS;
+    status: TBM_STATUS;
     notHavePermission: boolean = false;
     displayedColumns: string[] = ['CLS_INFO_CD', 'CLS_CD', 'CLS_DESC', 'SEQ', 'EDIT_FLAG'];
     displayedColumnsPersonInCharge: string[] = ['SELECT', 'DISPLAY'];
@@ -61,6 +61,8 @@ export class PMS060Component implements OnInit {
     dialogData: any;
 
     selectedMachineComponent: string;
+    MachineDisplay: string;
+    SpecialPermissionOH: any;
     // person in charge selection
     SelectedPersonInCharge: any;
     multiSelectPersonInCharge: boolean = false;
@@ -76,6 +78,35 @@ export class PMS060Component implements OnInit {
     STATUS_PARTIAL = "F08"; // Partial Check/Repair Order
     STATUS_COMPLETE = "F09"; // Completed Check/Repair Order
     STATUS_CANCEL = "F10"; // Cancelled Check/Repair Order
+
+    tsbCompleteMtnVisible() {
+        if (this.SpecialPermissionOH.COMPLETE_MTN != true)
+            return false;
+
+        if (this.data.Header.COMPLETE_MTN == "Y")
+            return false;
+
+        if (this.data.Header.STATUSID != this.STATUS_NEW && this.data.Header.STATUSID != this.STATUS_PARTIAL)
+            return false;
+
+        return true;
+    }
+
+    tsbCompletRqVisible() {
+        if (this.SpecialPermissionOH.COMPLETE_RQ != true)
+            return false;
+
+        if (this.data.Header.COMPLETE_RQ == "Y")
+            return false;
+
+        if (this.data.Header.AUTO_CREATEFLAG != "Y")
+            return false;
+
+        if (this.data.Header.STATUSID != this.STATUS_NEW && this.data.Header.STATUSID != this.STATUS_PARTIAL)
+            return false;
+
+        return true;
+    }
 
 
     comboUserWithPosition: ComboStringValue[];
@@ -117,6 +148,8 @@ export class PMS060Component implements OnInit {
 
     ngOnInit() {
         this.InitialCombo();
+        this.SpecialPermissionOH = this.flex.SpecialPermission("PMS061");
+        // console.log(this.flex.SpecialPermission("PMS061"));
         // console.log(this.flex.ActivePermission("PMS060"));
         // console.log(this.flex.ActivePermission("PMS061"));
         // console.log(this.flex.ActivePermission("PMS062"));
@@ -200,6 +233,9 @@ export class PMS060Component implements OnInit {
     }
 
     RemovePersonIncharge() {
+        // if(this.notHavePermission==true)
+        //     return;
+
         if (!this.data.PersonInCharge)
             return;
 
@@ -226,6 +262,9 @@ export class PMS060Component implements OnInit {
     }
 
     AddPersonIncharge() {
+        // if(this.notHavePermission==true)
+        //     return;
+
         if (!this.data.PersonInCharge)
             this.data.PersonInCharge = new Array();
 
@@ -256,6 +295,7 @@ export class PMS060Component implements OnInit {
         this.isLoading = true;
         this.dataList = null;
         this.svc.GetCheckListAndRepairOrderList(this.criteria).subscribe(res => {
+            // console.log(res);
             if (!res || res.length === 0) {
                 this.dlg.ShowInformation('INF0001');
             }
@@ -274,7 +314,7 @@ export class PMS060Component implements OnInit {
             if (result) {
                 let data = new PMS060_CheckListAndRepairOrder_Result();
                 data.SCHEDULE_TYPEID = +result;
-                data.STATUSID=this.STATUS_NEW;
+                data.STATUSID = this.STATUS_NEW;
                 this.OnEdit(data);
             }
         });
@@ -287,6 +327,7 @@ export class PMS060Component implements OnInit {
     }
 
     OnEdit(data: PMS060_CheckListAndRepairOrder_Result) {
+        this.MachineDisplay = null;
         this.isLoading = true;
         this.dataFromList = data;
 
@@ -298,11 +339,13 @@ export class PMS060Component implements OnInit {
             this.svc.GetCheckJobCr(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
+                this.SetMachineText();
+
                 if (!this.data.Header.STATUSID)
                     this.data.Header.STATUSID = this.STATUS_NEW;
 
-                this.status=this.flex.GetStatus(this.data.Header.STATUSID);
-         
+                this.status = this.flex.GetStatus(this.data.Header.STATUSID);
+
                 this.InitialPermission_CR(this.data.Header.STATUSID);
 
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
@@ -318,6 +361,9 @@ export class PMS060Component implements OnInit {
                 if (!this.data.Parts || this.data.Parts.length == 0)
                     this.MachineComponentChangeCR();
 
+                this.DisableControlByStatus();
+                this.SetDefaultDate();
+
             }, error => {
                 this.dlg.ShowException(error);
                 this.isLoading = false;
@@ -328,7 +374,8 @@ export class PMS060Component implements OnInit {
             this.svc.GetCheckJob(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
-                this.status=this.flex.GetStatus(this.data.Header.STATUSID);
+                this.SetMachineText();
+                this.status = this.flex.GetStatus(this.data.Header.STATUSID);
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
 
                 if (this.data.Header.SCHEDULE_TYPEID === 2) {
@@ -339,14 +386,53 @@ export class PMS060Component implements OnInit {
                     this.selectedMachineComponent = this.data.DefaultComponent;
 
                 }
+                this.DisableControlByStatus();
+                this.SetDefaultDate();
             }, error => {
                 this.dlg.ShowException(error);
                 this.isLoading = false;
             });
         }
 
-        
 
+
+    }
+    SetDefaultDate() {
+        if (this.data.Header.REQUEST_DATE)
+            return;
+
+        if (this.data.Header.PLAN_DATE) {
+            this.data.Header.REQUEST_DATE = this.data.Header.PLAN_DATE;
+            return;
+        }
+
+        let groupId = "PMS061";
+        if (this.data.Header.SCHEDULE_TYPEID == 2)
+            groupId = "PMS062";
+        else if (this.data.Header.SCHEDULE_TYPEID == 3)
+            groupId = "PMS063";
+
+        this.flex.GetSysConfig(groupId, "DEFAULT_DATE").subscribe(res => {
+            let date = new Date();
+            if (res) {
+                var config = res;
+
+                var dayToAdd = +config.CHAR_DATA;
+                date.setDate(date.getDate() + dayToAdd);
+                console.log(date);
+            }
+            this.data.Header.REQUEST_DATE = date;
+
+        }, error => {
+            this.dlg.ShowException(error);
+        });
+
+
+
+    }
+    DisableControlByStatus() {
+        if (this.data.Header.STATUSID == this.STATUS_CANCEL_PLAN || this.data.Header.STATUSID == this.STATUS_CANCEL || this.data.Header.STATUSID == this.STATUS_COMPLETE)
+            this.notHavePermission = true;
     }
     InitialPermission_CR(STATUSID: string) {
         if (STATUSID === this.STATUS_NEW) {
@@ -902,6 +988,17 @@ export class PMS060Component implements OnInit {
             return null;
     }
 
+    getSelectedMachineNameByValue(val) {
+        let item = this.comboMachine.find(p =>
+            p.VALUE === val
+        );
+
+        if (item)
+            return item.CODE;
+        else
+            return null;
+    }
+
     onConfirmCR() {
 
         if (this.data.Header.STATUSID == this.STATUS_DURING_ASSIGN && this.data.Header.APPROVE_RQ == "N") {
@@ -1059,6 +1156,177 @@ export class PMS060Component implements OnInit {
             return 0;
         else
             return result;
+    }
+
+    onMachineNoChange() {
+
+        // this.data.Header.MACHINE_NAME = this.getSelectedMachineNameByValue(this.data.Header.MACHINE_NO);
+
+        this.svc.LoadMachineData(this.data.Header.MACHINE_NO)
+            .subscribe(res => {
+                if (res) {
+                    let machine = res;
+                    this.data.Header.MACHINE_NAME = machine.MACHINE_NAME;
+                    this.data.Header.MACHINE_LOC = machine.MACHINE_LOC;
+                    this.SetMachineText();
+                }
+
+            }, error => {
+                this.dlg.ShowException(error);
+            });
+
+        this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
+        // SetAttachmentText();
+
+    }
+
+    LoadPersonIncharge(CHECK_REPH_ID, MACHINE_NO) {
+        this.svc.GetCheckJobPersonInCharge(CHECK_REPH_ID, MACHINE_NO)
+            .subscribe(res => {
+                this.data.PersonInCharge = res;
+                this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
+
+                this.SelectedPersonInCharge = null;
+
+            }, error => {
+                this.dlg.ShowException(error);
+            });
+    }
+
+    onMachineNameChange() {
+        this.data.Header.MACHINE_NO = null;
+        this.data.Header.MACHINE_LOC = null;
+
+        this.data.PersonInCharge = null;
+        this.dataSourcePersonInCharge = null;
+        this.SelectedPersonInCharge = null;
+
+        // SetAttachmentText();
+        this.SetMachineText();
+    }
+
+    SetMachineText() {
+        if (this.data == null) return;
+
+        let result = this.data.Header.MACHINE_NAME;
+
+
+        if (this.data.Header.MACHINE_NO != null) {
+            let machineCode = this.getSelectedMachineNameByValue(this.data.Header.MACHINE_NO);
+            if (machineCode != null) {
+                result = this.data.Header.MACHINE_NO + " - " + this.data.Header.MACHINE_NAME;
+            }
+
+        }
+
+        this.MachineDisplay = result;
+    }
+
+    onCompleteMTN() {
+        if (!this.data.Header.COMPLETE_DATE) {
+            this.dlg.ShowWaringText(this.flex.GetMessageDesc("VLM9058", "Complete Date"));
+            return;
+        }
+
+        this.dlg.ShowConfirm("CFM9024").subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+
+                this.isLoading = true;
+                this.data.Header.COMPLETE_MTN = "Y";
+
+                if (this.data.Header.AUTO_CREATEFLAG == "Y" && this.data.Header.COMPLETE_RQ != "Y") {
+                    this.data.Header.STATUSID = this.STATUS_PARTIAL;
+                }
+                else {
+                    this.data.COMPLETE_RQ = "Y";
+                    this.data.Header.STATUSID = this.STATUS_COMPLETE;
+                }
+
+                // this.data.Header.DELETEFLAG = "Y";
+
+                console.log(this.data);
+                this.svc.SaveOH(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+            }
+        });
+
+
+    }
+
+    onCompleteRQ() {
+        // if (!this.data.Header.COMPLETE_DATE) {
+        //     this.dlg.ShowWaringText(this.flex.GetMessageDesc("VLM9058", "Complete Date"));
+        //     return;
+        // }
+
+        this.dlg.ShowConfirm("CFM9024").subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+
+                this.isLoading = true;
+                this.data.Header.COMPLETE_RQ = "Y";
+
+                if (this.data.Header.COMPLETE_MTN != "Y") {
+                    this.data.Header.STATUSID = this.STATUS_PARTIAL;
+                }
+                else {
+                    this.data.Header.STATUSID = this.STATUS_COMPLETE;
+                }
+
+                // this.data.Header.DELETEFLAG = "Y";
+
+                console.log(this.data);
+                this.svc.SaveOH(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+            }
+        });
+
+
+    }
+
+    onCancelOH() {
+        this.dlg.ShowConfirmWithRemark('CFM9002').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.data.Header.CANCEL_REMARK = d.Remark;
+                this.svc.CancelOH(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
+
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
+        });
     }
 
 }
