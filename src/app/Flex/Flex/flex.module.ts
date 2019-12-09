@@ -19,9 +19,10 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {MatRadioModule} from '@angular/material/radio';
-
+import { MatRadioModule } from '@angular/material/radio';
 import { FlexLabelDirective } from './components/flexLabel.directive';
+import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   imports: [
@@ -41,6 +42,8 @@ import { FlexLabelDirective } from './components/flexLabel.directive';
     MatIconModule,
     MatExpansionModule,
     MatRadioModule,
+    DropDownsModule,
+    NgSelectModule
   ],
   declarations: [
     FlexLabelDirective,
@@ -68,6 +71,8 @@ import { FlexLabelDirective } from './components/flexLabel.directive';
     MatSelectModule,
     MatExpansionModule,
     MatRadioModule,
+    DropDownsModule,
+    NgSelectModule
   ]
 })
 export class FlexModule { }

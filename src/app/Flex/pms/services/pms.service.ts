@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { PMS060_Search_Criteria } from '../models/PMS060_Search_Criteria';
 import { PMS060_CheckListAndRepairOrder_Result } from '../models/PMS060_CheckListAndRepairOrder_Result';
 import { PMS062_GetJobPmChecklist_Result } from '../models/PMS062_GetJobPmChecklist_Result';
+import { PMS060_UserDefaultValue } from '../models/PMS060_UserDefaultValue';
 
 @Injectable({ providedIn: 'root' })
 export class PMSService {
@@ -18,6 +19,10 @@ export class PMSService {
 
     GetCheckListAndRepairOrderList(criteria: PMS060_Search_Criteria): Observable<PMS060_CheckListAndRepairOrder_Result[]> {
         return this.http.post<PMS060_CheckListAndRepairOrder_Result[]>(this.baseUrl + 'sp_PMS060_GetMachineRepairOrderList', criteria);
+    }
+
+    PMS060_GetUserDefaultValue(USER_CD: string): Observable<PMS060_UserDefaultValue> {
+        return this.http.post<PMS060_UserDefaultValue>(this.baseUrl + 'PMS060_GetUserDefaultValue', { 'StringValue': USER_CD });
     }
 
     GetComponentParts(mcbom_cd: string, parts_loc_cd: string): Observable<any[]> {

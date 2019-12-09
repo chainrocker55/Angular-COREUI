@@ -1,6 +1,13 @@
+<!-- ######################################################################################### -->
 <!-- list -->
 <mat-card [hidden]="data" class="animated fadeIn card-margin">
-    <div class="row"><div class="col-lg-12"><h2><span class="flex-title" [flexLabel]="'lblHeader'">Checklist and Repair Order</span></h2></div></div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>
+                <span class="flex-title" [flexLabel]="'lblHeader'">Checklist and Repair Order</span>
+            </h2>
+        </div>
+    </div>
     <mat-expansion-panel [expanded]="true">
         <mat-expansion-panel-header [@.disabled]="true" expandedHeight="54px" collapsedHeight="54px">
             <mat-panel-title>Search Criteria</mat-panel-title>
@@ -78,6 +85,7 @@
                             <input matInput id="PONumberFrom" name="PONumberFrom" type="text"
                                 [(ngModel)]="criteria.PONUMBER_FROM">
                         </mat-form-field>
+                        
                         <mat-form-field class="col-sm-6 col-lg-3">
                             <mat-label>PO Number To</mat-label>
                             <input matInput id="PONumberTo" name="PONumberTo" type="text"
@@ -85,45 +93,129 @@
                         </mat-form-field>
 
                         <mat-form-field class="col-sm-6 col-lg-3">
-                            <mat-label>Person In Charge</mat-label>
-                            <select matNativeControl id="PersonInCharge" name="PersonInCharge"
-                                [(ngModel)]="criteria.PERSONINCHARGE">
-                                <!-- <option value=""></option> -->
-                                <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</option>
-                            </select>
-                        </mat-form-field>
-
-                        <mat-form-field class="col-sm-6 col-lg-3">
-                            <mat-label>Requester</mat-label>
-                            <select matNativeControl id="Requester" name="Requester" [(ngModel)]="criteria.REQUESTER">
-                                <!-- <option value=""></option> -->
-                                <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</option>
-                            </select>
+                            <mat-label>Machine Name</mat-label>
+                            <input matInput id="MachineName" name="MachineName" type="text"
+                                [(ngModel)]="criteria.MACHINE_NAME">
                         </mat-form-field>
 
                     </div>
                     <div class="row">
-                        <mat-form-field class="col-sm-6 col-lg-3">
+
+                        <!-- <mat-form-field class="col-sm-6 col-lg-3">
                             <mat-label>Location</mat-label>
                             <select matNativeControl id="Location" name="Location" [(ngModel)]="criteria.MACHINE_LOC_CD">
-                                <!-- <option value=""></option> -->
                                 <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}</option>
                             </select>
-                        </mat-form-field>
+                        </mat-form-field> -->
+                        <!--------@ng-select/ng-select--------->
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="Location" 
+                                    name="Location"
+                                    placeholder="Location"
+                                    appendTo="body"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.MACHINE_LOC_CD">
+                                    <ng-option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <!--------End @ng-select/ng-select--------->
 
-                        <mat-form-field class="col-sm-6 col-lg-3">
+                        <!-- <mat-form-field class="col-sm-6 col-lg-3">
                             <mat-label>Approver</mat-label>
                             <select matNativeControl id="Approver" name="Approver" [(ngModel)]="criteria.CUR_PERSON">
-                                <!-- <option value=""></option> -->
                                 <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</option>
                             </select>
-                        </mat-form-field>
+                        </mat-form-field> -->
+                        <!--------@ng-select/ng-select--------->
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="Approver" 
+                                    name="Approver"
+                                    placeholder="Approver"
+                                    appendTo="body"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.CUR_PERSON">
+                                    <ng-option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <!--------End @ng-select/ng-select--------->
+                        <!-- <mat-form-field class="col-sm-6 col-lg-3">
+                            <mat-label>Person In Charge</mat-label>
+                            <select matNativeControl id="PersonInCharge" name="PersonInCharge"
+                                [(ngModel)]="criteria.PERSONINCHARGE">
+                                <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</option>
+                            </select>
 
-                        <mat-form-field class="col-sm-6 col-lg-3">
+
+                        </mat-form-field> -->
+                        <!----------KENDO-UI----------->
+                        <!-- <div class="col-sm-6 col-lg-3">
+                            <div class="row"><div class="col-12"><span style="overflow-wrap: break-word;">Person In Charge</span></div></div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <kendo-combobox [data]="comboUserWithPosition"
+                                                    [textField]="'DISPLAY'"
+                                                    [valueField]="'VALUE'"
+                                                    [allowCustom]="false"
+                                                    [(ngModel)]="criteria.PERSONINCHARGE"
+                                                    style="width:100%"
+                                                    placeholder="All : - All -"
+                                                    id="PersonInCharge" name="PersonInCharge"
+                                                    [valuePrimitive]="true"
+                                                    [suggest]="true"
+                                                    [kendoDropDownFilter]="filterSettings"
+                                                    >
+                                    </kendo-combobox>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!----------END-KENDO-UI----------->
+                        <!--------@ng-select/ng-select--------->
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="PersonInCharge" 
+                                    name="PersonInCharge"
+                                    placeholder="Person In Charge"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.PERSONINCHARGE">
+                                    <ng-option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <!--------End @ng-select/ng-select--------->
+                        <!-- <mat-form-field class="col-sm-6 col-lg-3">
+                            <mat-label>Requester</mat-label>
+                            <select matNativeControl id="Requester" name="Requester" [(ngModel)]="criteria.REQUESTER">
+                                <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</option>
+                            </select>
+                        </mat-form-field> -->
+                        <!--------@ng-select/ng-select--------->
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="Requester" 
+                                    name="Requester"
+                                    placeholder="Requester"
+                                    appendTo="body"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.REQUESTER">
+                                    <ng-option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <!--------End @ng-select/ng-select--------->
+                    </div>
+
+                    <div class="row">
+
+
+                        <!-- <mat-form-field class="col-sm-6 col-lg-3">
                             <mat-label>Machine No. From</mat-label>
                             <select matNativeControl id="MaxhineNoFrom" name="MaxhineNoFrom"
                                 [(ngModel)]="criteria.MACHINE_NO_FROM">
-                                <!-- <option value=""></option> -->
+
                                 <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}</option>
                             </select>
                         </mat-form-field>
@@ -132,23 +224,15 @@
                             <mat-label>Machine No. To</mat-label>
                             <select matNativeControl id="MachineNoTo" name="MachineNoTo"
                                 [(ngModel)]="criteria.MACHINE_NO_TO">
-                                <!-- <option value=""></option> -->
+
                                 <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}</option>
                             </select>
-                        </mat-form-field>
-
-                    </div>
-                    <div class="row">
-                        <mat-form-field class="col-sm-6 col-lg-3">
-                            <mat-label>Machine Name</mat-label>
-                            <input matInput id="MachineName" name="MachineName" type="text"
-                                [(ngModel)]="criteria.MACHINE_NAME">
                         </mat-form-field>
 
                         <mat-form-field class="col-sm-6 col-lg-3">
                             <mat-label>Supplier</mat-label>
                             <select matNativeControl id="Supplier" name="Supplier" [(ngModel)]="criteria.VENDORID">
-                                <!-- <option value=""></option> -->
+
                                 <option *ngFor="let c of comboSupplier" [value]="c.VALUE">{{c.DISPLAY}}</option>
                             </select>
                         </mat-form-field>
@@ -157,10 +241,68 @@
                             <mat-label>Schedule Type</mat-label>
                             <select matNativeControl id="Schedule Type" name="Schedule Type"
                                 [(ngModel)]="criteria.SCHEDULE_TYPEID">
-                                <!-- <option value=""></option> -->
+
                                 <option *ngFor="let c of comboSchduleType" [value]="c.VALUE">{{c.DISPLAY}}</option>
                             </select>
-                        </mat-form-field>
+                        </mat-form-field> -->
+                        <!--------@ng-select/ng-select--------->
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="MaxhineNoFrom" 
+                                    name="MaxhineNoFrom"
+                                    placeholder="Machine No. From"
+                                    appendTo="body"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.MACHINE_NO_FROM">
+                                    <ng-option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="MachineNoTo" 
+                                    name="MachineNoTo"
+                                    placeholder="Machine No. To"
+                                    appendTo="body"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.MACHINE_NO_TO">
+                                    <ng-option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="Supplier" 
+                                    name="Supplier"
+                                    placeholder="Supplier"
+                                    appendTo="body"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.VENDORID">
+                                    <ng-option *ngFor="let c of comboSupplier" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+
+
+                        <div class="col-sm-6 col-lg-3">
+                            <ng-select
+                                    id="Schedule Type" 
+                                    name="Schedule Type"
+                                    placeholder="Schedule Type"
+                                    appendTo="body"
+                                    [searchable]="true" 
+                                    [clearable]="true"
+                                    [(ngModel)]="criteria.SCHEDULE_TYPEID">
+                                    <ng-option *ngFor="let c of comboSchduleType" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <!--------End @ng-select/ng-select--------->
+                    </div>
+                    <div class="row">
+
+
 
                         <mat-form-field class="col-sm-6 col-lg-3">
                             <mat-label>Status</mat-label>
@@ -210,26 +352,18 @@
         </mat-card-content>
     </mat-expansion-panel>
 </mat-card>
-
+<!-- ######################################################################################### -->
 <!-- over haul -->
+<!-- ######################################################################################### -->
 <mat-card *ngIf="data && data.Header.SCHEDULE_TYPEID===1" class="animated fadeIn card-margin">
     <form (ngSubmit)="SaveOH()" #formOH="ngForm" autocomplete="off">
-
-        <div class="row">
-            <div class="col-lg-6">
-                <!-- <mat-card-header>
-                    <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
-                </mat-card-header> -->
-                <h2><span class="flex-title">Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</span></h2>
-            </div>
-            <div class="col-lg-6">
-                <!-- <mat-card-header class="text-right">
-                    <mat-card-title>Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</mat-card-title>
-                </mat-card-header> -->
-                <h2><span class="flex-status">Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</span></h2>
-            </div>
-        </div>
-
+        <!-- ######################################################################################### -->
+        <!-- HEADER -->
+        <!-- ######################################################################################### -->
+        <div class="row"><div class="col-lg-12"><h6><span class="flex-status">Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</span></h6></div></div>
+        <div class="row"><div class="col-lg-12"><h2><span class="flex-title">Checklist and Repair Order</span></h2></div></div>
+        <div class="row"><div class="col-lg-12"><h5 *ngIf="data.Header.MACHINE_NO"><span class="document-header">Checklist/Repair No.: {{data.Header.CHECK_REP_NO}}</span></h5></div></div>
+        <!-- ######################################################################################### -->
         <mat-accordion [multi]="true">
             <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header [@.disabled]="true" expandedHeight="54px" collapsedHeight="54px">
@@ -428,7 +562,8 @@
 
     </form>
 </mat-card>
-
+<!-- ######################################################################################### -->
+<!-- ######################################################################################### -->
 <!-- pm -->
 <mat-card *ngIf="!tempPmData && data && data.Header.SCHEDULE_TYPEID===2" class="animated fadeIn card-margin">
     <mat-card-actions *ngIf="data.Header.CHECK_REPH_ID">
@@ -453,24 +588,13 @@
     </mat-card-actions>
     <form (ngSubmit)="SavePM()" #formOH="ngForm" autocomplete="off">
 
-        <div class="row">
-            <!-- <div class="col-lg-6">
-                <mat-card-header>
-                    <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
-                </mat-card-header>
-            </div>
-            <div class="col-lg-6">
-                <mat-card-header class="text-right">
-                    <mat-card-title>Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</mat-card-title>
-                </mat-card-header>
-            </div> -->
-            <div class="col-lg-6">
-                <h2><span class="flex-title">Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</span></h2>
-            </div>
-            <div class="col-lg-6">
-                <h2><span class="flex-status">Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</span></h2>
-            </div>
-        </div>
+        <!-- ######################################################################################### -->
+        <!-- HEADER -->
+        <!-- ######################################################################################### -->
+        <div class="row"><div class="col-lg-12"><h6><span class="flex-status">Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</span></h6></div></div>
+        <div class="row"><div class="col-lg-12"><h2><span class="flex-title">Checklist and Repair Order</span></h2></div></div>
+        <div class="row"><div class="col-lg-12"><h5 *ngIf="data.Header.MACHINE_NO"><span class="document-header">Checklist/Repair No.: {{data.Header.CHECK_REP_NO}}</span></h5></div></div>
+        <!-- ######################################################################################### -->
 
         <mat-accordion [multi]="true">
 
@@ -816,8 +940,9 @@
 
     </form>
 </mat-card>
-
+<!-- ######################################################################################### -->
 <!-- cr -->
+<!-- ######################################################################################### -->
 <mat-card *ngIf="data && data.Header.SCHEDULE_TYPEID===3" class="animated fadeIn card-margin">
     <mat-card-actions *ngIf="data.Header.CHECK_REPH_ID">
         <button
@@ -854,27 +979,13 @@
 
     <form (ngSubmit)="SaveCR()" #formCR="ngForm" autocomplete="off">
 
-        <!-- header -->
-        <div class="row">
-            <!-- <div class="col-lg-6">
-                <mat-card-header>
-                    <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
-                </mat-card-header>
-            </div>
-            <div class="col-lg-6">
-                <mat-card-header>
-                    <mat-card-title class=flex-status>
-                        Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}
-                    </mat-card-title>
-                </mat-card-header>
-            </div> -->
-            <div class="col-lg-6">
-                <h2><span class="flex-title">Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</span></h2>
-            </div>
-            <div class="col-lg-6">
-                <h2><span class="flex-status">Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</span></h2>
-            </div>
-        </div>
+        <!-- ######################################################################################### -->
+        <!-- HEADER -->
+        <!-- ######################################################################################### -->
+        <div class="row"><div class="col-lg-12"><h6><span class="flex-status">Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</span></h6></div></div>
+        <div class="row"><div class="col-lg-12"><h2><span class="flex-title">Checklist and Repair Order</span></h2></div></div>
+        <div class="row"><div class="col-lg-12"><h5 *ngIf="data.Header.MACHINE_NO"><span class="document-header">Checklist/Repair No.: {{data.Header.CHECK_REP_NO}}</span></h5></div></div>
+        <!-- ######################################################################################### -->
 
         <mat-accordion [multi]="true">
 
@@ -1938,3 +2049,4 @@
         </mat-card-actions>
     </mat-card>
 </form>
+<!-- ######################################################################################### -->

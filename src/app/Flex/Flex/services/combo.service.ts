@@ -49,7 +49,7 @@ export class ComboService {
   }
 
   GetComboUserApproveLocation(userCd : string): Observable<ComboStringValue[]> {
-    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboUserApproveLocation/'+ userCd);
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboUserApproveLocation/' + userCd);
   }
 
   GetComboSupplier(): Observable<ComboIntValue[]> {
@@ -77,7 +77,7 @@ export class ComboService {
   }
 
   GetComboMachineComponent(machineNo): Observable<ComboStringValue[]> {
-    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachineComponent?MACHINE_NO='+machineNo);
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachineComponent?MACHINE_NO=' + machineNo);
   }
 
   GetComboItemUnit(itemCd): Observable<ComboStringValue[]> {

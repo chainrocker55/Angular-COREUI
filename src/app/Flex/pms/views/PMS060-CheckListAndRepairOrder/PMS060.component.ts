@@ -23,6 +23,7 @@ import { DLG045_Search_Criteria } from '../../models/DLG045_Search_Criteria';
 import { TBM_POSITION, TBM_STATUS } from '../../../Flex/models/tableModel';
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
 import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.component';
+import { DropDownsModule, DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 
 @Component({
     selector: 'app-pms060',
@@ -51,7 +52,13 @@ export class PMS060Component implements OnInit {
     pageOptions: number[];
     isLoading: boolean;
     isDataChange: boolean;
-    criteria: PMS060_Search_Criteria = new PMS060_Search_Criteria;
+    criteria: PMS060_Search_Criteria = new PMS060_Search_Criteria();
+
+    public filterSettings: DropDownFilterSettings = {
+        caseSensitive: false,
+        operator: 'contains'
+    };
+    
     dataList: PMS060_CheckListAndRepairOrder_Result[];
     data: any;
     dataFromList: PMS060_CheckListAndRepairOrder_Result;
@@ -66,16 +73,16 @@ export class PMS060Component implements OnInit {
     multiSelectPersonInCharge: boolean = false;
     selectionPersonInCharge = new SelectionModel<PMS060_CheckJobPersonInCharge_Result>(this.multiSelectPersonInCharge, []);
 
-    STATUS_ACTIVE_PLAN = "F01"; // Active Plan
-    STATUS_CANCEL_PLAN = "F02"; // Cancelled Plan
-    STATUS_NEW = "F03"; // New Check/Repair Order
-    STATUS_DURING_ASSIGN = "F04"; // During Assign
-    STATUS_RECEIVED = "F05"; // Received Check/Repair Order
-    STATUS_DURING_APPROVE = "F06"; // During Approve
-    STATUS_REVISE = "F07"; // Revised
-    STATUS_PARTIAL = "F08"; // Partial Check/Repair Order
-    STATUS_COMPLETE = "F09"; // Completed Check/Repair Order
-    STATUS_CANCEL = "F10"; // Cancelled Check/Repair Order
+    STATUS_ACTIVE_PLAN = 'F01'; // Active Plan
+    STATUS_CANCEL_PLAN = 'F02'; // Cancelled Plan
+    STATUS_NEW = 'F03'; // New Check/Repair Order
+    STATUS_DURING_ASSIGN = 'F04'; // During Assign
+    STATUS_RECEIVED = 'F05'; // Received Check/Repair Order
+    STATUS_DURING_APPROVE = 'F06'; // During Approve
+    STATUS_REVISE = 'F07'; // Revised
+    STATUS_PARTIAL = 'F08'; // Partial Check/Repair Order
+    STATUS_COMPLETE = 'F09'; // Completed Check/Repair Order
+    STATUS_CANCEL = 'F10'; // Cancelled Check/Repair Order
 
 
     comboUserWithPosition: ComboStringValue[];
@@ -91,6 +98,16 @@ export class PMS060Component implements OnInit {
     comboItemUnit: ComboStringValue[];
     comboPosition: TBM_POSITION[];
 
+    comboStringAllItem: ComboStringValue = {
+        VALUE: '',
+        CODE: undefined,
+        DISPLAY: 'All : - All -'
+    };
+    comboIntAllItem: ComboIntValue = {
+        VALUE: 0,
+        CODE: undefined,
+        DISPLAY: 'All : - All -'
+    };
     rdoCheckMachineItem = [
         { DISPLAY: 'Normal', VALUE: 1 },
         { DISPLAY: 'Not Available', VALUE: 2 },
@@ -101,7 +118,7 @@ export class PMS060Component implements OnInit {
         { DISPLAY: 'Not Available', VALUE: 2 },
         { DISPLAY: 'Temporary Use', VALUE: 3 },
     ];
-
+    
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -116,32 +133,66 @@ export class PMS060Component implements OnInit {
     }
 
     ngOnInit() {
+        this.comboStringAllItem.DISPLAY = 'All : - All -';
+        this.comboIntAllItem.DISPLAY = 'All : - All -';
         this.InitialCombo();
         // console.log(this.flex.ActivePermission("PMS060"));
         // console.log(this.flex.ActivePermission("PMS061"));
         // console.log(this.flex.ActivePermission("PMS062"));
         // console.log(this.flex.ActivePermission("PMS063"));
+        this.InitialCriteria();
     }
 
     InitialCriteria() {
+
+        this.criteria.CUR_PERSON = '';
+        this.criteria.PERSONINCHARGE = '';
+        this.criteria.REQUESTER = '';
+        
+        this.svc.PMS060_GetUserDefaultValue(this.flex.getCurrentUser().USER_CD).subscribe(res => {
+            if (!res) {
+                this.dlg.ShowInformation('INF0001');
+            }
+            this.isLoading = false;
+            if (res.IS_APPROVER) {
+                this.criteria.CUR_PERSON = this.flex.getCurrentUser().USER_CD;
+            }
+            if (res.IS_IN_CHARGE) {
+                this.criteria.PERSONINCHARGE = this.flex.getCurrentUser().USER_CD;
+            }
+            if (res.IS_REQUESTER) {
+                this.criteria.REQUESTER = this.flex.getCurrentUser().USER_CD;
+            }
+        }, error => {
+            this.dlg.ShowException(error);
+            this.isLoading = false;
+        });
+        this.criteria.STATUSID = 'F99';
+        this.criteria.MACHINE_NO_FROM = '';
+        this.criteria.MACHINE_NO_TO = '';
+        this.criteria.VENDORID = 0;
+        this.criteria.SCHEDULE_TYPEID = 0;
+        this.criteria.MACHINE_LOC_CD = '';
     }
 
     InitialCombo() {
 
         this.combo.GetComboUserWithPosition().subscribe(res => {
+            res.splice(0, 0, this.comboStringAllItem);
             this.comboUserWithPosition = res;
         }, error => {
             this.dlg.ShowException(error);
         });
 
         this.combo.GetComboLocation().subscribe(res => {
+            res.splice(0, 0, this.comboStringAllItem);
             this.comboLocation = res;
         }, error => {
             this.dlg.ShowException(error);
         });
 
         this.combo.GetComboUserApproveLocation(this.flex.getCurrentUser().USER_CD).subscribe(res => {
-            res.splice(0, 0, new ComboStringValue());
+            res.splice(0, 0, this.comboStringAllItem);
             this.comboUserApproveLocation = res;
         }, error => {
             this.dlg.ShowException(error);
@@ -149,12 +200,14 @@ export class PMS060Component implements OnInit {
 
 
         this.combo.GetComboSupplier().subscribe(res => {
+            res.splice(0, 0, this.comboIntAllItem);
             this.comboSupplier = res;
         }, error => {
             this.dlg.ShowException(error);
         });
 
         this.combo.GetComboMachineScheduleType().subscribe(res => {
+            res.splice(0, 0, this.comboIntAllItem);
             this.comboSchduleType = res;
         }, error => {
             this.dlg.ShowException(error);
@@ -167,7 +220,7 @@ export class PMS060Component implements OnInit {
         });
 
         this.combo.GetComboMachine().subscribe(res => {
-            res.splice(0, 0, new ComboStringValue());
+            res.splice(0, 0, this.comboStringAllItem);
             this.comboMachine = res;
         }, error => {
             this.dlg.ShowException(error);

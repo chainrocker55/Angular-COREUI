@@ -1,3 +1,4 @@
+
 // Here you can add other styles
 table {
     width: 100%;
@@ -141,10 +142,23 @@ tr.mat-row:hover {
 
 .flex-status
 {
-    color: rgba(32, 168, 216, 1) !important;
+    color: #696764 !important;
     text-align: right;
+}
+
+.flex-document-header {
+    color:  #696764 !important;
 }
 
 .flex-title {
     color: rgba(32, 168, 216, 1) !important;
+}
+
+// NG SELECT
+@import "~@ng-select/ng-select/themes/material.theme.css";
+//@import "~@ng-select/ng-select/themes/default.theme.css";
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+    top: 50%;
+    transform: translateY(-50%);
 }

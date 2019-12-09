@@ -55,6 +55,8 @@ import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/mat
 
 import { MY_FORMATS } from './Flex/Flex/constant';
 import { FlexModule } from './Flex/Flex/flex.module';
+import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+
 
 @NgModule({
   imports: [
@@ -76,6 +78,8 @@ import { FlexModule } from './Flex/Flex/flex.module';
     LoadingBarHttpClientModule,
 
     FlexModule,
+
+    DropDownsModule,
   ],
   entryComponents: [
     ConfirmDialogComponent,
