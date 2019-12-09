@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Optional } from '@angular/core';
+import { Component, OnInit, Inject, Optional, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Observable } from 'rxjs';
@@ -32,11 +32,16 @@ export class DLG045Component {
     dataList: any;
     isLoading: boolean;
     multiSelect: boolean = false;
-    selection :SelectionModel<any>;
+    pageOptions: number[];
+    filterText: string;
+
+    selection: SelectionModel<any>;
 
     displayedColumns: string[] = ['SELECT', 'ITEM_CD', 'ITEM_DESC', 'ITEM_CLS_DESC', 'ITEMCATEGORY_DESC', 'ITEMCONDITION_DESC', 'ITEMTYPE_DESC', 'LOT_CONTROL_CLS_DESC', 'CONSUMTION_CLS_DESC', 'INVENTORY_UNIT', 'PURCHASE_UNIT', 'SALES_UNIT', 'STOCK_UNIT'];
     dataSource: MatTableDataSource<PMS060_CheckJobPersonInCharge_Result>;
 
+
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
     constructor(
         private svc: PMSService,
@@ -50,17 +55,17 @@ export class DLG045Component {
             this.multiSelect = criteria.MultiSelect;
         }
 
-        this.selection =new SelectionModel<any>(this.multiSelect, []);
+        this.selection = new SelectionModel<any>(this.multiSelect, []);
     }
 
     ngOnInit() {
-        this.dataList=this.criteria.Data;
-        if(this.dataList)
-        {
+        this.pageOptions = PageSizeOptions;
+        this.dataList = this.criteria.Data;
+        if (this.dataList) {
             this.dataSource = new MatTableDataSource(this.dataList);
+            this.dataSource.paginator = this.paginator;
         }
-        else
-        {
+        else {
             this.loadData();
         }
     }
@@ -71,15 +76,16 @@ export class DLG045Component {
                 this.dlg.ShowInformation('INF0001');
             }
             this.isLoading = false;
-           
+
             this.dataList = res;
             this.dataSource = new MatTableDataSource(this.dataList);
+            this.dataSource.paginator = this.paginator;
         }, error => {
             this.dlg.ShowException(error);
             this.isLoading = false;
         });
 
-        
+
     }
 
     selectItem() {
@@ -89,5 +95,20 @@ export class DLG045Component {
     closeDialog() {
         this.dialogRef.close({ event: 'Cancel' });
     }
+
+    applyFilter(filterValue: string) {
+        if (!filterValue) {
+            filterValue = '';
+        }
+
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+
+    Clear() {
+        this.filterText='';
+        this.applyFilter('');
+    }
+
 
 }

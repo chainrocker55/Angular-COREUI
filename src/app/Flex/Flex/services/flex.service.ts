@@ -122,6 +122,27 @@ export class FlexService {
         });
     }
 
+    StringFormat(str: string, ...args: string[]) : string
+    {
+        return str.replace(/{(\d+)}/g, (match, index) => args[index] || '');
+    }
+
+    StringFormatArray(str: string, args: string[]) : string
+    {
+        return str.replace(/{(\d+)}/g, (match, index) => args[index] || '');
+    }
+
+    GetMessageDesc(MSG_CD: string, ...args: string[] ) : string
+    {
+        
+        let msg = this.GetMessageObj(MSG_CD);
+        if(!msg)
+            return "MESSAGE NOT FOUND!";
+
+        return this.StringFormatArray(msg.MSG_DESC, args);
+        
+    }
+
     GetScreenDetailObj (CONTROL_CD: string): TZ_SCREEN_DETAIL_LANG_MS {
         const scn = this.GetScreenObj();
         const msg: TZ_SCREEN_DETAIL_LANG_MS[] = JSON.parse(localStorage.getItem('flexScreenDetail'));
@@ -232,5 +253,15 @@ export class FlexService {
 
     GetSpecialPermission(groupCd: string,screenCd: string):  Observable<SpecialPermissionResult[]>  {
         return this.http.get<SpecialPermissionResult[]>(this.baseUrl + 'GetSpecialPermission/' + groupCd);
+    }
+
+    GetSysConfig(SYS_GROUP_ID: string, SYS_KEY: string) : Observable<any> 
+    {
+        return this.http.post<any>(this.baseUrl + 'GetSysConfig',{SYS_GROUP_ID: SYS_GROUP_ID, SYS_KEY: SYS_KEY});
+    }
+    
+    GetSysConfigList(SYS_GROUP_ID: string, SYS_KEY: string) : Observable<any[]> 
+    {
+        return this.http.post<any>(this.baseUrl + 'GetSysConfigList',{SYS_GROUP_ID: SYS_GROUP_ID, SYS_KEY: SYS_KEY});
     }
 }

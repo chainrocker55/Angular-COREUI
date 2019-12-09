@@ -40,6 +40,7 @@ export class PMS060_CheckListAndRepairOrder_Result {
     REPAIR_METHOD: string;
     CAUSE_DELAY: string;
     START_DATE: Date;
-    END_DATE: Date;
-    DAYS: number;
+    DISPLAY_DATE: Date;
+    // END_DATE: Date;
+    // DAYS: number;
 }

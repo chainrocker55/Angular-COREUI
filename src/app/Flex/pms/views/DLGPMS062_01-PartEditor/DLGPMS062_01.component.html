@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>Parts Edit Dialog</h2>
+<form *ngIf="data" (ngSubmit)="save()" #formMain="ngForm" autocomplete="off">
+
+    <mat-dialog-content>
+       
+
+                <div class="row">
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Parts Location</mat-label>
+                        <select matNativeControl id="PARTS_LOC_CD" name="PARTS_LOC_CD" [(ngModel)]="data.PARTS_LOC_CD">
+                            <!-- <option value=""></option> -->
+                            <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}
+                            </option>
+                        </select>
+                    </mat-form-field>
+                    <mat-form-field class="col-12">
+                        <mat-label>Parts Code</mat-label>
+                        <input matInput id="PARTS_ITEM_CD" name="PARTS_ITEM_CD" type="text"
+                            [(ngModel)]="data.PARTS_ITEM_CD">
+                        <button mat-stroked-button matSuffix type="button" (click)="openDialog(row)">...</button>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Parts Name</mat-label>
+                        <input matInput id="PARTS_ITEM_DESC" name="PARTS_ITEM_DESC" type="text"
+                            [(ngModel)]="data.PARTS_ITEM_DESC">
+
+
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Request Qty</mat-label>
+                        <input matInput id="REQUEST_QTY" name="REQUEST_QTY" type="number"
+                            [(ngModel)]="data.REQUEST_QTY">
+
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12">
+                        <mat-label>In Quantity</mat-label>
+                        <input disabled matInput id="USED_QTY" name="IN_QTY" type="number" [(ngModel)]="data.USED_QTY">
+
+
+                    </mat-form-field>
+                    <mat-form-field class="col-12">
+                        <mat-label>Used Quantity</mat-label>
+                        <input matInput id="USED_QTY" name="USED_QTY" type="number" [(ngModel)]="data.USED_QTY">
+
+                    </mat-form-field>
+                    <mat-form-field class="col-12">
+                        <mat-label>Unit</mat-label>
+                        <select matNativeControl id="UNITCODE" name="UNITCODE" [(ngModel)]="data.UNITCODE">
+                            <!-- <option value=""></option> -->
+                            <option *ngFor="let c of comboItemUnit" [value]="c.VALUE">
+                                {{c.DISPLAY}}
+                            </option>
+                        </select>
+
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Remark</mat-label>
+                        <textarea matInput id="REMARK" name="REMARK" type="text" [(ngModel)]="data.REMARK">
+
+                        </textarea>
+
+                    </mat-form-field>
+
+
+
+                </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button type="submit" [disabled]="!formMain.valid" cdkFocusInitial>Save</button>
+    </mat-dialog-actions>
+</form>
