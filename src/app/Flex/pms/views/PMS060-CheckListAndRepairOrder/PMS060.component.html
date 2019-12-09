@@ -225,10 +225,8 @@
             [disabled]="!formOH.valid || isLoading || notHavePermission" (click)="onCompleteMTN()">
             Complete (MTN)
         </button>
-        <button
-            *ngIf="tsbCompletRqVisible()"
-            class="button" mat-flat-button color="primary" [disabled]="!formOH.valid || isLoading || notHavePermission"
-            (click)="onCompleteRQ()">
+        <button *ngIf="tsbCompletRqVisible()" class="button" mat-flat-button color="primary"
+            [disabled]="!formOH.valid || isLoading || notHavePermission" (click)="onCompleteRQ()">
             Complete (RQ)
         </button>
         <button
@@ -282,7 +280,7 @@
                                     [disabled]="data.Header.MACHINE_SCHEDULEID!=null || notHavePermission"
                                     [(ngModel)]="data.Header.MACHINE_NO" (change)="onMachineNoChange()">
                                     <!-- <option value=""></option> -->
-                                    <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
+                                    <option *ngFor="let c of comboActiveMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
                                 </select>
                             </mat-form-field>
@@ -297,8 +295,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Request Date</mat-label>
                                 <input matInput required [matDatepicker]="ReqDate" id="ReqDate" name="ReqDate"
-                                    [disabled]="notHavePermission"
-                                    [(ngModel)]="data.Header.REQUEST_DATE">
+                                    [disabled]="notHavePermission" [(ngModel)]="data.Header.REQUEST_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="ReqDate"></mat-datepicker-toggle>
                                 <mat-datepicker #ReqDate></mat-datepicker>
                             </mat-form-field>
@@ -306,8 +303,7 @@
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Complete Date</mat-label>
                                 <input matInput [matDatepicker]="CompleteDate" id="CompleteDate" name="CompleteDate"
-                                [disabled]="notHavePermission"
-                                    [(ngModel)]="data.Header.COMPLETE_DATE">
+                                    [disabled]="notHavePermission" [(ngModel)]="data.Header.COMPLETE_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="CompleteDate"></mat-datepicker-toggle>
                                 <mat-datepicker #CompleteDate></mat-datepicker>
                             </mat-form-field>
@@ -335,7 +331,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <table class="border" mat-table [dataSource]="dataSourcePersonInCharge" >
+                                    <table class="border" mat-table [dataSource]="dataSourcePersonInCharge">
                                         <!-- checkbox colunm -->
                                         <ng-container matColumnDef="SELECT">
                                             <td mat-cell *matCellDef="let row" class="grid-checkbox-column">
@@ -364,8 +360,7 @@
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Supplier</mat-label>
                                         <select matNativeControl id="Supplier" name="Supplier"
-                                        [disabled]="notHavePermission"
-                                            [(ngModel)]="data.HeaderOverHaul.VENDORID">
+                                            [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.VENDORID">
                                             <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboSupplier" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
@@ -376,8 +371,7 @@
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>PO Number</mat-label>
                                         <select matNativeControl id="PONumber" name="PONumber"
-                                        [disabled]="notHavePermission"
-                                            [(ngModel)]="data.HeaderOverHaul.POHID">
+                                            [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.POHID">
                                             <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboPoNumber" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
@@ -389,15 +383,14 @@
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Machine Location</mat-label>
                                         <input matInput id="MachineLocation" name="MachineLocation" type="text"
-                                        [disabled]="notHavePermission"
-                                            [(ngModel)]="data.Header.MACHINE_LOC">
+                                            [disabled]="notHavePermission" [(ngModel)]="data.Header.MACHINE_LOC">
                                     </mat-form-field>
 
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Total Time of Operation (hr.)</mat-label>
                                         <input matInput id="TotalTimeOfOperation" name="TotalTimeOfOperation"
-                                        [disabled]="notHavePermission"
-                                            type="number" [(ngModel)]="data.HeaderOverHaul.TOTAL_TIME_OPERATION">
+                                            [disabled]="notHavePermission" type="number"
+                                            [(ngModel)]="data.HeaderOverHaul.TOTAL_TIME_OPERATION">
                                     </mat-form-field>
 
                                 </div>
@@ -426,25 +419,23 @@
                             <mat-form-field class="col-sm-12 col-lg-12">
                                 <mat-label>Detail of Problems or Disorder</mat-label>
                                 <textarea matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"
-                                [disabled]="notHavePermission"
-                                    [(ngModel)]="data.HeaderOverHaul.PROBLEM_DESC">
+                                    [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.PROBLEM_DESC">
                                     </textarea>
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-12 col-lg-12">
                                 <mat-label>Repair Method</mat-label>
                                 <textarea matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"
-                                [disabled]="notHavePermission"
-                                    [(ngModel)]="data.HeaderOverHaul.REPAIR_METHOD">
+                                    [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.REPAIR_METHOD">
                                     </textarea>
                             </mat-form-field>
 
 
                             <mat-form-field class="col-sm-12 col-lg-12">
                                 <mat-label>Cause of Delay</mat-label>
-                                <input matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
-                                [disabled]="notHavePermission"
-                                    [(ngModel)]="data.HeaderOverHaul.CAUSE_DELAY">
+                                <textarea matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
+                                    [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.CAUSE_DELAY">
+                                </textarea>
                             </mat-form-field>
 
                             <!-- 
@@ -465,7 +456,8 @@
 
 
         <mat-card-actions>
-            <button mat-flat-button color="primary" type="submit" [disabled]="!formOH.valid || isLoading || notHavePermission">Save</button>
+            <button mat-flat-button color="primary" type="submit"
+                [disabled]="!formOH.valid || isLoading || notHavePermission">Save</button>
             <button mat-flat-button (click)="Back()">Back</button>
         </mat-card-actions>
 
@@ -536,7 +528,7 @@
                                     [(ngModel)]="data.Header.MACHINE_NO"
                                     (change)="data.Header.MACHINE_NAME=getSelectedMachineName($event)">
                                     <!-- <option value=""></option> -->
-                                    <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
+                                    <option *ngFor="let c of comboActiveMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
                                 </select>
                             </mat-form-field>
@@ -548,20 +540,22 @@
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
-                                <mat-label>Request Date</mat-label>
-                                <input matInput required [matDatepicker]="ReqDate" id="ReqDate" name="ReqDate"
-                                    [(ngModel)]="data.Header.REQUEST_DATE">
-                                <mat-datepicker-toggle matSuffix [for]="ReqDate"></mat-datepicker-toggle>
-                                <mat-datepicker #ReqDate></mat-datepicker>
+                                <mat-label>Part Location (Used)</mat-label>
+                                <select matNativeControl id="PartLocation" name="PartLocation"
+                                    [(ngModel)]="data.Header.MACHINE_LOC_CD">
+                                    <!-- <option value=""></option> -->
+                                    <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}
+                                    </option>
+                                </select>
                             </mat-form-field>
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
-                                <mat-label>Test Date</mat-label>
-                                <input matInput [matDatepicker]="TestDate" id="TestDate" name="TestDate"
-                                    [(ngModel)]="data.Header.TEST_DATE">
-                                <mat-datepicker-toggle matSuffix [for]="TestDate"></mat-datepicker-toggle>
-                                <mat-datepicker #TestDate></mat-datepicker>
-                            </mat-form-field>
+                            <div class="col-sm-6 col-lg-3">
+                                <button class="button" mat-flat-button color="primary" (click)="openApproveHistory()">
+                                    Approve History
+                                </button>
+                            </div>
+
+
 
                         </div>
 
@@ -611,6 +605,26 @@
                             </div>
 
                             <div class="col-sm-12 col-lg-6">
+
+                                <div class="row">
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Request Date</mat-label>
+                                        <input matInput required [matDatepicker]="ReqDate" id="ReqDate" name="ReqDate"
+                                            [(ngModel)]="data.Header.REQUEST_DATE">
+                                        <mat-datepicker-toggle matSuffix [for]="ReqDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #ReqDate></mat-datepicker>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                        <mat-label>Test Date</mat-label>
+                                        <input matInput [matDatepicker]="TestDate" id="TestDate" name="TestDate"
+                                            [(ngModel)]="data.Header.TEST_DATE">
+                                        <mat-datepicker-toggle matSuffix [for]="TestDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #TestDate></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+
+
 
                                 <div class="row">
                                     <mat-form-field class="col-sm-6 col-lg-6">
@@ -970,7 +984,7 @@
                                     [(ngModel)]="data.Header.MACHINE_NO"
                                     (change)="data.Header.MACHINE_NAME=getSelectedMachineName($event)">
                                     <!-- <option value=""></option> -->
-                                    <option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}
+                                    <option *ngFor="let c of comboActiveMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
                                 </select>
                             </mat-form-field>

@@ -64,8 +64,8 @@ export class ComboService {
     return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachineStatus');
   }
 
-  GetComboMachine(): Observable<ComboStringValue[]> {
-    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachine');
+  GetComboMachine(excludeDelete : boolean): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachine?excludeDelete='+excludeDelete);
   }
 
   GetComboPoNumber(): Observable<ComboIntValue[]> {

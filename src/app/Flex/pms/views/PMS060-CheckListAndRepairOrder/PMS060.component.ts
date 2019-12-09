@@ -116,6 +116,7 @@ export class PMS060Component implements OnInit {
     comboSchduleType: ComboIntValue[];
     comboStatus: ComboStringValue[];
     comboMachine: ComboStringValue[];
+    comboActiveMachine: ComboStringValue[];
     comboPoNumber: ComboIntValue[];
     comboMachinePeriod: ComboIntValue[];
     comboMachineComponent: ComboStringValue[];
@@ -199,9 +200,16 @@ export class PMS060Component implements OnInit {
             this.dlg.ShowException(error);
         });
 
-        this.combo.GetComboMachine().subscribe(res => {
+        this.combo.GetComboMachine(false).subscribe(res => {
             res.splice(0, 0, new ComboStringValue());
             this.comboMachine = res;
+        }, error => {
+            this.dlg.ShowException(error);
+        });
+
+        this.combo.GetComboMachine(true).subscribe(res => {
+            res.splice(0, 0, new ComboStringValue());
+            this.comboActiveMachine = res;
         }, error => {
             this.dlg.ShowException(error);
         });
