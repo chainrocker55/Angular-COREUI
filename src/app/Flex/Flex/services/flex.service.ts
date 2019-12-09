@@ -259,4 +259,9 @@ export class FlexService {
     {
         return this.http.post<any>(this.baseUrl + 'GetSysConfig',{SYS_GROUP_ID: SYS_GROUP_ID, SYS_KEY: SYS_KEY});
     }
+    
+    GetSysConfigList(SYS_GROUP_ID: string, SYS_KEY: string) : Observable<any[]> 
+    {
+        return this.http.post<any>(this.baseUrl + 'GetSysConfigList',{SYS_GROUP_ID: SYS_GROUP_ID, SYS_KEY: SYS_KEY});
+    }
 }

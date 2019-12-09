@@ -148,3 +148,8 @@ tr.mat-row:hover {
 .flex-title {
     color: rgba(32, 168, 216, 1) !important;
 }
+
+app-sidebar.sidebar
+{
+    z-index: 999 !important;
+}

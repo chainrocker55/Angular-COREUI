@@ -33,8 +33,8 @@ export class PMSService {
         return this.http.post<any>(this.baseUrl + 'sp_PMS063_LoadData', rowData);
     }
 
-    GetJobPmChecklist(rowData: PMS060_CheckListAndRepairOrder_Result): Observable<any> {
-        return this.http.post<any>(this.baseUrl + 'sp_PMS062_GetJobPmChecklist', rowData);
+    GetJobPmChecklist(CHECK_REPH_ID: string, MACHINE_NO: string): Observable<any> {
+        return this.http.post<any>(this.baseUrl + 'sp_PMS062_GetJobPmChecklist', { CHECK_REPH_ID: CHECK_REPH_ID, MACHINE_NO: MACHINE_NO });
     }
 
     SaveOH(data: any): Observable<string> {
@@ -87,16 +87,20 @@ export class PMSService {
     }
 
     LoadMachineData(machineNo: string): Observable<any> {
-        return this.http.post(this.baseUrl + 'LoadMachineData', {StringValue : machineNo} );
+        return this.http.post(this.baseUrl + 'LoadMachineData', { StringValue: machineNo });
     }
 
     GetCheckJobPersonInCharge(CHECK_REPH_ID: string, MACHINE_NO: string): Observable<any> {
-        return this.http.post(this.baseUrl + 'GetCheckJobPersonInCharge', {CHECK_REPH_ID : CHECK_REPH_ID, MACHINE_NO:MACHINE_NO} );
+        return this.http.post(this.baseUrl + 'GetCheckJobPersonInCharge', { CHECK_REPH_ID: CHECK_REPH_ID, MACHINE_NO: MACHINE_NO });
     }
 
     CancelOH(data: any): Observable<any> {
         return this.http.post(this.baseUrl + 'PMS061_Cancel', data);
     }
 
-    
+    GetMachineDefaultComponent(data: string): Observable<string> {
+        return this.http.post(this.baseUrl + 'GetMachineDefaultComponent', { StringValue: data }, { responseType: "text" });
+    }
+
+
 }

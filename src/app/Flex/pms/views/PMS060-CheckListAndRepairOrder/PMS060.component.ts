@@ -23,6 +23,8 @@ import { DLG045_Search_Criteria } from '../../models/DLG045_Search_Criteria';
 import { TBM_POSITION, TBM_STATUS } from '../../../Flex/models/tableModel';
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
 import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.component';
+import { repeatWhen } from 'rxjs/operators';
+import { DLGPMS062_01Component } from '../DLGPMS062_01-PartEditor/DLGPMS062_01.component';
 
 @Component({
     selector: 'app-pms060',
@@ -35,7 +37,7 @@ export class PMS060Component implements OnInit {
     displayedColumns: string[] = ['CLS_INFO_CD', 'CLS_CD', 'CLS_DESC', 'SEQ', 'EDIT_FLAG'];
     displayedColumnsPersonInCharge: string[] = ['SELECT', 'DISPLAY'];
     displayedColumnsChecklist: string[] = ['BTN', 'PM_CHECKLIST_DESC', 'NORMAL_CHECK_BOOL', 'PROBLEM_DESC', 'REPAIR_METHOD'];
-    displayedColumnsPart: string[] = ['ACTION', 'PARTS_LOC_CD', 'PARTS_ITEM_CD', 'BTN', 'PARTS_ITEM_DESC', 'REQUEST_QTY', 'IN_QTY', 'USED_QTY', 'UNITCODE', 'REMARK'];
+    displayedColumnsPart: string[] = ['ACTION','ACTION2', 'PARTS_LOC_CD', 'PARTS_ITEM_CD', 'BTN', 'PARTS_ITEM_DESC', 'REQUEST_QTY', 'IN_QTY', 'USED_QTY', 'UNITCODE', 'REMARK'];
     displayedColumnsCrTools: string[] = ['NO', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
     displayedColumnsCrPart: string[] = ['ACTION', 'LOC_CD', 'ITEM_CD', 'BTN', 'ITEM_DESC', 'UNITCODE', 'REQUEST_QTY', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
     displayedColumnsCrPH: string[] = ['NO', 'PERSONAL_DESC', 'PASS'];
@@ -66,6 +68,7 @@ export class PMS060Component implements OnInit {
     // person in charge selection
     SelectedPersonInCharge: any;
     multiSelectPersonInCharge: boolean = false;
+    machineClass: string[];
     selectionPersonInCharge = new SelectionModel<PMS060_CheckJobPersonInCharge_Result>(this.multiSelectPersonInCharge, []);
 
     STATUS_ACTIVE_PLAN = "F01"; // Active Plan
@@ -148,6 +151,7 @@ export class PMS060Component implements OnInit {
     }
 
     ngOnInit() {
+        this.getMachineClass();
         this.InitialCombo();
         this.SpecialPermissionOH = this.flex.SpecialPermission("PMS061");
         // console.log(this.flex.SpecialPermission("PMS061"));
@@ -155,6 +159,16 @@ export class PMS060Component implements OnInit {
         // console.log(this.flex.ActivePermission("PMS061"));
         // console.log(this.flex.ActivePermission("PMS062"));
         // console.log(this.flex.ActivePermission("PMS063"));
+    }
+
+    getMachineClass()
+    {
+        this.flex.GetSysConfigList("MACHINE","ITEM_CLS").subscribe(res => {
+            this.machineClass = res;
+        }, error => {
+            this.dlg.ShowException(error);
+        });
+
     }
 
     InitialCriteria() {
@@ -378,7 +392,7 @@ export class PMS060Component implements OnInit {
             });
         }
         else {
-            this.notHavePermission = false;
+            // this.notHavePermission = false;
             this.svc.GetCheckJob(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
@@ -501,7 +515,7 @@ export class PMS060Component implements OnInit {
     InitialDialogData() {
         let criteria = new DLG045_Search_Criteria();
         criteria.FilterItemCategory = null;
-        criteria.FilterItemCls = ["FG"];
+        criteria.FilterItemCls = this.machineClass;
         criteria.MultiSelect = true;
         criteria.ShowDeleted = false;
         criteria.ShowStopItem = false;
@@ -754,7 +768,7 @@ export class PMS060Component implements OnInit {
     }
 
     MachineComponentChange() {
-        this.svc.GetComponentParts(this.selectedMachineComponent, null).subscribe(res => {
+        this.svc.GetComponentParts(this.selectedMachineComponent, this.data.Header.MACHINE_LOC_CD).subscribe(res => {
             if (!res || res.length === 0) {
                 this.dlg.ShowInformation('INF0001');
             }
@@ -770,7 +784,7 @@ export class PMS060Component implements OnInit {
     }
 
     MachineComponentChangeCR() {
-        this.svc.GetComponentParts(this.selectedMachineComponent, null).subscribe(res => {
+        this.svc.GetComponentParts(this.selectedMachineComponent, this.data.Header.PARTS_LOC_CD).subscribe(res => {
             if (!res || res.length === 0) {
                 this.dlg.ShowInformation('INF0001');
             }
@@ -799,6 +813,7 @@ export class PMS060Component implements OnInit {
     OnMachineChange(MACHINE_NO) {
         this.combo.GetComboMachineComponent(MACHINE_NO).subscribe(res => {
             this.comboMachineComponent = res;
+
         }, error => {
             this.dlg.ShowException(error);
         });
@@ -815,6 +830,22 @@ export class PMS060Component implements OnInit {
                 this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
             }
         });
+    }
+
+    editPart(row) {
+        
+
+        const dialogRef = this.popup.open(DLGPMS062_01Component, {
+            maxWidth: '400px',
+            data: row
+          });
+
+        dialogRef.afterClosed().subscribe(result => {
+
+            console.log(result);
+            
+        });
+        
     }
 
     deletePartCr(row) {
@@ -1175,7 +1206,30 @@ export class PMS060Component implements OnInit {
                 if (res) {
                     let machine = res;
                     this.data.Header.MACHINE_NAME = machine.MACHINE_NAME;
-                    this.data.Header.MACHINE_LOC = machine.MACHINE_LOC;
+
+
+                    if (this.data.Header.SCHEDULE_TYPEID == 1) {
+                        this.data.Header.MACHINE_LOC = machine.MACHINE_LOC;
+                    }
+                    else if (this.data.Header.SCHEDULE_TYPEID == 2) {
+                        this.data.Header.MACHINE_LOC_CD = machine.LOC_CD;
+                        this.data.Header.PERIOD = machine.PM_PERIOD;
+                        this.data.Header.PERIOD_ID = machine.PM_PERIOD_ID;
+
+                        if (machine.MACHINE_NO == null) {
+                            this.selectedMachineComponent = null;
+                            this.comboMachineComponent = null;
+                        }
+                        else {
+                            this.OnMachineChange(machine.MACHINE_NO);
+                            this.GetMachineDefaultComponent(machine.MACHINE_NO);
+                        }
+
+                        this.LoadPmChecklist(null, machine.MACHINE_NO);
+                        
+                        // this.SetAttachmentText();
+                    }
+
                     this.SetMachineText();
                 }
 
@@ -1186,6 +1240,23 @@ export class PMS060Component implements OnInit {
         this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
         // SetAttachmentText();
 
+    }
+    GetMachineDefaultComponent(MACHINE_NO: string) {
+        this.svc.GetMachineDefaultComponent(MACHINE_NO).subscribe(defaultComponent => {
+            this.selectedMachineComponent = defaultComponent;
+            this.MachineComponentChange();
+        }, error => {
+            this.dlg.ShowException(error);
+        });
+    }
+    LoadPmChecklist(CHECK_REPH_ID: string, MACHINE_NO: string) {
+        this.svc.GetJobPmChecklist(CHECK_REPH_ID, MACHINE_NO).subscribe(res => {
+            this.data.PmChecklist = res;
+            this.dataSourcePmChecklist = new MatTableDataSource(this.data.PmChecklist);
+
+        }, error => {
+            this.dlg.ShowException(error);
+        });
     }
 
     LoadPersonIncharge(CHECK_REPH_ID, MACHINE_NO) {
@@ -1335,6 +1406,15 @@ export class PMS060Component implements OnInit {
 
             }
         });
+    }
+
+    onPartLocationChange_PM()
+    {
+         for(let item of this.data.PmParts) {
+            item.PARTS_LOC_CD=this.data.Header.MACHINE_LOC_CD;
+          } 
+
+        this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
     }
 
 }
