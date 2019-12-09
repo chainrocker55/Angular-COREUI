@@ -267,7 +267,7 @@ export class PMS060Component implements OnInit {
             this.dlg.ShowException(error);
         });
 
-        this.combo.GetComboMachine().subscribe(res => {
+        this.combo.GetComboMachine(false).subscribe(res => {
             res.splice(0, 0, this.comboStringAllItem);
             this.comboMachine = res;
         }, error => {
@@ -275,7 +275,7 @@ export class PMS060Component implements OnInit {
         });
 
         this.combo.GetComboMachine(true).subscribe(res => {
-            res.splice(0, 0, new ComboStringValue());
+            res.splice(0, 0, this.comboStringAllItem);
             this.comboActiveMachine = res;
         }, error => {
             this.dlg.ShowException(error);
