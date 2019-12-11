@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FlexService } from './flex.service';
-import { MatDialog , MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class DialogData {
   DialogResult: string;
@@ -24,22 +24,22 @@ export class Exception {
 @Injectable({ providedIn: 'root' })
 export class DiaglogService {
 
-  private baseUrl =  environment.baseUrl + '/flex/';
+  private baseUrl = environment.baseUrl + '/flex/';
 
   constructor(private toastr: ToastrService, private svc: FlexService, public dialog: MatDialog) {
   }
 
   ShowProcessComplete() {
-      const msg = this.svc.GetMessageObj('INF9003');
-      this.toastr.success(msg.MSG_DESC);
+    const msg = this.svc.GetMessageObj('INF9003');
+    this.toastr.success(msg.MSG_DESC);
   }
 
   ShowInformation(MSG_CD: string) {
     const msg = this.svc.GetMessageObj(MSG_CD);
     if (msg) {
-        this.toastr.info(msg.MSG_DESC);
+      this.toastr.info(msg.MSG_DESC);
     } else {
-        this.toastr.info(MSG_CD);
+      this.toastr.info(MSG_CD);
     }
   }
   ShowInformationText(MSG_DESC: string, Title?: string) {
@@ -49,9 +49,9 @@ export class DiaglogService {
   ShowSuccess(MSG_CD: string) {
     const msg = this.svc.GetMessageObj(MSG_CD);
     if (msg) {
-        this.toastr.success(msg.MSG_DESC);
+      this.toastr.success(msg.MSG_DESC);
     } else {
-        this.toastr.success(MSG_CD);
+      this.toastr.success(MSG_CD);
     }
   }
   ShowSuccessText(MSG_DESC: string, Title?: string) {
@@ -61,9 +61,9 @@ export class DiaglogService {
   ShowWaring(MSG_CD: string) {
     const msg = this.svc.GetMessageObj(MSG_CD);
     if (msg) {
-        this.toastr.warning(msg.MSG_DESC);
+      this.toastr.warning(msg.MSG_DESC);
     } else {
-        this.toastr.warning(MSG_CD);
+      this.toastr.warning(MSG_CD);
     }
   }
   ShowWaringText(MSG_DESC: string, Title?: string) {
@@ -71,12 +71,12 @@ export class DiaglogService {
   }
 
   ShowError(MSG_CD: string) {
-      const msg = this.svc.GetMessageObj(MSG_CD);
-      if (msg) {
-          this.toastr.error(msg.MSG_DESC);
-      } else {
-          this.toastr.error(MSG_CD);
-      }
+    const msg = this.svc.GetMessageObj(MSG_CD);
+    if (msg) {
+      this.toastr.error(msg.MSG_DESC);
+    } else {
+      this.toastr.error(MSG_CD);
+    }
   }
   ShowErrorText(MSG_DESC: string, Title?: string) {
     this.toastr.error(MSG_DESC, Title);
@@ -84,8 +84,14 @@ export class DiaglogService {
 
   ShowException(ex: HttpErrorResponse) {
     console.log('Error', ex);
-    if (ex.status === 400) {
-      this.ShowWaring(ex.error);
+    if (ex.status === 400 && ex.error) {
+      let error = JSON.parse(ex.error);
+      
+      if (error.MSG_CD)
+        this.ShowWaring(this.svc.GetMessageDesc(error.MSG_CD, error.objParam));
+      else
+        this.ShowErrorText(error.Message);
+
     } else {
       const e = this.GetException(ex);
       this.toastr.error(e.Message, e.Source, {
@@ -168,7 +174,7 @@ export class ConfirmDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   onYesClick(): void {
     this.data.DialogResult = 'Yes';

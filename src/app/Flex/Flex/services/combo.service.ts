@@ -80,8 +80,12 @@ export class ComboService {
     return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachineComponent?MACHINE_NO=' + machineNo);
   }
 
-  GetComboItemUnit(itemCd): Observable<ComboStringValue[]> {
-    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboItemUnit?ITEM_CD='+itemCd);
+  GetComboItemUnit(ITEM_CD : string, UNIT_SETTING : string, SHOW_CODE : boolean): Observable<ComboStringValue[]> {
+    return this.http.post<ComboStringValue[]>(this.baseUrl + 'GetComboItemUnit', {ITEM_CD:ITEM_CD, UNIT_SETTING: UNIT_SETTING, SHOW_CODE: SHOW_CODE});
+  }
+
+  GetComboItemUnit_Stock(ITEM_CD : string,  SHOW_CODE : boolean): Observable<ComboStringValue[]> {
+    return this.http.post<ComboStringValue[]>(this.baseUrl + 'GetComboItemUnit', {ITEM_CD:ITEM_CD, UNIT_SETTING: "STOCK_FLAG", SHOW_CODE: SHOW_CODE});
   }
 
   GetComboUnit(showCode): Observable<ComboStringValue[]> {

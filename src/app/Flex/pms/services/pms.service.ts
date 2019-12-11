@@ -11,6 +11,7 @@ import { PMS060_UserDefaultValue } from '../models/PMS060_UserDefaultValue';
 
 @Injectable({ providedIn: 'root' })
 export class PMSService {
+    
 
     private baseUrl = environment.baseUrl + '/pms/';  // URL to web api
 
@@ -106,6 +107,17 @@ export class PMSService {
     GetMachineDefaultComponent(data: string): Observable<string> {
         return this.http.post(this.baseUrl + 'GetMachineDefaultComponent', { StringValue: data }, { responseType: "text" });
     }
+
+    LoadApproveHistory(CHECK_REPH_ID: string): Observable<any[]> {
+        return this.http.post<any[]>(this.baseUrl + 'LoadApproveHistory', { StringValue: CHECK_REPH_ID });
+
+    }
+
+    IsApprover(CHECK_REPH_ID: any, USER_CD: string) : Observable<string> {
+        return this.http.post(this.baseUrl + 'IsApprover', { CHECK_REPH_ID: CHECK_REPH_ID, USER_CD: USER_CD }, { responseType : "text"});
+        
+    }
+
 
 
 }

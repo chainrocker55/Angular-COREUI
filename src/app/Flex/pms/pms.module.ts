@@ -12,6 +12,7 @@ import { PMS060Component } from './views/PMS060-CheckListAndRepairOrder/PMS060.c
 import { DLG045Component } from './views/DLG045-ItemFindDialogWithParam/DLG045.component';
 import { DLGPMS060Component } from './views/DLGPMS060-ScheduleTypeSelect/DLGPMS060.component';
 import { DLGPMS062_01Component } from './views/DLGPMS062_01-PartEditor/DLGPMS062_01.component';
+import { DLGPMS001Component } from './views/DLGPMS001-ApproveHistoryDialog/DLGPMS001.component';
 
 @NgModule({
   imports: [
@@ -22,12 +23,14 @@ import { DLGPMS062_01Component } from './views/DLGPMS062_01-PartEditor/DLGPMS062
     PMS060Component,
     DLG045Component,
     DLGPMS060Component,
-    DLGPMS062_01Component
+    DLGPMS062_01Component,
+    DLGPMS001Component
   ],
   entryComponents: [
     DLG045Component,
     DLGPMS060Component,
-    DLGPMS062_01Component
+    DLGPMS062_01Component,
+    DLGPMS001Component
   ],
 })
 export class PMSModule { }

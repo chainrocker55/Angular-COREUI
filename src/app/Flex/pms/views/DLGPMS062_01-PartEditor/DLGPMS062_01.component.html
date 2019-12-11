@@ -8,7 +8,7 @@
 
                     <mat-form-field class="col-12">
                         <mat-label>Parts Location</mat-label>
-                        <select matNativeControl id="PARTS_LOC_CD" name="PARTS_LOC_CD" [(ngModel)]="data.PARTS_LOC_CD">
+                        <select matNativeControl id="PARTS_LOC_CD" name="PARTS_LOC_CD" [(ngModel)]="data.PARTS_LOC_CD" (change)="getItemInQty()">
                             <!-- <option value=""></option> -->
                             <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}
                             </option>
@@ -17,8 +17,8 @@
                     <mat-form-field class="col-12">
                         <mat-label>Parts Code</mat-label>
                         <input matInput id="PARTS_ITEM_CD" name="PARTS_ITEM_CD" type="text"
-                            [(ngModel)]="data.PARTS_ITEM_CD">
-                        <button mat-stroked-button matSuffix type="button" (click)="openDialog(row)">...</button>
+                            [(ngModel)]="data.PARTS_ITEM_CD" (change)="onPartChange()">
+                        <button mat-stroked-button matSuffix type="button" (click)="openDialog(data)">...</button>
                     </mat-form-field>
 
                     <mat-form-field class="col-12">
@@ -38,7 +38,7 @@
 
                     <mat-form-field class="col-12">
                         <mat-label>In Quantity</mat-label>
-                        <input disabled matInput id="USED_QTY" name="IN_QTY" type="number" [(ngModel)]="data.USED_QTY">
+                        <input disabled matInput id="IN_QTY" name="IN_QTY" type="number" [(ngModel)]="data.IN_QTY">
 
 
                     </mat-form-field>
@@ -49,7 +49,7 @@
                     </mat-form-field>
                     <mat-form-field class="col-12">
                         <mat-label>Unit</mat-label>
-                        <select matNativeControl id="UNITCODE" name="UNITCODE" [(ngModel)]="data.UNITCODE">
+                        <select matNativeControl id="UNITCODE" name="UNITCODE" [(ngModel)]="data.UNITCODE" (change)="getItemInQty()">
                             <!-- <option value=""></option> -->
                             <option *ngFor="let c of comboItemUnit" [value]="c.VALUE">
                                 {{c.DISPLAY}}
