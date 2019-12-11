@@ -4,7 +4,7 @@ import { FlexService } from '../../../Flex/services/flex.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MAT_DATE_FORMATS } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DiaglogService } from '../../../Flex/services/Dialog.service';
 import { ComboStringValue, ComboIntValue } from '../../../Flex/models/complexModel';
@@ -26,10 +26,16 @@ import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.co
 import { DropDownsModule, DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { repeatWhen } from 'rxjs/operators';
 import { DLGPMS062_01Component } from '../DLGPMS062_01-PartEditor/DLGPMS062_01.component';
+import { DateAdapter } from '@angular/material';
+import { APP_DATE_FORMATS, AppDateAdapter } from '../../../Flex/components/format-datepicker';
 
 @Component({
     selector: 'app-pms060',
     templateUrl: './pms060.component.html',
+    providers: [
+        {provide: DateAdapter, useClass: AppDateAdapter},
+        {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+    ]
 })
 export class PMS060Component implements OnInit {
 
@@ -163,12 +169,14 @@ export class PMS060Component implements OnInit {
         private combo: ComboService,
         private svc: PMSService,
         private flex: FlexService,
-        public popup: MatDialog
+        public popup: MatDialog,
+        private dateAdapter: DateAdapter<any>
     ) {
         this.pageOptions = PageSizeOptions;
     }
 
     ngOnInit() {
+        this.dateAdapter.setLocale('en-us');
     	this.getMachineClass();
         this.comboStringAllItem.DISPLAY = 'All : - All -';
         this.comboIntAllItem.DISPLAY = 'All : - All -';
