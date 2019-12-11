@@ -26,9 +26,12 @@ import { DLGPMS060Component } from '../DLGPMS060-ScheduleTypeSelect/DLGPMS060.co
 import { DropDownsModule, DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { repeatWhen } from 'rxjs/operators';
 import { DLGPMS062_01Component } from '../DLGPMS062_01-PartEditor/DLGPMS062_01.component';
+<<<<<<< HEAD
 import { DLGPMS001Component } from '../DLGPMS001-ApproveHistoryDialog/DLGPMS001.component';
+=======
 import { DateAdapter } from '@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '../../../Flex/components/format-datepicker';
+>>>>>>> 79265a19b6008d919457220ca1d947a5eb6a0e72
 
 @Component({
     selector: 'app-pms060',
@@ -177,8 +180,12 @@ export class PMS060Component implements OnInit {
     }
 
     ngOnInit() {
-        this.dateAdapter.setLocale(this.flex.getCurrentUser().LANG_CD);
+<<<<<<< HEAD
         this.getMachineClass();
+=======
+        this.dateAdapter.setLocale(this.flex.getCurrentUser().LANG_CD);
+    	this.getMachineClass();
+>>>>>>> 79265a19b6008d919457220ca1d947a5eb6a0e72
         this.comboStringAllItem.DISPLAY = 'All : - All -';
         this.comboIntAllItem.DISPLAY = 'All : - All -';
         this.InitialCombo();
