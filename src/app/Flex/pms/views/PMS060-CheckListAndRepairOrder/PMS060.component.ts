@@ -399,6 +399,7 @@ export class PMS060Component implements OnInit {
     OnClear() {
         this.criteria = new PMS060_Search_Criteria();
         this.dataList = null;
+        this.InitialCriteria();
     }
 
     OnEdit(data: PMS060_CheckListAndRepairOrder_Result) {
