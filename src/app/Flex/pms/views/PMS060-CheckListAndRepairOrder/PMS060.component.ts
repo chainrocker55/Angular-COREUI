@@ -176,7 +176,7 @@ export class PMS060Component implements OnInit {
     }
 
     ngOnInit() {
-        this.dateAdapter.setLocale('en-us');
+        this.dateAdapter.setLocale(this.flex.getCurrentUser().LANG_CD);
     	this.getMachineClass();
         this.comboStringAllItem.DISPLAY = 'All : - All -';
         this.comboIntAllItem.DISPLAY = 'All : - All -';
