@@ -132,6 +132,7 @@ export class PMS060Component implements OnInit {
     comboLocation: ComboStringValue[];
     comboUserApproveLocation: ComboStringValue[];
     comboSupplier: ComboIntValue[];
+    comboSupplierIncludeDelete: ComboIntValue[];
     comboSchduleType: ComboIntValue[];
     comboStatus: ComboStringValue[];
     comboMachine: ComboStringValue[];
@@ -256,9 +257,16 @@ export class PMS060Component implements OnInit {
         });
 
 
-        this.combo.GetComboSupplier().subscribe(res => {
+        this.combo.GetComboSupplier(false).subscribe(res => {
             res.splice(0, 0, this.comboIntAllItem);
             this.comboSupplier = res;
+        }, error => {
+            this.dlg.ShowException(error);
+        });
+
+        this.combo.GetComboSupplier(true).subscribe(res => {
+            res.splice(0, 0, this.comboIntAllItem);
+            this.comboSupplierIncludeDelete = res;
         }, error => {
             this.dlg.ShowException(error);
         });

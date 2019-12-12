@@ -52,8 +52,8 @@ export class ComboService {
     return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboUserApproveLocation/' + userCd);
   }
 
-  GetComboSupplier(): Observable<ComboIntValue[]> {
-    return this.http.get<ComboIntValue[]>(this.baseUrl + 'GetComboSupplier');
+  GetComboSupplier(IsIncludeDelete: boolean): Observable<ComboIntValue[]> {
+    return this.http.get<ComboIntValue[]>(this.baseUrl + 'GetComboSupplier?IsIncludeDelete=' + IsIncludeDelete);
   }
 
   GetComboMachineScheduleType(): Observable<ComboIntValue[]> {
@@ -64,8 +64,8 @@ export class ComboService {
     return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachineStatus');
   }
 
-  GetComboMachine(excludeDelete : boolean): Observable<ComboStringValue[]> {
-    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachine?excludeDelete='+excludeDelete);
+  GetComboMachine(excludeDelete: boolean): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboMachine?excludeDelete=' + excludeDelete);
   }
 
   GetComboPoNumber(): Observable<ComboIntValue[]> {
