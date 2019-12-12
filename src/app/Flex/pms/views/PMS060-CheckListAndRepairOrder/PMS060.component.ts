@@ -29,6 +29,7 @@ import { DLGPMS062_01Component } from '../DLGPMS062_01-PartEditor/DLGPMS062_01.c
 import { DLGPMS001Component } from '../DLGPMS001-ApproveHistoryDialog/DLGPMS001.component';
 import { DateAdapter } from '@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '../../../Flex/components/format-datepicker';
+import { DLGPMS002Component } from '../DLGPMS002-MachineAttachment/DLGPMS002.component';
 
 @Component({
     selector: 'app-pms060',
@@ -62,6 +63,7 @@ export class PMS060Component implements OnInit {
     pageOptions: number[];
     isLoading: boolean;
     isDataChange: boolean;
+    attachment: any[]=[];
     criteria: PMS060_Search_Criteria = new PMS060_Search_Criteria();
 
     public filterSettings: DropDownFilterSettings = {
@@ -80,6 +82,7 @@ export class PMS060Component implements OnInit {
 
     selectedMachineComponent: string;
     MachineDisplay: string;
+    MachineAttachment: string="(0)";
     SpecialPermissionOH: any;
     // person in charge selection
     SelectedPersonInCharge: any;
@@ -1408,6 +1411,8 @@ export class PMS060Component implements OnInit {
                 result = this.data.Header.MACHINE_NO + " - " + this.data.Header.MACHINE_NAME;
             }
 
+            this.LoadAttachMent();
+
         }
 
         this.MachineDisplay = result;
@@ -1533,6 +1538,24 @@ export class PMS060Component implements OnInit {
             maxWidth: '800px',
             minWidth: '60%',
             data: { CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID }
+        });
+    }
+
+    openAttachmentDialog()
+    {
+        const dialogRef = this.popup.open(DLGPMS002Component, {
+            maxWidth: '800px',
+            minWidth: '60%',
+            data: { MACHINE_NO: this.data.Header.MACHINE_NO, list: this.attachment }
+        });
+    }
+
+    LoadAttachMent() {
+        this.svc.LoadMachineAttachment(this.data.Header.MACHINE_NO).subscribe(res => {
+            this.attachment = res;
+            // this.attachment
+        }, error => {
+            this.dlg.ShowException(error);
         });
     }
 

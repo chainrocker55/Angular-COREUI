@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Attach File List</h2>
+<mat-dialog-content>
+
+
+    <div class="row">
+        <div class="col-12">
+
+            <table class="border" mat-table [dataSource]="dataSource">
+
+
+                <ng-container matColumnDef="NO">
+                    <th mat-header-cell *matHeaderCellDef>No.</th>
+                    <td mat-cell *matCellDef="let i = index" class="text-center">{{i+1}}</td>
+                </ng-container>
+                <ng-container matColumnDef="FILE_NAME">
+                    <th mat-header-cell *matHeaderCellDef>File Name</th>
+                    <td mat-cell *matCellDef="let row" (click)="openFile(row)"><a  ></a>{{row.DisplayName}}</td>
+                </ng-container>
+                
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;">
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Back</button>
+</mat-dialog-actions>

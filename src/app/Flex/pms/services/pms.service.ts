@@ -11,7 +11,6 @@ import { PMS060_UserDefaultValue } from '../models/PMS060_UserDefaultValue';
 
 @Injectable({ providedIn: 'root' })
 export class PMSService {
-    
 
     private baseUrl = environment.baseUrl + '/pms/';  // URL to web api
 
@@ -113,9 +112,24 @@ export class PMSService {
 
     }
 
-    IsApprover(CHECK_REPH_ID: any, USER_CD: string) : Observable<string> {
-        return this.http.post(this.baseUrl + 'IsApprover', { CHECK_REPH_ID: CHECK_REPH_ID, USER_CD: USER_CD }, { responseType : "text"});
-        
+    IsApprover(CHECK_REPH_ID: any, USER_CD: string): Observable<string> {
+        return this.http.post(this.baseUrl + 'IsApprover', { CHECK_REPH_ID: CHECK_REPH_ID, USER_CD: USER_CD }, { responseType: "text" });
+
+    }
+
+    LoadMachineAttachment(MACHINE_NO: string): Observable<any[]> {
+        return this.http.post<any[]>(this.baseUrl + 'LoadMachineAttachment', { StringValue: MACHINE_NO });
+
+    }
+
+    DownloadAttachment(FILEHID: any, FILEID: any) {
+        if (!FILEHID)
+            FILEHID = "0";
+
+        if (!FILEID)
+            FILEID = "0";
+        let url = environment.baseUrl + '/file/' + 'DownloadAttachment/' + FILEHID + "/" + FILEID;
+        return url;
     }
 
 
