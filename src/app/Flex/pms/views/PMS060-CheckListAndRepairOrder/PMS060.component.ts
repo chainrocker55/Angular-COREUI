@@ -42,6 +42,7 @@ export class PMS060Component implements OnInit {
 
     status: TBM_STATUS;
     notHavePermission: boolean = false;
+    isApprover: boolean = false;
     displayedColumns: string[] = ['CLS_INFO_CD', 'CLS_CD', 'CLS_DESC', 'SEQ', 'EDIT_FLAG'];
     displayedColumnsPersonInCharge: string[] = ['SELECT', 'DISPLAY'];
     displayedColumnsChecklist: string[] = ['BTN', 'PM_CHECKLIST_DESC', 'NORMAL_CHECK_BOOL', 'PROBLEM_DESC', 'REPAIR_METHOD'];
@@ -515,19 +516,21 @@ export class PMS060Component implements OnInit {
 
     }
     DisableControlByStatus() {
-        if (this.data.Header.STATUSID == this.STATUS_CANCEL_PLAN || this.data.Header.STATUSID == this.STATUS_CANCEL || this.data.Header.STATUSID == this.STATUS_COMPLETE) {
+        if (this.data.Header.STATUSID == this.STATUS_CANCEL_PLAN || this.data.Header.STATUSID == this.STATUS_CANCEL || this.data.Header.STATUSID == this.STATUS_COMPLETE ||  this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
             this.notHavePermission = true;
-            return;
-        }
-        else if (this.data.Header.SCHEDULE_TYPEID == 2) {
-            if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
-                this.svc.IsApprover(this.data.Header.CHECK_REPH_ID,this.flex.getCurrentUser().USER_CD).subscribe(res => {
-                    let result=(res === 'true');
-                    this.notHavePermission=result==false;
-                }, error => {
-                    this.dlg.ShowException(error);
-                });                
+
+            if (this.data.Header.SCHEDULE_TYPEID == 2) {
+                if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
+                    this.svc.IsApprover(this.data.Header.CHECK_REPH_ID,this.flex.getCurrentUser().USER_CD).subscribe(res => {
+                        let result=(res === 'true');
+                        this.isApprover=result;
+                    }, error => {
+                        this.dlg.ShowException(error);
+                    });                
+                }
             }
+
+            return;
         }
 
         this.notHavePermission = false;

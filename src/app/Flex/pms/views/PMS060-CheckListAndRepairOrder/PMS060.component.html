@@ -350,16 +350,13 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h5 *ngIf="data.Header.MACHINE_NO"><span class="document-header">Checklist/Repair No.:
+                <h5 *ngIf="data.Header.CHECK_REP_NO"><span class="document-header">Checklist/Repair No.:
                         {{data.Header.CHECK_REP_NO}}</span></h5>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <!-- <mat-card-header>
-                    <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
-                </mat-card-header> -->
-                <h2><span class="flex-title-2">Machine No. : {{MachineDisplay}}</span></h2>
+                <h5 *ngIf="MachineDisplay"><span class="document-header">Machine No. : {{MachineDisplay}}</span></h5>
             </div>
         </div>
         <!-- ######################################################################################### -->
@@ -571,24 +568,24 @@
     <mat-card-actions *ngIf="data.Header.CHECK_REPH_ID">
         <button
             *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_NEW || data.Header.STATUSID===STATUS_REVISE"
-            class="button" mat-flat-button color="primary" [disabled]="!formOH.valid || isLoading || notHavePermission"
+            class="button" mat-flat-button color="primary" [disabled]="!formPM.valid || isLoading || notHavePermission"
             (click)="onSendToApprovePM()">
             Send to Approve
         </button>
         <button *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_DURING_APPROVE " class="button"
-            mat-flat-button color="primary" [disabled]="!formOH.valid || isLoading || notHavePermission" (click)="onApprovePM()">
+            mat-flat-button color="primary" [disabled]="isLoading || !isApprover" (click)="onApprovePM()">
             Approve
         </button>
         <button *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID===STATUS_DURING_APPROVE" class="button"
-            mat-stroked-button color="basic" [disabled]="!formOH.valid || isLoading || notHavePermission" (click)="onRevisePM()">
+            mat-stroked-button color="basic" [disabled]="isLoading || !isApprover" (click)="onRevisePM()">
             Revise
         </button>
-        <button *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL" class="button" mat-flat-button
-            color="warn" [disabled]="!formOH.valid || isLoading || notHavePermission" (click)="onCancelPM()">
+        <button *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL && data.Header.STATUSID!=STATUS_DURING_APPROVE" class="button" mat-flat-button
+            color="warn" [disabled]="!formPM.valid || isLoading || notHavePermission" (click)="onCancelPM()">
             Cancel
         </button>
     </mat-card-actions>
-    <form (ngSubmit)="SavePM()" #formOH="ngForm" autocomplete="off">
+    <form (ngSubmit)="SavePM()" #formPM="ngForm" autocomplete="off">
 
         <!-- ######################################################################################### -->
         <!-- HEADER -->
@@ -605,16 +602,13 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h5 *ngIf="data.Header.MACHINE_NO"><span class="document-header">Checklist/Repair No.:
+                <h5 *ngIf="data.Header.CHECK_REP_NO"><span class="document-header">Checklist/Repair No.:
                         {{data.Header.CHECK_REP_NO}}</span></h5>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <!-- <mat-card-header>
-                            <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
-                        </mat-card-header> -->
-                <h2><span class="flex-title-2">Machine No. : {{MachineDisplay}}</span></h2>
+                <h5 *ngIf="MachineDisplay"><span class="document-header">Machine No. : {{MachineDisplay}}</span></h5>
             </div>
         </div>
         <!-- ######################################################################################### -->
@@ -1040,7 +1034,7 @@
 
         <mat-card-actions>
             <button mat-flat-button color="primary" type="submit"
-                [disabled]="!formOH.valid || isLoading || notHavePermission">Save</button>
+                [disabled]="!formPM.valid || isLoading || notHavePermission">Save</button>
             <button mat-flat-button (click)="Back()">Back</button>
         </mat-card-actions>
 
@@ -1100,16 +1094,13 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <h5 *ngIf="data.Header.MACHINE_NO"><span class="document-header">Checklist/Repair No.:
+                <h5 *ngIf="data.Header.CHECK_REP_NO"><span class="document-header">Checklist/Repair No.:
                         {{data.Header.CHECK_REP_NO}}</span></h5>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <!-- <mat-card-header>
-                        <mat-card-title>Checklist/Repair No. : {{data.Header.CHECK_REP_NO}}</mat-card-title>
-                    </mat-card-header> -->
-                <h2><span class="flex-title-2">Machine No. : {{MachineDisplay}}</span></h2>
+                <h5 *ngIf="MachineDisplay"><span class="document-header">Machine No. : {{MachineDisplay}}</span></h5>
             </div>
         </div>
         <!-- ######################################################################################### -->
