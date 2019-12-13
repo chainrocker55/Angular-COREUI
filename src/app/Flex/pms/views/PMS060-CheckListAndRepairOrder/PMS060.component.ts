@@ -253,7 +253,7 @@ export class PMS060Component implements OnInit {
         });
 
         this.combo.GetComboUserApproveLocation(this.flex.getCurrentUser().USER_CD).subscribe(res => {
-            res.splice(0, 0, this.comboStringAllItem);
+            // res.splice(0, 0, this.comboStringAllItem);
             this.comboUserApproveLocation = res;
         }, error => {
             this.dlg.ShowException(error);
@@ -295,7 +295,6 @@ export class PMS060Component implements OnInit {
         });
 
         this.combo.GetComboMachine(true).subscribe(res => {
-            res.splice(0, 0, this.comboStringAllItem);
             this.comboActiveMachine = res;
         }, error => {
             this.dlg.ShowException(error);
@@ -435,10 +434,18 @@ export class PMS060Component implements OnInit {
             this.svc.GetCheckJobCr(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
+                if(!this.data.Header.APPROVE_RQ)
+                    this.data.Header.APPROVE_RQ="Y";
+
                 this.SetMachineText();
 
                 if (!this.data.Header.STATUSID)
                     this.data.Header.STATUSID = this.STATUS_NEW;
+
+                if(this.data.Header.STATUSID != this.STATUS_NEW)
+                {
+                    this.comboUserApproveLocation=this.comboLocation;
+                }
 
                 this.status = this.flex.GetStatus(this.data.Header.STATUSID);
 
@@ -563,6 +570,7 @@ export class PMS060Component implements OnInit {
                         let location = res.findIndex(r => r.VALUE === this.data.Header.MACHINE_LOC_CD);
                         if (location === -1) {
                             this.notHavePermission = true;
+                            this.comboUserApproveLocation=this.comboLocation;
                         }
                         else {
                             this.notHavePermission = false;
@@ -802,6 +810,12 @@ export class PMS060Component implements OnInit {
         if (this.data.Header.STATUSID == this.STATUS_DURING_ASSIGN) {
             if (this.ValidatePersonInCharge() == false)
                 return false;
+        }
+        else if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
+            if(this.data.Header.IN_OUT_PROD_LINE)
+            {
+                this.dlg.ShowWaringText(this.flex.GetMessageDesc("VLM9058", "Location"));
+            }
         }
 
         if (!this.data.Header.COMPLETE_DATE) {
@@ -1121,6 +1135,9 @@ export class PMS060Component implements OnInit {
     }
 
     getUserPosition(userCd) {
+        if(!this.comboUserWithPosition)
+            return null;
+
         let item = this.comboUserWithPosition.find(p =>
             p.VALUE === userCd
         );
@@ -1297,7 +1314,7 @@ export class PMS060Component implements OnInit {
 
     loadUserApproveLocation() {
         this.combo.GetComboUserApproveLocation(this.data.Header.REQUESTER).subscribe(res => {
-            res.splice(0, 0, new ComboStringValue());
+            // res.splice(0, 0, new ComboStringValue());
             this.comboUserApproveLocation = res;
         }, error => {
             this.dlg.ShowException(error);
@@ -1344,6 +1361,15 @@ export class PMS060Component implements OnInit {
 
                         // this.SetAttachmentText();
                     }
+                    else if (this.data.Header.SCHEDULE_TYPEID == 3) {
+                        this.data.Header.MACHINE_LOC_CD = machine.LOC_CD;
+                        this.data.Header.PERIOD = machine.PM_PERIOD;
+                        this.data.Header.PERIOD_ID = machine.PM_PERIOD_ID;
+                        this.data.Header.MACHINE_LOC = machine.MACHINE_LOC;
+
+                        // this.SetAttachmentText();
+                    }
+
 
                     this.SetMachineText();
                 }
@@ -1352,8 +1378,11 @@ export class PMS060Component implements OnInit {
                 this.dlg.ShowException(error);
             });
 
-        this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
-        // SetAttachmentText();
+        
+        if (this.data.Header.SCHEDULE_TYPEID != 3)
+        {
+            this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
+        }
 
     }
     GetMachineDefaultComponent(MACHINE_NO: string) {
@@ -1557,6 +1586,18 @@ export class PMS060Component implements OnInit {
         }, error => {
             this.dlg.ShowException(error);
         });
+    }
+
+    onCrLocationChange()
+    {
+        if(this.data.Header.IN_OUT_PROD_LINE!="N")
+            this.data.Header.SKIP_APPROVAL="N";
+    }
+
+    onCompleteDateChange()
+    {
+        this.data.Header.CLEAN_DATE=this.data.Header.COMPLETE_DATE
+        this.data.Header.CHECK_MC_DATE=this.data.Header.COMPLETE_DATE
     }
 
 }

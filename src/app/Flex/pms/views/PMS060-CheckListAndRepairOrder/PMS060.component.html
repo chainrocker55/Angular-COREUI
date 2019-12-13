@@ -312,6 +312,8 @@
         </mat-card-content>
     </mat-expansion-panel>
 </mat-card>
+
+
 <!-- ######################################################################################### -->
 <!-- over haul -->
 <!-- ######################################################################################### -->
@@ -561,6 +563,8 @@
 
     </form>
 </mat-card>
+
+
 <!-- ######################################################################################### -->
 <!-- ######################################################################################### -->
 <!-- pm -->
@@ -1043,6 +1047,8 @@
 
     </form>
 </mat-card>
+
+
 <!-- ######################################################################################### -->
 <!-- cr -->
 <!-- ######################################################################################### -->
@@ -1157,7 +1163,7 @@
                                 <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission"
                                     matNativeControl id="MACHINE_NO" name="MACHINE_NO"
                                     [(ngModel)]="data.Header.MACHINE_NO"
-                                    (change)="data.Header.MACHINE_NAME=getSelectedMachineName($event)">
+                                    (change)="onMachineNoChange()">
                                     <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboActiveMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
@@ -1168,21 +1174,22 @@
                                 <mat-label>Machine Name</mat-label>
                                 <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
                                     required id="MACHINE_NAME" name="MACHINE_NAME" type="text"
-                                    [(ngModel)]="data.Header.MACHINE_NAME">
+                                    [(ngModel)]="data.Header.MACHINE_NAME"
+                                    (change)="onMachineNameChange()">
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Location</mat-label>
                                 <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
                                     id="MACHINE_LOC" name="MACHINE_LOC" type="text"
-                                    [(ngModel)]="data.Header.MACHINE_LOC">
+                                    [(ngModel)]="data.Header.MACHINE_LOC" floatLabel="always">
                             </mat-form-field>
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
-                                <mat-label>Part Location</mat-label>
+                            <mat-form-field class="col-sm-6 col-lg-3" floatLabel="always">
+                                <mat-label>Part Location</mat-label >
                                 <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" required
                                     matNativeControl id="MACHINE_LOC_CD" name="MACHINE_LOC_CD"
-                                    [(ngModel)]="data.Header.MACHINE_LOC_CD">
+                                    [(ngModel)]="data.Header.MACHINE_LOC_CD"  floatLabel="always">
                                     <option *ngFor="let c of comboUserApproveLocation" [value]="c.VALUE">
                                         {{c.DISPLAY}}
                                     </option>
@@ -1258,15 +1265,18 @@
                                     [(ngModel)]="data.Header.REC_REQUEST_TIME">
                             </mat-form-field>
 
+                            
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Complete Date</mat-label>
+                                <mat-error >Complete Date is required</mat-error>
                                 <input
+                                    required
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     matInput [matDatepicker]="COMPLETE_DATE" id="COMPLETE_DATE" name="COMPLETE_DATE"
-                                    [(ngModel)]="data.Header.COMPLETE_DATE">
-                                <mat-datepicker-toggle matSuffix [for]="COMPLETE_DATE">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker #COMPLETE_DATE></mat-datepicker>
+                                    [(ngModel)]="data.Header.COMPLETE_DATE"
+                                    (dateChange)="onCompleteDateChange()">
+                                <mat-datepicker-toggle matSuffix [for]="COMPLETE_DATE"></mat-datepicker-toggle>
+                                <mat-datepicker required #COMPLETE_DATE></mat-datepicker>
                             </mat-form-field>
 
 
@@ -1284,7 +1294,7 @@
                         <div class="row">
                             <div class="col-sm-6 col-lg-3">
                                 <mat-checkbox
-                                    [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
+                                    [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || data.Header.IN_OUT_PROD_LINE!='N'"
                                     labelPosition="before" name="SKIP_APPROVAL" id="SKIP_APPROVAL"
                                     [checked]="data.Header.SKIP_APPROVAL==='Y'"
                                     (change)="data.Header.SKIP_APPROVAL=GetCheckedYn($event)">
@@ -1292,7 +1302,7 @@
                                 </mat-checkbox>
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <mat-label>Approve</mat-label>
+                                <mat-label>Approve *</mat-label>
                                 <mat-radio-group
                                     [disabled]="data.Header.STATUSID!=STATUS_DURING_ASSIGN || notHavePermission"
                                     [(ngModel)]="data.Header.APPROVE_RQ" [ngModelOptions]="{standalone: true}">
@@ -1308,8 +1318,9 @@
                             <div class="col-sm-12 col-lg-6">
                                 <mat-label>Location</mat-label>
                                 <mat-radio-group
+                                    required
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
-                                    [(ngModel)]="data.Header.IN_OUT_PROD_LINE" [ngModelOptions]="{standalone: true}">
+                                    [(ngModel)]="data.Header.IN_OUT_PROD_LINE" [ngModelOptions]="{standalone: true}" (change)="onCrLocationChange()">
                                     <mat-radio-button value="Y">
                                         In Production Line
                                     </mat-radio-button>
@@ -1354,7 +1365,7 @@
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Person In Charge</mat-label>
                                         <select
-                                            [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN) || notHavePermission"
+                                            [disabled]="(data.Header.STATUSID!=STATUS_DURING_ASSIGN) || notHavePermission"
                                             matNativeControl id="PersonInCharge" name="PersonInCharge"
                                             [(ngModel)]="SelectedPersonInCharge">
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
@@ -1364,10 +1375,10 @@
                                     </mat-form-field>
                                     <div class="col-sm-6 col-lg-6">
                                         <button
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
                                             type="button" mat-stroked-button (click)="AddPersonIncharge()">Add</button>
                                         <button
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE && data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
                                             type="button" mat-stroked-button
                                             (click)="RemovePersonIncharge()">Remove</button>
                                     </div>
