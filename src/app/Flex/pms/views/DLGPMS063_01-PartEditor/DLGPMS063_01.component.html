@@ -1,0 +1,115 @@
+<h2 mat-dialog-title>Parts Edit Dialog</h2>
+<form *ngIf="data" (ngSubmit)="save()" #formMain="ngForm" autocomplete="off">
+
+    <mat-dialog-content>
+
+
+        <div class="row">
+
+            <mat-form-field class="col-12">
+                <mat-label>Parts Location</mat-label>
+                <select matNativeControl id="LOC_CD" name="LOC_CD" [(ngModel)]="data.LOC_CD" (change)="getItemInQty()">
+                    <!-- <option value=""></option> -->
+                    <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}
+                    </option>
+                </select>
+            </mat-form-field>
+            <mat-form-field class="col-12">
+                <mat-label>Parts Code</mat-label>
+                <input matInput id="ITEM_CD" name="ITEM_CD" type="text" [(ngModel)]="data.ITEM_CD"
+                    (change)="onPartChange()">
+                <button mat-stroked-button matSuffix type="button" (click)="openDialog(data)">...</button>
+            </mat-form-field>
+
+            <mat-form-field class="col-12">
+                <mat-label>Parts Name</mat-label>
+                <input matInput mat-form-field-should-float="true" id="ITEM_DESC" name="ITEM_DESC" type="text"
+                    [(ngModel)]="data.ITEM_DESC">
+            </mat-form-field>
+
+            <mat-form-field class="col-12">
+                <mat-label>Unit</mat-label>
+                <select matNativeControl id="UNITCODE" name="UNITCODE" [(ngModel)]="data.UNITCODE"
+                    (change)="getItemInQty()">
+                    <!-- <option value=""></option> -->
+                    <option *ngFor="let c of comboItemUnit" [value]="c.VALUE">
+                        {{c.DISPLAY}}
+                    </option>
+                </select>
+
+            </mat-form-field>
+
+            <mat-form-field class="col-12">
+                <mat-label>Request Qty</mat-label>
+                <input matInput id="REQUEST_QTY" name="REQUEST_QTY" type="number" [(ngModel)]="data.REQUEST_QTY">
+            </mat-form-field>
+
+
+            <div class=" col-12">
+                <fieldset class="well the-fieldset">
+                    <legend class="the-legend">In</legend>
+
+
+                    <mat-form-field class="col-12">
+                        <mat-label>In Qty</mat-label>
+                        <input matInput id="IN_QTY" name="IN_QTY" type="number" [(ngModel)]="data.IN_QTY"
+                            (change)="calculateUsedQty()">
+                    </mat-form-field>
+
+                    <div class="col-12">
+                        <mat-checkbox labelPosition="before" name="IN_CLEAN_BOOL" id="IN_CLEAN_BOOL"
+                            [(ngModel)]="data.IN_CLEAN_BOOL">
+                            Clean
+                        </mat-checkbox>
+
+                        <mat-checkbox labelPosition="before" name="IN_APPEARANCE_BOOL" id="IN_APPEARANCE_BOOL"
+                            [(ngModel)]="data.IN_APPEARANCE_BOOL">
+                            Appearance
+                        </mat-checkbox>
+                    </div>
+
+                </fieldset>
+            </div>
+
+
+            <div class=" col-12">
+                <fieldset class="well the-fieldset">
+                    <legend class="the-legend">Out</legend>
+
+
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Used Qty</mat-label>
+                        <input matInput id="OUT_USEDQTY" name="OUT_USEDQTY" type="number"
+                            [(ngModel)]="data.OUT_USEDQTY">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Return Qty</mat-label>
+                        <input matInput id="OUT_RETURNQTY" name="OUT_RETURNQTY" type="number"
+                            [(ngModel)]="data.OUT_RETURNQTY" (change)="calculateUsedQty()">
+                    </mat-form-field>
+
+                    <div class="col-12">
+                        <mat-checkbox disabled labelPosition="before" name="OUT_CLEAN_BOOL" id="OUT_CLEAN_BOOL"
+                            [(ngModel)]="data.OUT_CLEAN_BOOL">
+                            Clean
+                        </mat-checkbox>
+
+                        <mat-checkbox disabled labelPosition="before" name="OUT_APPEARANCE_BOOL"
+                            id="OUT_APPEARANCE_BOOL" [(ngModel)]="data.OUT_APPEARANCE_BOOL">
+                            Appearance
+                        </mat-checkbox>
+                    </div>
+
+                </fieldset>
+            </div>
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button type="submit" [disabled]="!formMain.valid" cdkFocusInitial>Save</button>
+    </mat-dialog-actions>
+</form>

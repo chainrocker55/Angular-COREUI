@@ -12,7 +12,7 @@ import { ComboService } from '../../../Flex/services/combo.service';
 import { PMSService } from '../../services/pms.service';
 import { PMS060_Search_Criteria } from '../../models/PMS060_Search_Criteria';
 import { PMS060_CheckListAndRepairOrder_Result } from '../../models/PMS060_CheckListAndRepairOrder_Result';
-import { PageSizeOptions, ComboStringAll } from '../../../Flex/constant';
+import { PageSizeOptions, ComboStringAll, TEXTAREA_ROWS } from '../../../Flex/constant';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { PMS062_GetJobPmChecklist_Result } from '../../models/PMS062_GetJobPmChecklist_Result';
 import { PMS060_CheckJobPersonInCharge_Result } from '../../models/PMS060_CheckJobPersonInCharge_Result';
@@ -30,26 +30,29 @@ import { DLGPMS001Component } from '../DLGPMS001-ApproveHistoryDialog/DLGPMS001.
 import { DateAdapter } from '@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '../../../Flex/components/format-datepicker';
 import { DLGPMS002Component } from '../DLGPMS002-MachineAttachment/DLGPMS002.component';
+import { DLGPMS063_01Component } from '../DLGPMS063_01-PartEditor/DLGPMS063_01.component';
 
 @Component({
     selector: 'app-pms060',
     templateUrl: './pms060.component.html',
     providers: [
-        {provide: DateAdapter, useClass: AppDateAdapter},
-        {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+        { provide: DateAdapter, useClass: AppDateAdapter },
+        { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
     ]
 })
 export class PMS060Component implements OnInit {
 
+    TEXTAREA_ROWS=TEXTAREA_ROWS;
     status: TBM_STATUS;
     notHavePermission: boolean = false;
     isApprover: boolean = false;
+    isMachineComponentVisible: boolean = false;
     displayedColumns: string[] = ['CLS_INFO_CD', 'CLS_CD', 'CLS_DESC', 'SEQ', 'EDIT_FLAG'];
     displayedColumnsPersonInCharge: string[] = ['SELECT', 'DISPLAY'];
     displayedColumnsChecklist: string[] = ['BTN', 'PM_CHECKLIST_DESC', 'NORMAL_CHECK_BOOL', 'PROBLEM_DESC', 'REPAIR_METHOD'];
     displayedColumnsPart: string[] = ['ACTION', 'ACTION2', 'PARTS_LOC_CD', 'PARTS_ITEM_CD', 'PARTS_ITEM_DESC', 'REQUEST_QTY', 'IN_QTY', 'USED_QTY', 'UNITCODE', 'REMARK'];
     displayedColumnsCrTools: string[] = ['NO', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
-    displayedColumnsCrPart: string[] = ['ACTION', 'LOC_CD', 'ITEM_CD', 'BTN', 'ITEM_DESC', 'UNITCODE', 'REQUEST_QTY', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
+    displayedColumnsCrPart: string[] = ['ACTION', 'ACTION2', 'LOC_CD', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'REQUEST_QTY', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
     displayedColumnsCrPH: string[] = ['NO', 'PERSONAL_DESC', 'PASS'];
 
     dataSource: MatTableDataSource<PMS060_CheckListAndRepairOrder_Result>;
@@ -63,7 +66,7 @@ export class PMS060Component implements OnInit {
     pageOptions: number[];
     isLoading: boolean;
     isDataChange: boolean;
-    attachment: any[]=[];
+    attachment: any[] = [];
     criteria: PMS060_Search_Criteria = new PMS060_Search_Criteria();
 
     public filterSettings: DropDownFilterSettings = {
@@ -82,7 +85,7 @@ export class PMS060Component implements OnInit {
 
     selectedMachineComponent: string;
     MachineDisplay: string;
-    MachineAttachment: string="(0)";
+    MachineAttachment: string = "(0)";
     SpecialPermissionOH: any;
     // person in charge selection
     SelectedPersonInCharge: any;
@@ -434,18 +437,19 @@ export class PMS060Component implements OnInit {
             this.svc.GetCheckJobCr(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
-                if(!this.data.Header.APPROVE_RQ)
-                    this.data.Header.APPROVE_RQ="Y";
+                if (!this.data.Header.APPROVE_RQ)
+                    this.data.Header.APPROVE_RQ = "Y";
 
                 this.SetMachineText();
 
                 if (!this.data.Header.STATUSID)
                     this.data.Header.STATUSID = this.STATUS_NEW;
 
-                if(this.data.Header.STATUSID != this.STATUS_NEW)
-                {
-                    this.comboUserApproveLocation=this.comboLocation;
+                if (this.data.Header.STATUSID != this.STATUS_NEW) {
+                    this.comboUserApproveLocation = this.comboLocation;
                 }
+
+
 
                 this.status = this.flex.GetStatus(this.data.Header.STATUSID);
 
@@ -461,11 +465,28 @@ export class PMS060Component implements OnInit {
 
                 this.OnMachineChange(this.data.Header.MACHINE_NO);
                 this.selectedMachineComponent = this.data.DefaultComponent;
-                if (!this.data.Parts || this.data.Parts.length == 0)
-                    this.MachineComponentChangeCR();
+
+
 
                 this.DisableControlByStatus();
                 this.SetDefaultDate();
+
+                if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
+                    if (!this.data.Header.IN_OUT_PROD_LINE) {
+                        this.isMachineComponentVisible = true;
+                        this.MachineComponentChangeCR();
+                    }
+                    else
+
+                        if (this.notHavePermission == false) {
+                            let userCode = this.flex.getCurrentUser().USER_CD;
+                            this.data.Header.CHECK_MC_PERSON = userCode;
+                            this.data.Header.CHECK_MC_POSITIONID = this.getUserPosition(userCode);
+                        }
+                }
+                else {
+                    this.isMachineComponentVisible = false;
+                }
 
             }, error => {
                 this.dlg.ShowException(error);
@@ -477,6 +498,12 @@ export class PMS060Component implements OnInit {
             this.svc.GetCheckJob(data).subscribe((res) => {
                 this.isLoading = false;
                 this.data = res;
+
+                if(this.data.Header.STATUSID== this.STATUS_ACTIVE_PLAN)
+                {
+                    this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
+                }
+
                 this.SetMachineText();
                 this.status = this.flex.GetStatus(this.data.Header.STATUSID);
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
@@ -534,19 +561,31 @@ export class PMS060Component implements OnInit {
 
     }
     DisableControlByStatus() {
-        if (this.data.Header.STATUSID == this.STATUS_CANCEL_PLAN || this.data.Header.STATUSID == this.STATUS_CANCEL || this.data.Header.STATUSID == this.STATUS_COMPLETE ||  this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
+        if (this.data.Header.STATUSID == this.STATUS_CANCEL_PLAN || this.data.Header.STATUSID == this.STATUS_CANCEL || this.data.Header.STATUSID == this.STATUS_COMPLETE || this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
             this.notHavePermission = true;
 
             if (this.data.Header.SCHEDULE_TYPEID == 2) {
                 if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
-                    this.svc.IsApprover(this.data.Header.CHECK_REPH_ID,this.flex.getCurrentUser().USER_CD).subscribe(res => {
-                        let result=(res === 'true');
-                        this.isApprover=result;
+                    this.svc.IsApprover(this.data.Header.CHECK_REPH_ID, this.flex.getCurrentUser().USER_CD).subscribe(res => {
+                        let result = (res === 'true');
+                        this.isApprover = result;
                     }, error => {
                         this.dlg.ShowException(error);
-                    });                
+                    });
                 }
             }
+            else if (this.data.Header.SCHEDULE_TYPEID == 3) {
+                if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
+                    this.svc.IsApprover(this.data.Header.CHECK_REPH_ID, this.flex.getCurrentUser().USER_CD).subscribe(res => {
+                        let result = (res === 'true');
+                        this.notHavePermission = result==false;
+                        this.isApprover = result;
+                    }, error => {
+                        this.dlg.ShowException(error);
+                    });
+                }
+            }
+
 
             return;
         }
@@ -570,7 +609,7 @@ export class PMS060Component implements OnInit {
                         let location = res.findIndex(r => r.VALUE === this.data.Header.MACHINE_LOC_CD);
                         if (location === -1) {
                             this.notHavePermission = true;
-                            this.comboUserApproveLocation=this.comboLocation;
+                            this.comboUserApproveLocation = this.comboLocation;
                         }
                         else {
                             this.notHavePermission = false;
@@ -811,12 +850,12 @@ export class PMS060Component implements OnInit {
             if (this.ValidatePersonInCharge() == false)
                 return false;
         }
-        else if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
-            if(this.data.Header.IN_OUT_PROD_LINE)
-            {
-                this.dlg.ShowWaringText(this.flex.GetMessageDesc("VLM9058", "Location"));
-            }
-        }
+        // else if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
+        //     // if(!this.data.Header.IN_OUT_PROD_LINE)
+        //     // {
+        //     //     this.dlg.ShowWaringText(this.flex.GetMessageDesc("VLM9058", "Location"));
+        //     // }
+        // }
 
         if (!this.data.Header.COMPLETE_DATE) {
             let item = this.data.Parts.find(p =>
@@ -961,6 +1000,31 @@ export class PMS060Component implements OnInit {
 
     }
 
+    editPartCr(row) {
+
+
+        const dialogRef = this.popup.open(DLGPMS063_01Component, {
+            maxWidth: '400px',
+            data: {
+                item: row,
+                list: this.dialogData,
+                parts: this.data.Parts,
+                CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            // console.log(result);
+            // console.log(Object.assign(row, result));
+            // console.log(row);
+            // row=Object.assign(row, result);
+            // console.log(this.data.PmParts);
+            Object.assign(row, result);
+
+        });
+
+    }
+
 
     deletePartCr(row) {
         this.dlg.ShowConfirm('CFM0131').subscribe(d => {
@@ -988,7 +1052,7 @@ export class PMS060Component implements OnInit {
     openDialog(row) {
         let criteria = new DLG045_Search_Criteria();
         criteria.FilterItemCategory = null;
-        criteria.FilterItemCls = ["FG"];
+        criteria.FilterItemCls = this.machineClass;
         criteria.MultiSelect = true;
         criteria.ShowDeleted = false;
         criteria.ShowStopItem = false;
@@ -1005,29 +1069,8 @@ export class PMS060Component implements OnInit {
 
                 this.getInQty(pData);
 
-                if (row) {
-                    row.PARTS_LOC_CD = pData[0].PARTS_LOC_CD;
-                    row.PARTS_ITEM_CD = pData[0].PARTS_ITEM_CD;
-                    row.PARTS_ITEM_DESC = pData[0].PARTS_ITEM_DESC;
-                    row.IN_QTY = result[0].IN_QTY;
-                    row.UNITCODE = pData[0].UNITCODE;
-                }
-                else {
-                    this.data.PmParts.push({
-                        PARTS_LOC_CD: pData[0].PARTS_LOC_CD,
-                        PARTS_ITEM_CD: pData[0].PARTS_ITEM_CD,
-                        PARTS_ITEM_DESC: pData[0].PARTS_ITEM_DESC,
-                        IN_QTY: pData[0].IN_QTY,
-                        UNITCODE: pData[0].UNITCODE,
-                    });
-
-                    if (pData.length == 1) {
-                        this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
-                    }
-                }
-
-                if (pData.length > 1) {
-                    for (let i = 1; i < pData.length; i++) {
+                for (let i = 0; i < pData.length; i++) {
+                    if (this.PartsExists(pData[i].PARTS_ITEM_CD) == false) {
                         this.data.PmParts.push({
                             PARTS_LOC_CD: pData[0].PARTS_LOC_CD,
                             PARTS_ITEM_CD: pData[i].PARTS_ITEM_CD,
@@ -1036,10 +1079,9 @@ export class PMS060Component implements OnInit {
                             UNITCODE: pData[i].UNITCODE,
                         });
                     }
-                    this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
+
                 }
-
-
+                this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
             }
         });
     }
@@ -1047,7 +1089,7 @@ export class PMS060Component implements OnInit {
         this.isLoading = true;
         let criteria = new DLG045_Search_Criteria();
         criteria.FilterItemCategory = null;
-        criteria.FilterItemCls = ["FG"];
+        criteria.FilterItemCls = this.machineClass;
         criteria.MultiSelect = true;
         criteria.ShowDeleted = false;
         criteria.ShowStopItem = false;
@@ -1063,16 +1105,9 @@ export class PMS060Component implements OnInit {
             if (pData && pData.length > 0) {
 
                 this.getInQty(pData);
-
-                row.LOC_CD = pData[0].PARTS_LOC_CD;
-                row.ITEM_CD = pData[0].PARTS_ITEM_CD;
-                row.ITEM_DESC = pData[0].PARTS_ITEM_DESC;
-                row.IN_QTY = result[0].IN_QTY;
-                row.UNITCODE = pData[0].UNITCODE;
-
-                if (pData.length > 1) {
-                    for (let i = 1; i < pData.length; i++) {
-                        this.data.PmParts.push({
+                for (let i = 0; i < pData.length; i++) {
+                    if (this.PartsExists_CR(pData[i].PARTS_ITEM_CD) == false) {
+                        this.data.Parts.push({
                             LOC_CD: pData[i].PARTS_LOC_CD,
                             ITEM_CD: pData[i].PARTS_ITEM_CD,
                             ITEM_DESC: pData[i].PARTS_ITEM_DESC,
@@ -1080,10 +1115,8 @@ export class PMS060Component implements OnInit {
                             UNITCODE: pData[i].UNITCODE,
                         });
                     }
-                    this.dataSourceCrParts = new MatTableDataSource(this.data.PmParts);
                 }
-
-
+                this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
             }
         });
     }
@@ -1135,7 +1168,7 @@ export class PMS060Component implements OnInit {
     }
 
     getUserPosition(userCd) {
-        if(!this.comboUserWithPosition)
+        if (!this.comboUserWithPosition)
             return null;
 
         let item = this.comboUserWithPosition.find(p =>
@@ -1378,9 +1411,8 @@ export class PMS060Component implements OnInit {
                 this.dlg.ShowException(error);
             });
 
-        
-        if (this.data.Header.SCHEDULE_TYPEID != 3)
-        {
+
+        if (this.data.Header.SCHEDULE_TYPEID != 3) {
             this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
         }
 
@@ -1570,8 +1602,7 @@ export class PMS060Component implements OnInit {
         });
     }
 
-    openAttachmentDialog()
-    {
+    openAttachmentDialog() {
         const dialogRef = this.popup.open(DLGPMS002Component, {
             maxWidth: '800px',
             minWidth: '60%',
@@ -1588,16 +1619,30 @@ export class PMS060Component implements OnInit {
         });
     }
 
-    onCrLocationChange()
-    {
-        if(this.data.Header.IN_OUT_PROD_LINE!="N")
-            this.data.Header.SKIP_APPROVAL="N";
+    onCrLocationChange() {
+        if (this.data.Header.IN_OUT_PROD_LINE != "N")
+            this.data.Header.SKIP_APPROVAL = "N";
     }
 
-    onCompleteDateChange()
-    {
-        this.data.Header.CLEAN_DATE=this.data.Header.COMPLETE_DATE
-        this.data.Header.CHECK_MC_DATE=this.data.Header.COMPLETE_DATE
+    onCompleteDateChange() {
+        this.data.Header.CLEAN_DATE = this.data.Header.COMPLETE_DATE
+        this.data.Header.CHECK_MC_DATE = this.data.Header.COMPLETE_DATE
+    }
+
+    PartsExists(PARTS_ITEM_CD: string) {
+        let item = this.data.PmParts.find(p => p.PARTS_ITEM_CD == PARTS_ITEM_CD)
+        if (item)
+            return true;
+        else
+            return false;
+    }
+
+    PartsExists_CR(PARTS_ITEM_CD: string) {
+        let item = this.data.Parts.find(p => p.ITEM_CD == PARTS_ITEM_CD)
+        if (item)
+            return true;
+        else
+            return false;
     }
 
 }

@@ -1,6 +1,7 @@
 import { ComboStringValue } from './models/complexModel';
 
 export const PageSizeOptions = [10, 20, 50, 100, 500, 1000];
+export const TEXTAREA_ROWS = 4;
 
 export const MY_FORMATS = {
     parse: {
