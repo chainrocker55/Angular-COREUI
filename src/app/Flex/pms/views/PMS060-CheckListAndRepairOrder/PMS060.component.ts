@@ -42,7 +42,7 @@ import { DLGPMS063_01Component } from '../DLGPMS063_01-PartEditor/DLGPMS063_01.c
 })
 export class PMS060Component implements OnInit {
 
-    TEXTAREA_ROWS=TEXTAREA_ROWS;
+    TEXTAREA_ROWS = TEXTAREA_ROWS;
     status: TBM_STATUS;
     notHavePermission: boolean = false;
     isApprover: boolean = false;
@@ -53,7 +53,7 @@ export class PMS060Component implements OnInit {
     displayedColumnsPart: string[] = ['ACTION', 'ACTION2', 'PARTS_LOC_CD', 'PARTS_ITEM_CD', 'PARTS_ITEM_DESC', 'REQUEST_QTY', 'IN_QTY', 'USED_QTY', 'UNITCODE', 'REMARK'];
     displayedColumnsCrTools: string[] = ['NO', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
     displayedColumnsCrPart: string[] = ['ACTION', 'ACTION2', 'LOC_CD', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'REQUEST_QTY', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
-    displayedColumnsCrPH: string[] = ['NO', 'PERSONAL_DESC', 'PASS'];
+    displayedColumnsCrPH: string[] = ['NO', 'PERSONAL_DESC', 'PASS', 'NOT_PASS'];
 
     dataSource: MatTableDataSource<PMS060_CheckListAndRepairOrder_Result>;
     dataSourcePersonInCharge: MatTableDataSource<PMS060_CheckJobPersonInCharge_Result>;
@@ -488,6 +488,7 @@ export class PMS060Component implements OnInit {
                     this.isMachineComponentVisible = false;
                 }
 
+
             }, error => {
                 this.dlg.ShowException(error);
                 this.isLoading = false;
@@ -499,8 +500,7 @@ export class PMS060Component implements OnInit {
                 this.isLoading = false;
                 this.data = res;
 
-                if(this.data.Header.STATUSID== this.STATUS_ACTIVE_PLAN)
-                {
+                if (this.data.Header.STATUSID == this.STATUS_ACTIVE_PLAN) {
                     this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
                 }
 
@@ -578,8 +578,34 @@ export class PMS060Component implements OnInit {
                 if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
                     this.svc.IsApprover(this.data.Header.CHECK_REPH_ID, this.flex.getCurrentUser().USER_CD).subscribe(res => {
                         let result = (res === 'true');
-                        this.notHavePermission = result==false;
+                        this.notHavePermission = result == false;
                         this.isApprover = result;
+
+                        if (this.isApprover == true && this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
+
+                            let userCode = this.flex.getCurrentUser().USER_CD;
+
+                            if (!this.data.Check.CHECK_MC_PERSON) {
+                                this.data.Check.CHECK_MC_PERSON = userCode;
+                                this.data.Check.CHECK_MC_POSITIONID = this.getUserPosition(userCode);
+                                this.data.Check.CHECK_MC_DATE = new Date();
+                            }
+
+                            if (!this.data.Check.CLEAN_PERSON) {
+                                this.data.Check.CLEAN_FLAG = 'Y';
+                                this.data.Check.CLEAN_PERSON = userCode;
+                                this.data.Check.CLEAN_POSITIONID = this.getUserPosition(userCode);
+                                this.data.Check.CLEAN_DATE = new Date();
+                            }
+
+                            if (!this.data.Check.QC_PERSON) {
+                                this.data.Check.QC_PERSON = userCode;
+                                this.data.Check.QC_POSITIONID = this.getUserPosition(userCode);
+                                this.data.Check.QC_DATE = new Date();
+                            }
+                        }
+
+
                     }, error => {
                         this.dlg.ShowException(error);
                     });
@@ -1643,6 +1669,17 @@ export class PMS060Component implements OnInit {
             return true;
         else
             return false;
+    }
+
+    onPassChange(col, row) {
+        if (col == "PASS") {
+            if (row.PASS == true)
+                row.NOT_PASS = false;
+        }
+        else {
+            if (row.NOT_PASS == true)
+                row.PASS = false;
+        }
     }
 
 }

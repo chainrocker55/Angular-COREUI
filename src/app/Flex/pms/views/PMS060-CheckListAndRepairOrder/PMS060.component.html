@@ -1,4 +1,3 @@
-
 <!-- ######################################################################################### -->
 <!-- list -->
 <mat-card [hidden]="data" class="animated fadeIn card-margin">
@@ -436,7 +435,7 @@
                                     <table class="border" mat-table [dataSource]="dataSourcePersonInCharge">
                                         <!-- checkbox colunm -->
                                         <ng-container matColumnDef="SELECT">
-                                            <td  mat-cell *matCellDef="let row" class="grid-checkbox-column">
+                                            <td mat-cell *matCellDef="let row" class="grid-checkbox-column">
                                                 <mat-checkbox (click)="$event.stopPropagation()"
                                                     (change)="$event ? selectionPersonInCharge.toggle(row) : null"
                                                     [checked]="selectionPersonInCharge.isSelected(row)"
@@ -521,23 +520,26 @@
 
                             <mat-form-field class="col-sm-12 col-lg-12">
                                 <mat-label>Detail of Problems or Disorder</mat-label>
-                                <textarea matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"  rows="{{TEXTAREA_ROWS}}"
-                                    [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.PROBLEM_DESC">
+                                <textarea matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"
+                                    rows="{{TEXTAREA_ROWS}}" [disabled]="notHavePermission"
+                                    [(ngModel)]="data.HeaderOverHaul.PROBLEM_DESC">
                                     </textarea>
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-12 col-lg-12">
                                 <mat-label>Repair Method</mat-label>
-                                <textarea matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"  rows="{{TEXTAREA_ROWS}}"
-                                    [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.REPAIR_METHOD">
+                                <textarea matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"
+                                    rows="{{TEXTAREA_ROWS}}" [disabled]="notHavePermission"
+                                    [(ngModel)]="data.HeaderOverHaul.REPAIR_METHOD">
                                     </textarea>
                             </mat-form-field>
 
 
                             <mat-form-field class="col-sm-12 col-lg-12">
                                 <mat-label>Cause of Delay</mat-label>
-                                <textarea matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"  rows="{{TEXTAREA_ROWS}}"
-                                    [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.CAUSE_DELAY">
+                                <textarea matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
+                                    rows="{{TEXTAREA_ROWS}}" [disabled]="notHavePermission"
+                                    [(ngModel)]="data.HeaderOverHaul.CAUSE_DELAY">
                                 </textarea>
                             </mat-form-field>
 
@@ -723,7 +725,8 @@
 
                                         <tr mat-row
                                             *matRowDef="let row; let i = index; columns: displayedColumnsPersonInCharge;"
-                                            (click)="notHavePermission ==false ? selectionPersonInCharge.toggle(row) : null">>
+                                            (click)="notHavePermission ==false ? selectionPersonInCharge.toggle(row) : null">
+                                            >
                                         </tr>
                                     </table>
                                 </div>
@@ -1065,8 +1068,6 @@
 <!-- ######################################################################################### -->
 <mat-card *ngIf="data && data.Header.SCHEDULE_TYPEID===3" class="animated fadeIn card-margin">
 
-        notHavePermission={{notHavePermission}}
-
     <mat-card-actions *ngIf="data.Header.CHECK_REPH_ID">
         <button
             *ngIf="data.Header.CHECK_REPH_ID && (data.Header.STATUSID===STATUS_NEW || data.Header.STATUSID===STATUS_DURING_ASSIGN)"
@@ -1234,7 +1235,8 @@
                             </mat-form-field>
                             <mat-form-field class="col-sm-6 col-lg-6">
                                 <mat-label>Trouble</mat-label>
-                                <textarea rows="{{TEXTAREA_ROWS}}" [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
+                                <textarea rows="{{TEXTAREA_ROWS}}"
+                                    [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
                                     id="TROUBLE" name="TROUBLE" type="text"
                                     [(ngModel)]="data.Header.TROUBLE"></textarea>
                             </mat-form-field>
@@ -1398,7 +1400,7 @@
                                                 <mat-checkbox (click)="$event.stopPropagation()"
                                                     (change)="$event ? selectionPersonInCharge.toggle(row) : null"
                                                     [checked]="selectionPersonInCharge.isSelected(row)"
-                                                    [disabled]="notHavePermission">
+                                                    [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_DURING_ASSIGN)">
                                                 </mat-checkbox>
                                             </td>
                                         </ng-container>
@@ -1409,7 +1411,8 @@
 
                                         <tr mat-row
                                             *matRowDef="let row; let i = index; columns: displayedColumnsPersonInCharge;"
-                                            (click)="notHavePermission ==false ? selectionPersonInCharge.toggle(row) : null">>
+                                            (click)="notHavePermission || (data.Header.STATUSID!=STATUS_DURING_ASSIGN) ? selectionPersonInCharge.toggle(row) : null">
+                                            >
                                         </tr>
                                     </table>
                                 </div>
@@ -1561,7 +1564,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="IN_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
-                                    <td mat-cell *matCellDef="let row">
+                                    <td mat-cell *matCellDef="let row" class="text-center">
                                         <mat-checkbox
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             [(ngModel)]="row.IN_CLEAN_BOOL" [ngModelOptions]="{standalone: true}">
@@ -1570,7 +1573,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="IN_APPEARANCE_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
-                                    <td mat-cell *matCellDef="let row">
+                                    <td mat-cell *matCellDef="let row" class="text-center">
                                         <mat-checkbox
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             [(ngModel)]="row.IN_APPEARANCE_BOOL" [ngModelOptions]="{standalone: true}">
@@ -1597,15 +1600,15 @@
                                 </ng-container>
                                 <ng-container matColumnDef="OUT_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox disabled [(ngModel)]="row.OUT_CLEAN_BOOL" 
+                                    <td mat-cell *matCellDef="let row" class="text-center">
+                                        <mat-checkbox disabled [(ngModel)]="row.OUT_CLEAN_BOOL"
                                             [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="OUT_APPEARANCE_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
-                                    <td mat-cell *matCellDef="let row">
+                                    <td mat-cell *matCellDef="let row" class="text-center">
                                         <mat-checkbox disabled [(ngModel)]="row.OUT_APPEARANCE_BOOL"
                                             [ngModelOptions]="{standalone: true}">
                                         </mat-checkbox>
@@ -1695,7 +1698,8 @@
                                     <th mat-header-cell *matHeaderCellDef></th>
                                     <td mat-cell *matCellDef="let row" class="button-column">
 
-                                        <button type="button" [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                        <button type="button"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             class="btn btn-primary btn-sm" (click)="editPartCr(row)">
                                             Edit
                                         </button>
@@ -1859,7 +1863,7 @@
                                     <td mat-cell *matCellDef="let i = index" class="text-center">{{i+1}}</td>
                                 </ng-container>
                                 <ng-container matColumnDef="ACTION">
-                                    <th mat-header-cell *matHeaderCellDef>Action</th>
+                                    <th mat-header-cell *matHeaderCellDef></th>
                                     <td mat-cell *matCellDef="let row" class="button-column">
                                         <button
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
@@ -1871,7 +1875,8 @@
                                     <th mat-header-cell *matHeaderCellDef></th>
                                     <td mat-cell *matCellDef="let row" class="button-column">
 
-                                        <button type="button" [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                        <button type="button"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             class="btn btn-primary btn-sm" (click)="editPartCr(row)">
                                             Edit
                                         </button>
@@ -2020,9 +2025,29 @@
                             </ng-container>
                             <ng-container matColumnDef="PERSONAL_DESC">
                                 <th mat-header-cell *matHeaderCellDef>Tools Code</th>
-                                <td mat-cell *matCellDef="let row">{{row.PERSONAL_DESC}}</td>
+                                <td mat-cell *matCellDef="let row" style="max-width: 80%;">{{row.PERSONAL_DESC}}</td>
                             </ng-container>
                             <ng-container matColumnDef="PASS">
+                                <th mat-header-cell *matHeaderCellDef>Pass</th>
+                                <td mat-cell *matCellDef="let row" class="text-center">
+                                    <mat-checkbox
+                                        [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                        [(ngModel)]="row.PASS" [ngModelOptions]="{standalone: true}"
+                                        (change)="onPassChange('PASS',row)">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="NOT_PASS">
+                                <th mat-header-cell *matHeaderCellDef>Not Pass</th>
+                                <td mat-cell *matCellDef="let row" style="width: 80px;" class="text-center">
+                                    <mat-checkbox
+                                        [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                        [(ngModel)]="row.NOT_PASS" [ngModelOptions]="{standalone: true}"
+                                        (change)="onPassChange('NOT_PASS',row)">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="PASS_">
                                 <th mat-header-cell *matHeaderCellDef></th>
                                 <td mat-cell *matCellDef="let row">
                                     <mat-radio-group
@@ -2151,7 +2176,7 @@
                                         [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                         matNativeControl id="CLEAN_PERSON_C" name="CLEAN_PERSON_C"
                                         [(ngModel)]="data.Check.CLEAN_PERSON"
-                                        (change)="data.Header.CLEAN_POSITIONID=getUserPosition($event.target.value)">
+                                        (change)="data.Check.CLEAN_POSITIONID=getUserPosition($event.target.value)">
                                         <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                             {{c.DISPLAY}}
                                         </option>
@@ -2334,8 +2359,8 @@
 
                     <mat-form-field class="col-12">
                         <mat-label>Repair Method required</mat-label>
-                        <textarea rows="{{TEXTAREA_ROWS}}" #REPAIR_METHOD matInput id="REPAIR_METHOD" name="REPAIR_METHOD" 
-                            [(ngModel)]="tempPmData.REPAIR_METHOD"></textarea>
+                        <textarea rows="{{TEXTAREA_ROWS}}" #REPAIR_METHOD matInput id="REPAIR_METHOD"
+                            name="REPAIR_METHOD" [(ngModel)]="tempPmData.REPAIR_METHOD"></textarea>
                     </mat-form-field>
                 </div>
             </div>
