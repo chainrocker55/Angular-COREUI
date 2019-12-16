@@ -1330,7 +1330,7 @@
                                 </mat-checkbox>
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <mat-label>Approve *</mat-label>
+                                <mat-label class="radio-group-label">Approve *</mat-label>
                                 <mat-radio-group id="APPROVE_RQ" name="APPROVE_RQ"
                                     [disabled]="data.Header.STATUSID!=STATUS_DURING_ASSIGN || notHavePermission"
                                     [(ngModel)]="data.Header.APPROVE_RQ">
@@ -1344,7 +1344,7 @@
                             </div>
 
                             <div class="col-sm-12 col-lg-6">
-                                <mat-label>Location *</mat-label>
+                                <mat-label class="radio-group-label">Location *</mat-label>
                                 <mat-radio-group required id="IN_OUT_PROD_LINE" name="IN_OUT_PROD_LINE"
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     [(ngModel)]="data.Header.IN_OUT_PROD_LINE" (change)="onCrLocationChange()">
@@ -2103,7 +2103,7 @@
                                     [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     id="CHECK_MC_ID" name="CHECK_MC_ID" [(ngModel)]="data.Check.CHECK_MC_ID"
                                     [ngModelOptions]="{standalone: true}">
-                                    <mat-radio-button class="example-radio-button"
+                                    <mat-radio-button class="radio-button-fix"
                                         *ngFor="let item of rdoCheckMachineItem" [value]="item.VALUE">
                                         {{item.DISPLAY}}
                                     </mat-radio-button>
