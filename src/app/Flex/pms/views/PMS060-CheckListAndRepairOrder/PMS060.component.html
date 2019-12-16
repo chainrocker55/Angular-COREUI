@@ -1,3 +1,5 @@
+<!-- <flex-combo></flex-combo> -->
+
 <!-- ######################################################################################### -->
 <!-- list -->
 <mat-card [hidden]="data" class="animated fadeIn card-margin">
@@ -1039,9 +1041,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="REMARK">
                                     <th mat-header-cell *matHeaderCellDef>Remark</th>
-                                    <td mat-cell *matCellDef="let row" class="pre-line">
-                                        {{row.REMARK}}
-                                    </td>
+                                    <td mat-cell *matCellDef="let row" class="pre-line">{{row.REMARK}}</td>
                                 </ng-container>
 
                                 <tr mat-header-row *matHeaderRowDef="displayedColumnsPart; sticky: true"></tr>
@@ -1473,18 +1473,27 @@
                             <div class="col-12">
 
                                 <div class="row">
-                                    <mat-form-field class="col-sm-12 col-lg-4">
-                                        <mat-label>Cleaner (Basic)</mat-label>
-                                        <select
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matNativeControl id="CLEAN_PERSON" name="CLEAN_PERSON"
-                                            [(ngModel)]="data.Header.CLEAN_PERSON"
-                                            (change)="data.Header.CLEAN_POSITIONID=getUserPosition($event.target.value)">
-                                            <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
-                                                {{c.DISPLAY}}
-                                            </option>
-                                        </select>
-                                    </mat-form-field>
+                                    <div class="col-sm-12 col-lg-4">
+                                        <span class="col-2">
+                                            <mat-checkbox
+                                                [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                                [checked]="data.Header.CLEAN_FLAG==='Y'"
+                                                (change)="data.Header.CLEAN_FLAG=GetCheckedYn($event)">
+                                            </mat-checkbox>
+                                        </span>
+                                        <mat-form-field class="col-10">
+                                            <mat-label>Cleaner (Basic)</mat-label>
+                                            <select
+                                                [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || data.Header.CLEAN_FLAG!='Y'"
+                                                matNativeControl id="CLEAN_PERSON" name="CLEAN_PERSON"
+                                                [(ngModel)]="data.Header.CLEAN_PERSON"
+                                                (change)="data.Header.CLEAN_POSITIONID=getUserPosition($event.target.value)">
+                                                <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
+                                                    {{c.DISPLAY}}
+                                                </option>
+                                            </select>
+                                        </mat-form-field>
+                                    </div>
                                     <mat-form-field class="col-sm-12 col-lg-4">
                                         <mat-label>Position</mat-label>
                                         <select disabled matNativeControl id="CLEAN_POSITIONID" name="CLEAN_POSITIONID"
@@ -1504,18 +1513,27 @@
                                 </div>
 
                                 <div class="row">
-                                    <mat-form-field class="col-sm-12 col-lg-4">
-                                        <mat-label>Cleaner the Machine</mat-label>
-                                        <select
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matNativeControl id="CHECK_MC_PERSON" name="CHECK_MC_PERSON"
-                                            [(ngModel)]="data.Header.CHECK_MC_PERSON"
-                                            (change)="data.Header.CHECK_MC_POSITIONID=getUserPosition($event.target.value)">
-                                            <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
-                                                {{c.DISPLAY}}
-                                            </option>
-                                        </select>
-                                    </mat-form-field>
+                                    <div class="col-sm-12 col-lg-4">
+                                        <span class="col-2">
+                                            <mat-checkbox
+                                                [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                                [checked]="data.Header.CHECK_MC_FLAG==='Y'"
+                                                (change)="data.Header.CHECK_MC_FLAG=GetCheckedYn($event)">
+                                            </mat-checkbox>
+                                        </span>
+                                        <mat-form-field class="col-10">
+                                            <mat-label>Cleaner the Machine</mat-label>
+                                            <select
+                                                [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || data.Header.CHECK_MC_FLAG!='Y'"
+                                                matNativeControl id="CHECK_MC_PERSON" name="CHECK_MC_PERSON"
+                                                [(ngModel)]="data.Header.CHECK_MC_PERSON"
+                                                (change)="data.Header.CHECK_MC_POSITIONID=getUserPosition($event.target.value)">
+                                                <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
+                                                    {{c.DISPLAY}}
+                                                </option>
+                                            </select>
+                                        </mat-form-field>
+                                    </div>
                                     <mat-form-field class="col-sm-12 col-lg-4">
                                         <mat-label>Position</mat-label>
                                         <select disabled matNativeControl id="CHECK_MC_POSITIONID"
@@ -2103,8 +2121,8 @@
                                     [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     id="CHECK_MC_ID" name="CHECK_MC_ID" [(ngModel)]="data.Check.CHECK_MC_ID"
                                     [ngModelOptions]="{standalone: true}">
-                                    <mat-radio-button class="radio-button-fix"
-                                        *ngFor="let item of rdoCheckMachineItem" [value]="item.VALUE">
+                                    <mat-radio-button class="radio-button-fix" *ngFor="let item of rdoCheckMachineItem"
+                                        [value]="item.VALUE">
                                         {{item.DISPLAY}}
                                     </mat-radio-button>
                                 </mat-radio-group>

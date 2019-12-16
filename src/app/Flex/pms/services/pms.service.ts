@@ -67,6 +67,10 @@ export class PMSService {
         return this.http.post<any[]>(this.baseUrl + 'sp_PMS062_GetInQty', data);
     }
 
+    GetInQty_CR(data: any): Observable<any[]> {
+        return this.http.post<any[]>(this.baseUrl + 'sp_PMS063_GetInQty', data);
+    }
+
     SaveCR(data: any): Observable<string> {
         return this.http.post(this.baseUrl + 'PMS063_SaveData', data, { responseType: "text" });
     }

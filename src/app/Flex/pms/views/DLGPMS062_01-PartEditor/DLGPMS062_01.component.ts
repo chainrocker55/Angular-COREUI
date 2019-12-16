@@ -174,15 +174,19 @@ export class DLGPMS062_01Component {
             CHECK_REPH_ID: this.CHECK_REPH_ID,
             ITEMS: data
         }).subscribe(res => {
-            console.log(res);
-            res.forEach(function (row) {
-                let item = data.find(i =>
+            // console.log(res);
+            data.forEach(function (row) {
+                let item = res.find(i =>
                     i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
                     && i.PARTS_LOC_CD === row.PARTS_LOC_CD
                     && i.UNITCODE === row.UNITCODE
                 );
                 if (item) {
-                    item.IN_QTY = row.IN_QTY
+                    row.IN_QTY = item.ISSUE_INVQTY
+                }
+                else
+                {
+                    row.IN_QTY=0;
                 }
             });
 

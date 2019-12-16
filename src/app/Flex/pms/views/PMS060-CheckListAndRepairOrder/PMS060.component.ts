@@ -457,6 +457,46 @@ export class PMS060Component implements OnInit {
 
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
                 this.dataSourceCrTools = new MatTableDataSource(this.data.Tools);
+
+                if (this.data.Header.STATUSID == this.STATUS_RECEIVED || this.data.Header.STATUSID == this.STATUS_REVISE) {
+                    this.svc.GetInQty_CR({
+                        CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
+                        ITEMS: this.data.Parts
+                    }).subscribe(resIn => {
+                        resIn.forEach(function (row) {
+                            let item = res.Parts.find(i =>
+                                i.ITEM_CD === row.PARTS_ITEM_CD
+                                && i.LOC_CD === row.PARTS_LOC_CD
+                                && i.UNITCODE === row.UNITCODE
+                            );
+                            if (item) {
+
+                                let qty = row.ISSUE_INVQTY;
+                                if (item.IN_QTY != qty) {
+                                    item.IN_QTY = qty;
+
+                                    let inQty = item.IN_QTY;
+                                    if (!inQty)
+                                        inQty = 0;
+
+                                    let returnQty = item.OUT_RETURNQTY;
+                                    if (!returnQty)
+                                        returnQty = 0;
+
+
+                                    item.OUT_USEDQTY = inQty - returnQty;
+                                    if (item.OUT_USEDQTY < 0)
+                                        item.OUT_USEDQTY = 0;
+                                }
+
+                            }
+                        });
+
+                    }, error => {
+                        this.dlg.ShowException(error);
+                    });
+                }
+
                 this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
                 // console.log(this.data);
                 // console.log(this.data.Parts);
@@ -510,10 +550,34 @@ export class PMS060Component implements OnInit {
 
                 if (this.data.Header.SCHEDULE_TYPEID === 2) {
                     this.dataSourcePmChecklist = new MatTableDataSource(this.data.PmChecklist);
+
+                    // if (this.data.Header.STATUSID == this.STATUS_RECEIVED || this.data.Header.STATUSID == this.STATUS_REVISE) {
+                    this.svc.GetInQty({
+                        CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
+                        ITEMS: this.data.PmParts
+                    }).subscribe(resIn => {
+
+                        resIn.forEach(function (row) {
+                            let item = res.PmParts.find(i =>
+                                i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
+                                && i.PARTS_LOC_CD === row.PARTS_LOC_CD
+                                && i.UNITCODE === row.UNITCODE
+                            );
+                            if (item) {
+                                item.IN_QTY = row.ISSUE_INVQTY
+                            }
+                        });
+
+                    }, error => {
+                        this.dlg.ShowException(error);
+                    });
+                    // }
                     this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
 
                     this.OnMachineChange(this.data.Header.MACHINE_NO);
                     this.selectedMachineComponent = this.data.DefaultComponent;
+
+
 
                 }
                 this.DisableControlByStatus();
@@ -563,7 +627,47 @@ export class PMS060Component implements OnInit {
     DisableControlByStatus() {
         if (this.data.Header.STATUSID == this.STATUS_CANCEL_PLAN || this.data.Header.STATUSID == this.STATUS_CANCEL || this.data.Header.STATUSID == this.STATUS_COMPLETE || this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
             this.notHavePermission = true;
+            if (this.data.Header.SCHEDULE_TYPEID == 3) {
+                if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
+                    this.svc.IsApprover(this.data.Header.CHECK_REPH_ID, this.flex.getCurrentUser().USER_CD).subscribe(res => {
+                        let result = (res === 'true');
+                        this.notHavePermission = result == false;
+                        this.isApprover = result;
 
+                        if (this.isApprover == true && this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
+
+                            let userCode = this.flex.getCurrentUser().USER_CD;
+                            let position = this.getUserPosition(userCode);
+
+                            if (!this.data.Check.CHECK_MC_PERSON) {
+                                this.data.Check.CHECK_MC_PERSON = userCode;
+                                this.data.Check.CHECK_MC_POSITIONID = position;
+                                this.data.Check.CHECK_MC_DATE = new Date();
+                            }
+
+                            if (!this.data.Check.CLEAN_PERSON) {
+                                this.data.Check.CLEAN_FLAG = 'Y';
+                                this.data.Check.CLEAN_PERSON = userCode;
+                                this.data.Check.CLEAN_POSITIONID = position;
+                                this.data.Check.CLEAN_DATE = new Date();
+                            }
+
+                            if (!this.data.Check.QC_PERSON) {
+                                this.data.Check.QC_PERSON = userCode;
+                                this.data.Check.QC_POSITIONID = position;
+                                this.data.Check.QC_DATE = new Date();
+                            }
+                        }
+
+
+                    }, error => {
+                        this.dlg.ShowException(error);
+                    });
+                }
+            }
+        }
+        else {
+            this.notHavePermission = false;
             if (this.data.Header.SCHEDULE_TYPEID == 2) {
                 if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
                     this.svc.IsApprover(this.data.Header.CHECK_REPH_ID, this.flex.getCurrentUser().USER_CD).subscribe(res => {
@@ -575,48 +679,19 @@ export class PMS060Component implements OnInit {
                 }
             }
             else if (this.data.Header.SCHEDULE_TYPEID == 3) {
-                if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
-                    this.svc.IsApprover(this.data.Header.CHECK_REPH_ID, this.flex.getCurrentUser().USER_CD).subscribe(res => {
-                        let result = (res === 'true');
-                        this.notHavePermission = result == false;
-                        this.isApprover = result;
+                if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
 
-                        if (this.isApprover == true && this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
-
-                            let userCode = this.flex.getCurrentUser().USER_CD;
-
-                            if (!this.data.Check.CHECK_MC_PERSON) {
-                                this.data.Check.CHECK_MC_PERSON = userCode;
-                                this.data.Check.CHECK_MC_POSITIONID = this.getUserPosition(userCode);
-                                this.data.Check.CHECK_MC_DATE = new Date();
-                            }
-
-                            if (!this.data.Check.CLEAN_PERSON) {
-                                this.data.Check.CLEAN_FLAG = 'Y';
-                                this.data.Check.CLEAN_PERSON = userCode;
-                                this.data.Check.CLEAN_POSITIONID = this.getUserPosition(userCode);
-                                this.data.Check.CLEAN_DATE = new Date();
-                            }
-
-                            if (!this.data.Check.QC_PERSON) {
-                                this.data.Check.QC_PERSON = userCode;
-                                this.data.Check.QC_POSITIONID = this.getUserPosition(userCode);
-                                this.data.Check.QC_DATE = new Date();
-                            }
-                        }
-
-
-                    }, error => {
-                        this.dlg.ShowException(error);
-                    });
+                    if (!this.data.Check.CHECK_MC_5PERSON) {
+                        let userCode = this.flex.getCurrentUser().USER_CD;
+                        let position = this.getUserPosition(userCode);
+                        this.data.Header.CHECK_MC_PERSON = userCode;
+                        this.data.Header.CHECK_MC_POSITIONID = position;
+                    }
                 }
             }
-
-
-            return;
         }
 
-        this.notHavePermission = false;
+
     }
     InitialPermission_CR(STATUSID: string) {
         if (STATUSID === this.STATUS_NEW) {
@@ -1093,21 +1168,42 @@ export class PMS060Component implements OnInit {
             let pData = this.prepareResult(result);
             if (pData && pData.length > 0) {
 
-                this.getInQty(pData);
+                this.svc.GetInQty({
+                    CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
+                    ITEMS: pData
+                }).subscribe(res => {
 
-                for (let i = 0; i < pData.length; i++) {
-                    if (this.PartsExists(pData[i].PARTS_ITEM_CD) == false) {
-                        this.data.PmParts.push({
-                            PARTS_LOC_CD: pData[0].PARTS_LOC_CD,
-                            PARTS_ITEM_CD: pData[i].PARTS_ITEM_CD,
-                            PARTS_ITEM_DESC: pData[i].PARTS_ITEM_DESC,
-                            IN_QTY: pData[i].IN_QTY,
-                            UNITCODE: pData[i].UNITCODE,
-                        });
+                    res.forEach(function (row) {
+                        let item = pData.find(i =>
+                            i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
+                            && i.PARTS_LOC_CD === row.PARTS_LOC_CD
+                            && i.UNITCODE === row.UNITCODE
+                        );
+                        if (item) {
+                            item.IN_QTY = row.ISSUE_INVQTY
+                        }
+                    });
+
+                    for (let i = 0; i < pData.length; i++) {
+                        if (this.PartsExists(pData[i].PARTS_ITEM_CD) == false) {
+                            this.data.PmParts.push({
+                                PARTS_LOC_CD: pData[0].PARTS_LOC_CD,
+                                PARTS_ITEM_CD: pData[i].PARTS_ITEM_CD,
+                                PARTS_ITEM_DESC: pData[i].PARTS_ITEM_DESC,
+                                IN_QTY: pData[i].IN_QTY,
+                                UNITCODE: pData[i].UNITCODE,
+                            });
+                        }
+
                     }
+                    this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
 
-                }
-                this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
+                }, error => {
+                    this.dlg.ShowException(error);
+                });
+
+
+
             }
         });
     }
@@ -1130,44 +1226,66 @@ export class PMS060Component implements OnInit {
             let pData = this.prepareResult(result);
             if (pData && pData.length > 0) {
 
-                this.getInQty(pData);
-                for (let i = 0; i < pData.length; i++) {
-                    if (this.PartsExists_CR(pData[i].PARTS_ITEM_CD) == false) {
-                        this.data.Parts.push({
-                            LOC_CD: pData[i].PARTS_LOC_CD,
-                            ITEM_CD: pData[i].PARTS_ITEM_CD,
-                            ITEM_DESC: pData[i].PARTS_ITEM_DESC,
-                            IN_QTY: pData[i].IN_QTY,
-                            UNITCODE: pData[i].UNITCODE,
-                        });
+                // this.getInQty(pData);
+                this.svc.GetInQty_CR({
+                    CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
+                    ITEMS: pData
+                }).subscribe(res => {
+
+                    res.forEach(function (row) {
+                        let item = pData.find(i =>
+                            i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
+                            && i.PARTS_LOC_CD === row.PARTS_LOC_CD
+                            && i.UNITCODE === row.UNITCODE
+                        );
+                        if (item) {
+                            item.IN_QTY = row.ISSUE_INVQTY
+                        }
+                    });
+
+                    for (let i = 0; i < pData.length; i++) {
+                        if (this.PartsExists_CR(pData[i].PARTS_ITEM_CD) == false) {
+                            this.data.Parts.push({
+                                LOC_CD: pData[i].PARTS_LOC_CD,
+                                ITEM_CD: pData[i].PARTS_ITEM_CD,
+                                ITEM_DESC: pData[i].PARTS_ITEM_DESC,
+                                IN_QTY: pData[i].IN_QTY,
+                                UNITCODE: pData[i].UNITCODE,
+                            });
+                        }
                     }
-                }
-                this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
+                    this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                });
+
+
             }
         });
     }
-    getInQty(data: any[]) {
+    // getInQty(data: any[]) {
 
-        this.svc.GetInQty({
-            CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
-            ITEMS: data
-        }).subscribe(res => {
+    //     this.svc.GetInQty({
+    //         CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
+    //         ITEMS: data
+    //     }).subscribe(res => {
 
-            res.forEach(function (row) {
-                let item = data.find(i =>
-                    i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
-                    && i.PARTS_LOC_CD === row.PARTS_LOC_CD
-                    && i.UNITCODE === row.UNITCODE
-                );
-                if (item) {
-                    item.IN_QTY = row.IN_QTY
-                }
-            });
+    //         res.forEach(function (row) {
+    //             let item = data.find(i =>
+    //                 i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
+    //                 && i.PARTS_LOC_CD === row.PARTS_LOC_CD
+    //                 && i.UNITCODE === row.UNITCODE
+    //             );
+    //             if (item) {
+    //                 item.IN_QTY = row.IN_QTY
+    //             }
+    //         });
 
-        }, error => {
-            this.dlg.ShowException(error);
-        });
-    }
+    //     }, error => {
+    //         this.dlg.ShowException(error);
+    //     });
+    // }
     prepareResult(data: any) {
         if (data && data.length > 0) {
             let result = [];

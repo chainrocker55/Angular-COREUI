@@ -175,22 +175,28 @@ export class DLGPMS063_01Component {
 
     getInQty(data: any[]) {
 
-        this.svc.GetInQty({
+        this.svc.GetInQty_CR({
             CHECK_REPH_ID: this.CHECK_REPH_ID,
             ITEMS: data
         }).subscribe(res => {
 
-            res.forEach(function (row) {
-                let item = data.find(i =>
-                    i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
-                    && i.PARTS_LOC_CD === row.PARTS_LOC_CD
+            data.forEach(function (row) {
+                let item = res.find(i =>
+                    i.PARTS_ITEM_CD === row.ITEM_CD
+                    && i.PARTS_LOC_CD === row.LOC_CD
                     && i.UNITCODE === row.UNITCODE
                 );
                 if (item) {
-                    item.IN_QTY = row.IN_QTY
+                    row.IN_QTY = item.ISSUE_INVQTY
+                }
+                else
+                {
+                    row.IN_QTY=0;
                 }
             });
 
+            this.calculateUsedQty();
+           
         }, error => {
             this.dlg.ShowException(error);
         });
