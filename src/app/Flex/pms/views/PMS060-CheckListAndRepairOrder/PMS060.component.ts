@@ -49,10 +49,10 @@ export class PMS060Component implements OnInit {
     isMachineComponentVisible: boolean = false;
     displayedColumns: string[] = ['CLS_INFO_CD', 'CLS_CD', 'CLS_DESC', 'SEQ', 'EDIT_FLAG'];
     displayedColumnsPersonInCharge: string[] = ['SELECT', 'DISPLAY'];
-    displayedColumnsChecklist: string[] = ['PM_CHECKLIST_DESC', 'NORMAL_CHECK_BOOL', 'PROBLEM_DESC', 'REPAIR_METHOD'];
-    displayedColumnsPart: string[] = ['ACTION', 'ACTION2', 'PARTS_LOC_CD', 'PARTS_ITEM_CD', 'PARTS_ITEM_DESC', 'REQUEST_QTY', 'IN_QTY', 'USED_QTY', 'UNITCODE', 'REMARK'];
+    displayedColumnsChecklist: string[] = ['NO', 'PM_CHECKLIST_DESC', 'NORMAL_CHECK_BOOL', 'PROBLEM_DESC', 'REPAIR_METHOD'];
+    displayedColumnsPart: string[] = ['NO', 'ACTION', 'ACTION2', 'PARTS_LOC_CD', 'PARTS_ITEM_CD', 'PARTS_ITEM_DESC', 'REQUEST_QTY', 'IN_QTY', 'USED_QTY', 'UNITCODE', 'REMARK'];
     displayedColumnsCrTools: string[] = ['NO', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
-    displayedColumnsCrPart: string[] = ['ACTION', 'ACTION2', 'LOC_CD', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'REQUEST_QTY', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
+    displayedColumnsCrPart: string[] = ['NO', 'ACTION', 'ACTION2', 'LOC_CD', 'ITEM_CD', 'ITEM_DESC', 'UNITCODE', 'REQUEST_QTY', 'IN_QTY', 'IN_CLEAN_BOOL', 'IN_APPEARANCE_BOOL', 'OUT_USEDQTY', 'OUT_RETURNQTY', 'OUT_CLEAN_BOOL', 'OUT_APPEARANCE_BOOL'];
     displayedColumnsCrPH: string[] = ['NO', 'PERSONAL_DESC', 'PASS', 'NOT_PASS'];
 
     dataSource: MatTableDataSource<PMS060_CheckListAndRepairOrder_Result>;
@@ -542,6 +542,10 @@ export class PMS060Component implements OnInit {
 
                 if (this.data.Header.STATUSID == this.STATUS_ACTIVE_PLAN) {
                     this.LoadPersonIncharge(null, this.data.Header.MACHINE_NO);
+
+                    this.OnMachineChange(this.data.Header.MACHINE_NO);
+                    this.selectedMachineComponent = this.data.DefaultComponent;
+                    this.MachineComponentChange();
                 }
 
                 this.SetMachineText();
@@ -551,35 +555,38 @@ export class PMS060Component implements OnInit {
                 if (this.data.Header.SCHEDULE_TYPEID === 2) {
                     this.dataSourcePmChecklist = new MatTableDataSource(this.data.PmChecklist);
 
-                    // if (this.data.Header.STATUSID == this.STATUS_RECEIVED || this.data.Header.STATUSID == this.STATUS_REVISE) {
-                    this.svc.GetInQty({
-                        CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
-                        ITEMS: this.data.PmParts
-                    }).subscribe(resIn => {
+                    if (this.data.Header.STATUSID == this.STATUS_NEW || this.data.Header.STATUSID == this.STATUS_REVISE) {
+                        this.svc.GetInQty({
+                            CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
+                            ITEMS: this.data.PmParts
+                        }).subscribe(resIn => {
 
-                        resIn.forEach(function (row) {
-                            let item = res.PmParts.find(i =>
-                                i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
-                                && i.PARTS_LOC_CD === row.PARTS_LOC_CD
-                                && i.UNITCODE === row.UNITCODE
-                            );
-                            if (item) {
-                                item.IN_QTY = row.ISSUE_INVQTY
-                            }
+                            resIn.forEach(function (row) {
+                                let item = res.PmParts.find(i =>
+                                    i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
+                                    && i.PARTS_LOC_CD === row.PARTS_LOC_CD
+                                    && i.UNITCODE === row.UNITCODE
+                                );
+                                if (item) {
+                                    let qty = row.ISSUE_INVQTY;
+                                    if (item.IN_QTY != qty) {
+                                        item.IN_QTY = qty;
+                                        item.USED_QTY = qty;
+                                    }
+                                }
+                            });
+
+                        }, error => {
+                            this.dlg.ShowException(error);
                         });
-
-                    }, error => {
-                        this.dlg.ShowException(error);
-                    });
-                    // }
+                    }
                     this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
 
-                    this.OnMachineChange(this.data.Header.MACHINE_NO);
-                    this.selectedMachineComponent = this.data.DefaultComponent;
-
-
+                    // this.OnMachineChange(this.data.Header.MACHINE_NO);
+                    // this.selectedMachineComponent = this.data.DefaultComponent;
 
                 }
+
                 this.DisableControlByStatus();
                 this.SetDefaultDate();
             }, error => {
@@ -1180,7 +1187,8 @@ export class PMS060Component implements OnInit {
                             && i.UNITCODE === row.UNITCODE
                         );
                         if (item) {
-                            item.IN_QTY = row.ISSUE_INVQTY
+                            item.IN_QTY = row.ISSUE_INVQTY;
+                            item.USED_QTY = row.ISSUE_INVQTY;
                         }
                     });
 
@@ -1800,4 +1808,10 @@ export class PMS060Component implements OnInit {
         }
     }
 
+    handleEnterKeyPress(event) {
+        const tagName = event.target.tagName.toLowerCase();
+        if (tagName !== 'textarea') {
+            return false;
+        }
+    }
 }

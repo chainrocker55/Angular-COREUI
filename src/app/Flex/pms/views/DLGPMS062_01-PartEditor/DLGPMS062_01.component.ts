@@ -182,11 +182,13 @@ export class DLGPMS062_01Component {
                     && i.UNITCODE === row.UNITCODE
                 );
                 if (item) {
-                    row.IN_QTY = item.ISSUE_INVQTY
+                    row.IN_QTY = item.ISSUE_INVQTY;
+                    row.USED_QTY = item.ISSUE_INVQTY;
                 }
                 else
                 {
                     row.IN_QTY=0;
+                    row.USED_QTY=0;
                 }
             });
 
@@ -223,6 +225,11 @@ export class DLGPMS062_01Component {
         }, error => {
             this.dlg.ShowException(error);
         });
+    }
+
+    onInQtyChange()
+    {
+        this.data.USED_QTY=this.data.IN_QTY;
     }
 
 }

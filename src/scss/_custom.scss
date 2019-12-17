@@ -100,10 +100,6 @@ tr.mat-row:hover {
     background-color: powderblue;
 }
 
-.grid-checkbox-column{
-    padding-top: 0.35rem !important;
-}
-
 .grid-switch-column{
     vertical-align: top;
     text-align: center;
@@ -220,4 +216,9 @@ tr.mat-row:hover {
 .radio-button-fix, .mat-radio-button
 {
     padding-right: 10px;
+}
+
+.grid-checkbox-column{
+    padding-top: 0.4rem !important;
+    width: 25px;
 }
