@@ -45,9 +45,9 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
       }, (error: HttpErrorResponse) => {
         this.dlg.ShowException(error);
       });
-      this.GetNoti();
+      this.GetNoti(true);
       this.interval = setInterval(() => {
-        this.GetNoti();
+        this.GetNoti(false);
       }, 60 * 1000);
     }
     console.clear();
@@ -66,32 +66,34 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     this.router.navigate(['system']);
   }
 
-  GetNoti() {
+  GetNoti(isFirst: boolean) {
     this.svc.GetNotiy().subscribe(res => {
-      if (!this.noti) {
-        this.noti = [];
-      }
-      const n = this.noti;
-      const r = res.filter(function(value) {
-        return value.HasRead === false;
-      });
-      const n_new = [];
-      r.forEach(function(value) {
-        let found = false;
-        n.forEach(function(valuen) {
-          if (value.Seq === valuen.Seq) {
-            found = true;
-          }
-        })
-        if (!found) {
-          n_new.push(value);
+      if (!isFirst) {
+        if (!this.noti) {
+          this.noti = [];
         }
-      });
-      const d = this.dlg;
-      if (n_new.length > 0) {
-        n_new.forEach(function(value) {
-          d.ShowInformationText(value.Description);
+        const n = this.noti;
+        const r = res.filter(function(value) {
+          return value.HasRead === false;
         });
+        const n_new = [];
+        r.forEach(function(value) {
+          let found = false;
+          n.forEach(function(valuen) {
+            if (value.Seq === valuen.Seq) {
+              found = true;
+            }
+          })
+          if (!found) {
+            n_new.push(value);
+          }
+        });
+        const d = this.dlg;
+        if (n_new.length > 0) {
+          n_new.forEach(function(value) {
+            d.ShowInformationText(value.Description);
+          });
+        }
       }
       this.noti = res.filter(function(value) {
         return value.HasRead === false;
