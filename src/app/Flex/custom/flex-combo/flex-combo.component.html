@@ -1,14 +1,7 @@
 
-<ul>
-    <ng-template ngFor [ngForOf]="tags" let-tag let-index="index">
-      <li>
-        {{tag}}
-        <button type="button" (click)="remove(index)">x</button>
-      </li>
-   </ng-template>
-  </ul>
-  
-  <input type="text"
-   [(ngModel)]="newTag"
-   (keydown)="onInputKeyDown($event)"
-   placeholder="type some text and press Enter" />
+<div class="col-sm-6 col-lg-3">
+  <ng-select [id]="id" [name]="name" [placeholder]="placeholder" appendTo="body"
+      [searchable]="true" [clearable]="true" [(ngModel)]="value" (change)="onValueChange($event)">
+      <ng-option *ngFor="let c of comboData" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+  </ng-select>
+</div>

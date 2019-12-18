@@ -85,12 +85,19 @@ export class DiaglogService {
   ShowException(ex: HttpErrorResponse) {
     console.log('Error', ex);
     if (ex.status === 400 && ex.error) {
-      let error = JSON.parse(ex.error);
-      
-      if (error.MSG_CD)
-        this.ShowWaring(this.svc.GetMessageDesc(error.MSG_CD, error.objParam));
-      else
-        this.ShowErrorText(error.Message);
+      try {
+        let error = JSON.parse(ex.error);
+
+        if (error.MSG_CD)
+          this.ShowWaring(this.svc.GetMessageDesc(error.MSG_CD, error.objParam));
+        else
+          this.ShowErrorText(error.Message);
+      }
+      catch (error) {
+        // can't convert to json
+        // show error as text
+        this.ShowErrorText(ex.error);
+      }
 
     } else {
       const e = this.GetException(ex);

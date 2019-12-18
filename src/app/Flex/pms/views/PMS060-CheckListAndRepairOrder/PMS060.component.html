@@ -598,7 +598,7 @@
             Revise
         </button>
         <button
-            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL && data.Header.STATUSID!=STATUS_DURING_APPROVE"
+            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL && data.Header.STATUSID!=STATUS_DURING_APPROVE && data.Header.STATUSID!=STATUS_COMPLETE"
             class="button" mat-flat-button color="warn" [disabled]="!formPM.valid || isLoading || notHavePermission"
             (click)="onCancelPM()">
             Cancel
@@ -1002,7 +1002,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="ACTION2">
                                     <th mat-header-cell *matHeaderCellDef></th>
-                                    <td mat-cell *matCellDef="let row" class="button-column">
+                                    <td mat-cell *matCellDef="let row" class="button-column"  (click)="$event.stopPropagation()">
 
                                         <button type="button" [disabled]="notHavePermission"
                                             class="btn btn-primary btn-sm" (click)="editPart(row)">
@@ -1060,7 +1060,7 @@
 
                                 <tr mat-header-row *matHeaderRowDef="displayedColumnsPart; sticky: true"></tr>
                                 <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumnsPart;"
-                                    (click)="editPart(row)">
+                                    (click)=" notHavePermission ? null :  editPart(row)">
                                 </tr>
                             </table>
 
@@ -1926,7 +1926,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="ACTION2">
                                     <th mat-header-cell *matHeaderCellDef></th>
-                                    <td mat-cell *matCellDef="let row" class="button-column">
+                                    <td mat-cell *matCellDef="let row" class="button-column" (click)="$event.stopPropagation()">
 
                                         <button type="button"
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
@@ -2052,7 +2052,7 @@
 
                                 <tr mat-header-row *matHeaderRowDef="displayedColumnsCrPart; sticky: true"></tr>
                                 <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumnsCrPart;"
-                                    (click)="editPartCr(row)">
+                                    (click)="(notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)) ? null :editPartCr(row)">
                                 </tr>
                             </table>
 

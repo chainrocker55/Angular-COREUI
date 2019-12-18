@@ -672,10 +672,7 @@ export class PMS060Component implements OnInit {
                     });
                 }
             }
-        }
-        else {
-            this.notHavePermission = false;
-            if (this.data.Header.SCHEDULE_TYPEID == 2) {
+            else if (this.data.Header.SCHEDULE_TYPEID == 2) {
                 if (this.data.Header.STATUSID == this.STATUS_DURING_APPROVE) {
                     this.svc.IsApprover(this.data.Header.CHECK_REPH_ID, this.flex.getCurrentUser().USER_CD).subscribe(res => {
                         let result = (res === 'true');
@@ -685,7 +682,11 @@ export class PMS060Component implements OnInit {
                     });
                 }
             }
-            else if (this.data.Header.SCHEDULE_TYPEID == 3) {
+        }
+        else {
+            this.notHavePermission = false;
+            
+            if (this.data.Header.SCHEDULE_TYPEID == 3) {
                 if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
 
                     if (!this.data.Check.CHECK_MC_5PERSON) {
@@ -1192,8 +1193,13 @@ export class PMS060Component implements OnInit {
                         }
                     });
 
+                    let exists=false;
                     for (let i = 0; i < pData.length; i++) {
-                        if (this.PartsExists(pData[i].PARTS_ITEM_CD) == false) {
+                        if (this.PartsExists(pData[i].PARTS_ITEM_CD)) {
+                            exists=true;
+                        }
+                        else
+                        {
                             this.data.PmParts.push({
                                 PARTS_LOC_CD: pData[0].PARTS_LOC_CD,
                                 PARTS_ITEM_CD: pData[i].PARTS_ITEM_CD,
@@ -1205,6 +1211,11 @@ export class PMS060Component implements OnInit {
 
                     }
                     this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
+
+                    if(exists==true)
+                    {
+                        this.dlg.ShowWaring("VLM0780");
+                    }
 
                 }, error => {
                     this.dlg.ShowException(error);
@@ -1251,8 +1262,12 @@ export class PMS060Component implements OnInit {
                         }
                     });
 
+                    let exists=false;
                     for (let i = 0; i < pData.length; i++) {
-                        if (this.PartsExists_CR(pData[i].PARTS_ITEM_CD) == false) {
+                        if (this.PartsExists_CR(pData[i].PARTS_ITEM_CD) == true) {
+                            exists=true;
+                        }
+                        else{
                             this.data.Parts.push({
                                 LOC_CD: pData[i].PARTS_LOC_CD,
                                 ITEM_CD: pData[i].PARTS_ITEM_CD,
@@ -1263,6 +1278,11 @@ export class PMS060Component implements OnInit {
                         }
                     }
                     this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
+
+                    if(exists==true)
+                    {
+                        this.dlg.ShowWaring("VLM0780");
+                    }
 
                 }, error => {
                     this.dlg.ShowException(error);
@@ -1743,7 +1763,39 @@ export class PMS060Component implements OnInit {
             item.PARTS_LOC_CD = this.data.Header.MACHINE_LOC_CD;
         }
 
+        this.svc.GetInQty({
+            CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
+            ITEMS: this.data.PmParts
+        }).subscribe( resIn => {
+
+            this.ProcessInQty(resIn);
+
+        }, error => {
+            this.dlg.ShowException(error);
+        });
+
+        
+    }
+    ProcessInQty(resIn: any[]) {
+        console.log("ProcessInQty()");
+
+        resIn.forEach(function (row) {
+            let item = this.data.PmParts.PmParts.find(i =>
+                i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
+                && i.PARTS_LOC_CD === row.PARTS_LOC_CD
+                && i.UNITCODE === row.UNITCODE
+            );
+            if (item) {
+                let qty = row.ISSUE_INVQTY;
+                if (item.IN_QTY != qty) {
+                    item.IN_QTY = qty;
+                    item.USED_QTY = qty;
+                }
+            }
+        });
+
         this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
+        
     }
 
     openApproveHistory() {

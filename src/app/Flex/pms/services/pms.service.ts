@@ -53,6 +53,11 @@ export class PMSService {
     SendToApprovePM(data: any): Observable<string> {
         return this.http.post(this.baseUrl + 'PMS062_SendToApprove', data, { responseType: "text" });
     }
+
+    ApprovePM(data: any): Observable<string> {
+        return this.http.post(this.baseUrl + 'PMS062_Approve', data, { responseType: "text" });
+    }
+
     RevisePM(data: any): Observable<string> {
         return this.http.post(this.baseUrl + 'PMS062_Revise', data, { responseType: "text" });
     }

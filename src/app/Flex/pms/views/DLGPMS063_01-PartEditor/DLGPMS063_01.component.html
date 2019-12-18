@@ -29,7 +29,7 @@
 
             <mat-form-field class="col-12">
                 <mat-label>Unit</mat-label>
-                <select matNativeControl id="UNITCODE" name="UNITCODE" [(ngModel)]="data.UNITCODE"
+                <select  matNativeControl id="UNITCODE" name="UNITCODE" [(ngModel)]="data.UNITCODE"
                     (change)="getItemInQty()">
                     <!-- <option value=""></option> -->
                     <option *ngFor="let c of comboItemUnit" [value]="c.VALUE">
@@ -52,7 +52,7 @@
 
                     <mat-form-field class="col-12">
                         <mat-label>In Qty</mat-label>
-                        <input matInput id="IN_QTY" name="IN_QTY" type="number" [(ngModel)]="data.IN_QTY"
+                        <input disabled matInput id="IN_QTY" name="IN_QTY" type="number" [(ngModel)]="data.IN_QTY"
                             (change)="calculateUsedQty()">
                     </mat-form-field>
 
