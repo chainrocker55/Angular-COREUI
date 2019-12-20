@@ -79,7 +79,7 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 
     FlexModule,
 
-    DropDownsModule,
+    DropDownsModule
   ],
   entryComponents: [
     ConfirmDialogComponent,
@@ -118,7 +118,7 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
     //   useClass: MomentDateAdapter,
     //   deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     // },
-    MatDatepickerModule,
+    MatDatepickerModule
   ],
   bootstrap: [AppComponent]
 })

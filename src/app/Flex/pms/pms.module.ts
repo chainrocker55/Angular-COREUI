@@ -16,6 +16,7 @@ import { DLGPMS063_01Component } from './views/DLGPMS063_01-PartEditor/DLGPMS063
 import { DLGPMS001Component } from './views/DLGPMS001-ApproveHistoryDialog/DLGPMS001.component';
 import { DLGPMS002Component } from './views/DLGPMS002-MachineAttachment/DLGPMS002.component';
 import { FlexCombo } from '../custom/flex-combo/flex-combo.component';
+import { FlexTime } from '../custom/flex-time/flex-time.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { FlexCombo } from '../custom/flex-combo/flex-combo.component';
     DLGPMS063_01Component,
     DLGPMS001Component,
     DLGPMS002Component,
-    FlexCombo
+    FlexCombo,
+    FlexTime
   ],
   entryComponents: [
     DLG045Component,
@@ -39,7 +41,8 @@ import { FlexCombo } from '../custom/flex-combo/flex-combo.component';
     DLGPMS063_01Component,
     DLGPMS001Component,
     DLGPMS002Component,
-    FlexCombo
+    FlexCombo,
+    FlexTime
   ],
 })
 export class PMSModule { }

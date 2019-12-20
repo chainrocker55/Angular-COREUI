@@ -30,7 +30,8 @@
               "node_modules/simple-line-icons/css/simple-line-icons.css",
               "src/scss/style.scss",
               "node_modules/ngx-toastr/toastr.css",
-              "src/app/Flex/custom/flex-combo/flex-combo.component.scss"
+              "src/app/Flex/custom/flex-combo/flex-combo.component.scss",
+              "src/app/Flex/custom/flex-time/flex-time.component.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

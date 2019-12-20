@@ -970,7 +970,7 @@ export class PMS060Component implements OnInit {
     }
 
     SaveCR() {
-
+        console.log(this.data.Header.START_REQ_TIME);
         this.dlg.ShowConfirm('CFM9001').subscribe(d => {
             if (d && d.DialogResult === 'Yes') {
 

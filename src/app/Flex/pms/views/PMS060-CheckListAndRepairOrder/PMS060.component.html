@@ -380,7 +380,7 @@
         <!-- ######################################################################################### -->
         <!-- HEADER -->
         <!-- ######################################################################################### -->
-        
+
         <div class="row">
             <div class="col-lg-12">
                 <h6><span class="flex-status">Status : {{status.STATUSID + ' : ' + status.STATUSNAME}}</span></h6>
@@ -1281,13 +1281,20 @@
                                 <mat-datepicker #START_REQ_DATE></mat-datepicker>
                             </mat-form-field>
 
-
-                            <mat-form-field class="col-sm-6 col-lg-3">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Start Time</mat-label>
                                 <input [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" matInput
                                     id="START_REQ_TIME" name="START_REQ_TIME" type="time" placeholder="Time"
                                     [(ngModel)]="data.Header.START_REQ_TIME">
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-time name="START_REQ_TIME" label="Start Time"
+                                    [(ngModel)]="data.Header.START_REQ_TIME"></flex-time>
+                            </div>
+
+
+
 
                         </div>
 
@@ -2116,7 +2123,8 @@
                                 <ng-container matColumnDef="IN_APPEARANCE_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [checked]="row.IN_APPEARANCE_BOOL" (change)="cancelChecked($event)">
+                                        <mat-checkbox [checked]="row.IN_APPEARANCE_BOOL"
+                                            (change)="cancelChecked($event)">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
