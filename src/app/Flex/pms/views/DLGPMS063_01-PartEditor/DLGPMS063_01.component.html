@@ -52,7 +52,8 @@
 
             <mat-form-field class="col-12">
                 <mat-label>Request Qty</mat-label>
-                <input matInput id="REQUEST_QTY" name="REQUEST_QTY" type="number" [(ngModel)]="data.REQUEST_QTY">
+                <input matInput id="REQUEST_QTY" name="REQUEST_QTY" type="number" [(ngModel)]="data.REQUEST_QTY" min="0"
+                    [flexMin]="0">
             </mat-form-field>
 
 
@@ -64,7 +65,7 @@
                     <mat-form-field class="col-12">
                         <mat-label>In Qty</mat-label>
                         <input disabled matInput id="IN_QTY" name="IN_QTY" type="number" [(ngModel)]="data.IN_QTY"
-                            (change)="calculateUsedQty()">
+                            min="0" [flexMin]="0" (change)="calculateUsedQty()">
                     </mat-form-field>
 
                     <div class="col-12">
@@ -91,13 +92,13 @@
 
                     <mat-form-field class="col-12">
                         <mat-label>Used Qty</mat-label>
-                        <input matInput id="OUT_USEDQTY" name="OUT_USEDQTY" type="number"
+                        <input matInput id="OUT_USEDQTY" name="OUT_USEDQTY" type="number" min="0" [flexMin]="0"
                             [(ngModel)]="data.OUT_USEDQTY">
                     </mat-form-field>
 
                     <mat-form-field class="col-12">
                         <mat-label>Return Qty</mat-label>
-                        <input matInput id="OUT_RETURNQTY" name="OUT_RETURNQTY" type="number"
+                        <input matInput id="OUT_RETURNQTY" name="OUT_RETURNQTY" type="number" min="0" [flexMin]="0"
                             [(ngModel)]="data.OUT_RETURNQTY" (change)="calculateUsedQty()">
                     </mat-form-field>
 
@@ -120,7 +121,7 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-button type="submit" [disabled]="!formMain.valid" cdkFocusInitial>Save</button>
+        <button mat-flat-button mat-dialog-close>Cancel</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="!formMain.valid" cdkFocusInitial>Save</button>
     </mat-dialog-actions>
 </form>

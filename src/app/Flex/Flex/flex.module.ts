@@ -23,6 +23,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FlexLabelDirective } from './components/flexLabel.directive';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FlexMinDirective } from '../custom/directive/flex-min-validator.directive';
 
 @NgModule({
   imports: [
@@ -47,9 +48,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
   ],
   declarations: [
     FlexLabelDirective,
+    FlexMinDirective
   ],
   exports: [
     FlexLabelDirective,
+    FlexMinDirective,
 
     CommonModule,
     FormsModule,
