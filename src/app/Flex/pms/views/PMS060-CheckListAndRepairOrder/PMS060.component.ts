@@ -1984,8 +1984,9 @@ export class PMS060Component implements OnInit {
         }
     }
 
-    cancelEvent(event)
+    cancelChecked(event)
     {
-        event.stopPropagation();
+        console.log(event);
+        event.source._checked=event.checked==false;
     }
 }

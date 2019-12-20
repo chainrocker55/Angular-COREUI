@@ -2109,14 +2109,14 @@
                                 <ng-container matColumnDef="IN_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [checked]="row.IN_CLEAN_BOOL" (click)="cancelEvent($event)">
+                                        <mat-checkbox [checked]="row.IN_CLEAN_BOOL" (change)="cancelChecked($event)">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="IN_APPEARANCE_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [checked]="row.IN_APPEARANCE_BOOL">
+                                        <mat-checkbox [checked]="row.IN_APPEARANCE_BOOL" (change)="cancelChecked($event)">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
