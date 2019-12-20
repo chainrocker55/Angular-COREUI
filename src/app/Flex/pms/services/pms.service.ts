@@ -72,6 +72,11 @@ export class PMSService {
         return this.http.post<any[]>(this.baseUrl + 'sp_PMS062_GetInQty', data);
     }
 
+    async GetInQtyAsync(data: any) {
+        return await this.http.post<any[]>(this.baseUrl + 'sp_PMS062_GetInQty', data).toPromise();
+    }     
+
+
     GetInQty_CR(data: any): Observable<any[]> {
         return this.http.post<any[]>(this.baseUrl + 'sp_PMS063_GetInQty', data);
     }

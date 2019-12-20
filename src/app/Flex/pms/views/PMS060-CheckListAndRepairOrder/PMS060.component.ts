@@ -31,6 +31,7 @@ import { DateAdapter } from '@angular/material';
 import { APP_DATE_FORMATS, AppDateAdapter } from '../../../Flex/components/format-datepicker';
 import { DLGPMS002Component } from '../DLGPMS002-MachineAttachment/DLGPMS002.component';
 import { DLGPMS063_01Component } from '../DLGPMS063_01-PartEditor/DLGPMS063_01.component';
+import { async } from '@angular/core/testing';
 
 @Component({
     selector: 'app-pms060',
@@ -449,10 +450,22 @@ export class PMS060Component implements OnInit {
                     this.comboUserApproveLocation = this.comboLocation;
                 }
 
+                if (this.data.Header.STATUSID == this.STATUS_DURING_ASSIGN) {
+                    let date = new Date();
+                    if (!res.Header.REC_REQUEST_DATE) {
+                        res.Header.REC_REQUEST_DATE = date;
+                    }
+
+                    if (!res.Header.REC_REQUEST_TIME) {
+                        res.Header.REC_REQUEST_TIME = date.toLocaleTimeString('it-IT');
+                    }
+                }
+
 
 
                 this.status = this.flex.GetStatus(this.data.Header.STATUSID);
 
+                this.DisableControlByStatus();
                 this.InitialPermission_CR(this.data.Header.STATUSID);
 
                 this.dataSourcePersonInCharge = new MatTableDataSource(this.data.PersonInCharge);
@@ -508,7 +521,7 @@ export class PMS060Component implements OnInit {
 
 
 
-                this.DisableControlByStatus();
+
                 this.SetDefaultDate();
 
                 if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
@@ -620,7 +633,7 @@ export class PMS060Component implements OnInit {
 
                 var dayToAdd = +config.CHAR_DATA;
                 date.setDate(date.getDate() + dayToAdd);
-                console.log(date);
+                // console.log(date);
             }
             this.data.Header.REQUEST_DATE = date;
 
@@ -685,7 +698,7 @@ export class PMS060Component implements OnInit {
         }
         else {
             this.notHavePermission = false;
-            
+
             if (this.data.Header.SCHEDULE_TYPEID == 3) {
                 if (this.data.Header.STATUSID == this.STATUS_RECEIVED) {
 
@@ -744,12 +757,14 @@ export class PMS060Component implements OnInit {
                 this.data.Header.ASSIGN_POSITIONID = this.getUserPosition(this.data.Header.ASSIGNER);
             }
         }
-        else if (STATUSID === this.STATUS_RECEIVED) {
+        else if (STATUSID === this.STATUS_RECEIVED || STATUSID === this.STATUS_REVISE) {
             let exists = this.data.PersonInCharge.find(u => u.PERSONINCHARGE === this.flex.getCurrentUser().USER_CD);
-            if (exists)
+            if (exists) {
                 this.notHavePermission = false;
-            else
+            }
+            else {
                 this.notHavePermission = true;
+            }
         }
         else {
             this.notHavePermission = false;
@@ -778,24 +793,31 @@ export class PMS060Component implements OnInit {
     }
 
     SaveOH() {
-        if (this.ValidatePersonInCharge() == false)
-            return;
 
-        this.isLoading = true;
-        this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
-        this.svc.SaveOH(this.data).subscribe((res: string) => {
-            this.isLoading = false;
-            this.isDataChange = true;
+        this.dlg.ShowConfirm('CFM9001').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+                if (this.ValidatePersonInCharge() == false)
+                    return;
 
-            this.dlg.ShowSuccess("INF9003");
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.svc.SaveOH(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
 
-            this.dataFromList.CHECK_REPH_ID = res;
-            this.OnEdit(this.dataFromList);
+                    this.dlg.ShowSuccess("INF9003");
 
-        }, error => {
-            this.dlg.ShowException(error);
-            this.isLoading = false;
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+            }
         });
+
+
     }
 
     onCancelPM() {
@@ -883,9 +905,51 @@ export class PMS060Component implements OnInit {
                 if (this.ValidatePM() == false)
                     return;
 
+                if (this.ValidateItemQty_PM() == false) {
+                    this.dlg.ShowConfirm('CFM0174').subscribe(d2 => {
+                        if (d2 && d2.DialogResult === 'Yes') {
+                            this.sendToApprovePM();
+
+                        }
+                    });
+                }
+                else {
+                    this.sendToApprovePM();
+
+                }
+                
+            }
+        });
+    }
+    sendToApprovePM() {
+        this.isLoading = true;
+        this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+        this.svc.SendToApprovePM(this.data).subscribe((res: string) => {
+            this.isLoading = false;
+            this.isDataChange = true;
+
+            this.dlg.ShowSuccess("INF9003");
+
+            this.dataFromList.CHECK_REPH_ID = res;
+            this.OnEdit(this.dataFromList);
+
+        }, error => {
+            this.dlg.ShowException(error);
+            this.isLoading = false;
+        });
+    }
+
+    SavePM() {
+
+        this.dlg.ShowConfirm('CFM9001').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
+
+                if (this.ValidatePM() == false)
+                    return;
+
                 this.isLoading = true;
                 this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
-                this.svc.SendToApprovePM(this.data).subscribe((res: string) => {
+                this.svc.SavePM(this.data).subscribe((res: string) => {
                     this.isLoading = false;
                     this.isDataChange = true;
 
@@ -901,55 +965,47 @@ export class PMS060Component implements OnInit {
 
             }
         });
-    }
 
-    SavePM() {
-        if (this.ValidatePM() == false)
-            return;
 
-        this.isLoading = true;
-        this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
-        this.svc.SavePM(this.data).subscribe((res: string) => {
-            this.isLoading = false;
-            this.isDataChange = true;
-
-            this.dlg.ShowSuccess("INF9003");
-
-            this.dataFromList.CHECK_REPH_ID = res;
-            this.OnEdit(this.dataFromList);
-
-        }, error => {
-            this.dlg.ShowException(error);
-            this.isLoading = false;
-        });
     }
 
     SaveCR() {
-        if (this.ValidateCR() == false)
-            return;
 
-        this.isLoading = true;
-        this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
-        this.svc.SaveCR(this.data).subscribe((res: string) => {
-            this.isLoading = false;
-            this.isDataChange = true;
+        this.dlg.ShowConfirm('CFM9001').subscribe(d => {
+            if (d && d.DialogResult === 'Yes') {
 
-            this.dlg.ShowSuccess("INF9003");
+                if (this.ValidateCR() == false)
+                    return;
 
-            this.dataFromList.CHECK_REPH_ID = res;
-            this.OnEdit(this.dataFromList);
+                this.isLoading = true;
+                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+                this.svc.SaveCR(this.data).subscribe((res: string) => {
+                    this.isLoading = false;
+                    this.isDataChange = true;
 
-        }, error => {
-            this.dlg.ShowException(error);
-            this.isLoading = false;
+                    this.dlg.ShowSuccess("INF9003");
+
+                    this.dataFromList.CHECK_REPH_ID = res;
+                    this.OnEdit(this.dataFromList);
+
+                }, error => {
+                    this.dlg.ShowException(error);
+                    this.isLoading = false;
+                });
+
+            }
         });
+
+
     }
 
     ValidatePersonInCharge() {
 
-        if (!this.data.PersonInCharge || this.data.PersonInCharge.length == 0) {
-            this.dlg.ShowWaring("VLM0770"); // No slelcted Person in Charge.
-            return false;
+        if (this.data.Header.APPROVE_RQ == "Y") {
+            if (!this.data.PersonInCharge || this.data.PersonInCharge.length == 0) {
+                this.dlg.ShowWaring("VLM0770"); // No slelcted Person in Charge.
+                return false;
+            }
         }
     }
 
@@ -966,13 +1022,13 @@ export class PMS060Component implements OnInit {
         //     // }
         // }
 
-        if (!this.data.Header.COMPLETE_DATE) {
+        if (!this.data.Header.COMPLETE_DATE || !this.data.Header.COMPLETE_TIME) {
             let item = this.data.Parts.find(p =>
-                p.USED_QTY > 0
+                p.OUT_USEDQTY > 0
             );
 
             if (item) {
-                this.dlg.ShowWaring("VLM0773");//"Test Date is required.");
+                this.dlg.ShowWaring("VLM0783");//"Test Date is required.");
                 return false;
             }
         }
@@ -1193,13 +1249,12 @@ export class PMS060Component implements OnInit {
                         }
                     });
 
-                    let exists=false;
+                    let exists = false;
                     for (let i = 0; i < pData.length; i++) {
                         if (this.PartsExists(pData[i].PARTS_ITEM_CD)) {
-                            exists=true;
+                            exists = true;
                         }
-                        else
-                        {
+                        else {
                             this.data.PmParts.push({
                                 PARTS_LOC_CD: pData[0].PARTS_LOC_CD,
                                 PARTS_ITEM_CD: pData[i].PARTS_ITEM_CD,
@@ -1212,8 +1267,7 @@ export class PMS060Component implements OnInit {
                     }
                     this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
 
-                    if(exists==true)
-                    {
+                    if (exists == true) {
                         this.dlg.ShowWaring("VLM0780");
                     }
 
@@ -1262,12 +1316,12 @@ export class PMS060Component implements OnInit {
                         }
                     });
 
-                    let exists=false;
+                    let exists = false;
                     for (let i = 0; i < pData.length; i++) {
                         if (this.PartsExists_CR(pData[i].PARTS_ITEM_CD) == true) {
-                            exists=true;
+                            exists = true;
                         }
-                        else{
+                        else {
                             this.data.Parts.push({
                                 LOC_CD: pData[i].PARTS_LOC_CD,
                                 ITEM_CD: pData[i].PARTS_ITEM_CD,
@@ -1279,8 +1333,7 @@ export class PMS060Component implements OnInit {
                     }
                     this.dataSourceCrParts = new MatTableDataSource(this.data.Parts);
 
-                    if(exists==true)
-                    {
+                    if (exists == true) {
                         this.dlg.ShowWaring("VLM0780");
                     }
 
@@ -1413,24 +1466,58 @@ export class PMS060Component implements OnInit {
                 if (this.ValidateCR() == false)
                     return;
 
-                this.isLoading = true;
-                this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
-                this.svc.SendToApproveCR(this.data).subscribe((res: string) => {
-                    this.isLoading = false;
-                    this.isDataChange = true;
-
-                    this.dlg.ShowSuccess("INF9003");
-
-                    this.dataFromList.CHECK_REPH_ID = res;
-                    this.OnEdit(this.dataFromList);
-
-                }, error => {
-                    this.dlg.ShowException(error);
-                    this.isLoading = false;
-                });
+                if (this.ValidateItemQty_CR() == false) {
+                    this.dlg.ShowConfirm('CFM0174').subscribe(d2 => {
+                        if (d2 && d2.DialogResult === 'Yes') {
+                            this.sendToApproveCR();
+                        }
+                    });
+                }
+                else {
+                    this.sendToApproveCR();
+                }
             }
         });
 
+    }
+    sendToApproveCR() {
+        this.isLoading = true;
+        this.data.CurrentUser = this.flex.getCurrentUser().USER_CD;
+        this.svc.SendToApproveCR(this.data).subscribe((res: string) => {
+            this.isLoading = false;
+            this.isDataChange = true;
+
+            this.dlg.ShowSuccess("INF9003");
+
+            this.dataFromList.CHECK_REPH_ID = res;
+            this.OnEdit(this.dataFromList);
+
+        }, error => {
+            this.dlg.ShowException(error);
+            this.isLoading = false;
+        });
+    }
+
+    ValidateItemQty_CR(): boolean {
+        for (let item of this.data.Parts) {
+            if (item.REQUEST_QTY != null && item.OUT_USEDQTY == null) {
+                return false
+                break;
+            }
+        }
+
+        return true;
+    }
+
+    ValidateItemQty_PM(): boolean {
+        for (let item of this.data.PmParts) {
+            if (item.REQUEST_QTY != null && item.USED_QTY == null) {
+                return false
+                break;
+            }
+        }
+
+        return true;
     }
 
     onApproveCR() {
@@ -1673,7 +1760,7 @@ export class PMS060Component implements OnInit {
 
                 // this.data.Header.DELETEFLAG = "Y";
 
-                console.log(this.data);
+                // console.log(this.data);
                 this.svc.SaveOH(this.data).subscribe((res: string) => {
                     this.isLoading = false;
                     this.isDataChange = true;
@@ -1763,39 +1850,41 @@ export class PMS060Component implements OnInit {
             item.PARTS_LOC_CD = this.data.Header.MACHINE_LOC_CD;
         }
 
-        this.svc.GetInQty({
+        this.GetInQty();
+        this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
+
+    }
+
+    async GetInQty() {
+
+        let inQty = await this.svc.GetInQtyAsync({
             CHECK_REPH_ID: this.data.Header.CHECK_REPH_ID,
             ITEMS: this.data.PmParts
-        }).subscribe( resIn => {
-
-            this.ProcessInQty(resIn);
-
-        }, error => {
-            this.dlg.ShowException(error);
         });
 
-        
-    }
-    ProcessInQty(resIn: any[]) {
-        console.log("ProcessInQty()");
+        for (let row of this.data.PmParts) {
 
-        resIn.forEach(function (row) {
-            let item = this.data.PmParts.PmParts.find(i =>
+            let item = inQty.find(i =>
                 i.PARTS_ITEM_CD === row.PARTS_ITEM_CD
                 && i.PARTS_LOC_CD === row.PARTS_LOC_CD
                 && i.UNITCODE === row.UNITCODE
             );
+
             if (item) {
-                let qty = row.ISSUE_INVQTY;
-                if (item.IN_QTY != qty) {
-                    item.IN_QTY = qty;
-                    item.USED_QTY = qty;
+                let qty = item.ISSUE_INVQTY;
+                if (row.IN_QTY != qty) {
+                    row.IN_QTY = qty;
+                    row.USED_QTY = qty;
                 }
             }
-        });
+            else {
+                row.IN_QTY = 0;
+                row.USED_QTY = 0;
+            }
 
-        this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
-        
+        }
+
+
     }
 
     openApproveHistory() {
@@ -1865,5 +1954,38 @@ export class PMS060Component implements OnInit {
         if (tagName !== 'textarea') {
             return false;
         }
+    }
+
+    calculateTools(row) {
+
+        var in_qty = row.IN_QTY;
+        var return_qty = row.OUT_RETURNQTY;
+
+        if (!in_qty) in_qty = 0;
+        if (!return_qty) return_qty = 0;
+
+        var use_qty = in_qty - return_qty;
+        if (use_qty < 0)
+            use_qty = 0;
+
+        row.OUT_USEDQTY = use_qty;
+
+    }
+
+    onDefectFoundChange(event) {
+        if (event.value == "N")
+            this.data.Check.QC_CHECK_DESC = null;
+    }
+
+    onTemporaryUseChange(event) {
+        if (event.value != 3) {
+            this.data.Check.CHECK_MC_DATE_FR = null;
+            this.data.Check.CHECK_MC_DATE_TO = null;
+        }
+    }
+
+    cancelEvent(event)
+    {
+        event.stopPropagation();
     }
 }

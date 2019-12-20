@@ -1,7 +1,6 @@
 
-<div class="col-sm-6 col-lg-3">
-  <ng-select [id]="id" [name]="name" [placeholder]="placeholder" appendTo="body"
-      [searchable]="true" [clearable]="true" [(ngModel)]="value" (change)="onValueChange($event)">
-      <ng-option *ngFor="let c of comboData" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
+  <ng-select [placeholder]="placeholder" appendTo="body" [disabled]="disabled"
+      [searchable]="true" [clearable]="true" [(ngModel)]="selectedValue" (change)="onSelectedChange($event)">
+      <ng-option *ngIf="showAll===true" value="">All : - All -</ng-option>
+      <ng-option *ngFor="let c of datasource" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
   </ng-select>
-</div>

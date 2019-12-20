@@ -1,5 +1,3 @@
-<!-- <flex-combo disabled></flex-combo> -->
-
 <!-- ######################################################################################### -->
 <!-- list -->
 <mat-card [hidden]="data" class="animated fadeIn card-margin">
@@ -112,10 +110,15 @@
                         </mat-form-field> -->
                         <!--------@ng-select/ng-select--------->
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="Location" name="Location" placeholder="Location" appendTo="body"
+                            <!-- <ng-select id="Location" name="Location" placeholder="Location" appendTo="body"
                                 [searchable]="true" [clearable]="true" [(ngModel)]="criteria.MACHINE_LOC_CD">
                                 <ng-option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="Location" placeholder="Location" [datasource]="comboLocation"
+                                [(ngModel)]="criteria.MACHINE_LOC_CD">
+                            </flex-combo>
+
                         </div>
                         <!--------End @ng-select/ng-select--------->
 
@@ -127,11 +130,15 @@
                         </mat-form-field> -->
                         <!--------@ng-select/ng-select--------->
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="Approver" name="Approver" placeholder="Approver" appendTo="body"
+                            <!-- <ng-select id="Approver" name="Approver" placeholder="Approver" appendTo="body"
                                 [searchable]="true" [clearable]="true" [(ngModel)]="criteria.CUR_PERSON">
                                 <ng-option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}
                                 </ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="Approver" placeholder="Approver" [(ngModel)]="criteria.CUR_PERSON"
+                                [datasource]="comboUserWithPosition">
+                            </flex-combo>
                         </div>
                         <!--------End @ng-select/ng-select--------->
                         <!-- <mat-form-field class="col-sm-6 col-lg-3">
@@ -167,11 +174,15 @@
                         <!----------END-KENDO-UI----------->
                         <!--------@ng-select/ng-select--------->
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="PersonInCharge" name="PersonInCharge" placeholder="Person In Charge"
+                            <!-- <ng-select id="PersonInCharge" name="PersonInCharge" placeholder="Person In Charge"
                                 [searchable]="true" [clearable]="true" [(ngModel)]="criteria.PERSONINCHARGE">
                                 <ng-option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}
                                 </ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="PersonInCharge" placeholder="Person In Charge"
+                                [(ngModel)]="criteria.PERSONINCHARGE" [datasource]="comboUserWithPosition">
+                            </flex-combo>
                         </div>
                         <!--------End @ng-select/ng-select--------->
                         <!-- <mat-form-field class="col-sm-6 col-lg-3">
@@ -182,11 +193,15 @@
                         </mat-form-field> -->
                         <!--------@ng-select/ng-select--------->
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="Requester" name="Requester" placeholder="Requester" appendTo="body"
+                            <!-- <ng-select id="Requester" name="Requester" placeholder="Requester" appendTo="body"
                                 [searchable]="true" [clearable]="true" [(ngModel)]="criteria.REQUESTER">
                                 <ng-option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">{{c.DISPLAY}}
                                 </ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="Requester" placeholder="Requester" [(ngModel)]="criteria.REQUESTER"
+                                [datasource]="comboUserWithPosition">
+                            </flex-combo>
                         </div>
                         <!--------End @ng-select/ng-select--------->
                     </div>
@@ -230,36 +245,52 @@
                         </mat-form-field> -->
                         <!--------@ng-select/ng-select--------->
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="MaxhineNoFrom" name="MaxhineNoFrom" placeholder="Machine No. From"
+                            <!-- <ng-select id="MaxhineNoFrom" name="MaxhineNoFrom" placeholder="Machine No. From"
                                 appendTo="body" [searchable]="true" [clearable]="true"
                                 [(ngModel)]="criteria.MACHINE_NO_FROM">
                                 <ng-option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="MaxhineNoFrom" placeholder="Machine No. From"
+                                [(ngModel)]="criteria.MACHINE_NO_FROM" [datasource]="comboMachine">
+                            </flex-combo>
                         </div>
 
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="MachineNoTo" name="MachineNoTo" placeholder="Machine No. To" appendTo="body"
+                            <!-- <ng-select id="MachineNoTo" name="MachineNoTo" placeholder="Machine No. To" appendTo="body"
                                 [searchable]="true" [clearable]="true" [(ngModel)]="criteria.MACHINE_NO_TO">
                                 <ng-option *ngFor="let c of comboMachine" [value]="c.VALUE">{{c.DISPLAY}}</ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="MachineNoTo" placeholder="Machine No. To"
+                                [(ngModel)]="criteria.MACHINE_NO_TO" [datasource]="comboMachine">
+                            </flex-combo>
                         </div>
 
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="Supplier" name="Supplier" placeholder="Supplier" appendTo="body"
+                            <!-- <ng-select id="Supplier" name="Supplier" placeholder="Supplier" appendTo="body"
                                 [searchable]="true" [clearable]="true" [(ngModel)]="criteria.VENDORID">
                                 <ng-option *ngFor="let c of comboSupplierIncludeDelete" [value]="c.VALUE">{{c.DISPLAY}}
                                 </ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="Supplier" placeholder="Supplier" [(ngModel)]="criteria.VENDORID"
+                                [datasource]="comboSupplierIncludeDelete">
+                            </flex-combo>
                         </div>
 
 
                         <div class="col-sm-6 col-lg-3">
-                            <ng-select id="Schedule Type" name="Schedule Type" placeholder="Schedule Type"
+                            <!-- <ng-select id="ScheduleType" name="ScheduleType" placeholder="Schedule Type"
                                 appendTo="body" [searchable]="true" [clearable]="true"
                                 [(ngModel)]="criteria.SCHEDULE_TYPEID">
                                 <ng-option *ngFor="let c of comboSchduleType" [value]="c.VALUE">{{c.DISPLAY}}
                                 </ng-option>
-                            </ng-select>
+                            </ng-select> -->
+
+                            <flex-combo name="ScheduleType" placeholder="Schedule Type"
+                                [(ngModel)]="criteria.SCHEDULE_TYPEID" [datasource]="comboSchduleType">
+                            </flex-combo>
                         </div>
                         <!--------End @ng-select/ng-select--------->
                     </div>
@@ -267,13 +298,19 @@
 
 
 
-                        <mat-form-field class="col-sm-6 col-lg-3">
+                        <!-- <mat-form-field class="col-sm-6 col-lg-3">
                             <mat-label>Status</mat-label>
                             <select matNativeControl id="Status" name="Status" [(ngModel)]="criteria.STATUSID">
                                 <option value="">All : - All -</option>
                                 <option *ngFor="let c of comboStatus" [value]="c.VALUE">{{c.DISPLAY}}</option>
                             </select>
-                        </mat-form-field>
+                        </mat-form-field> -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <flex-combo name="Status" placeholder="Status" [datasource]="comboStatus" [showAll]="true"
+                                [(ngModel)]="criteria.STATUSID">
+                            </flex-combo>
+                        </div>
 
                     </div>
                     <div class="row">
@@ -383,16 +420,24 @@
                     <div class="col-12">
                         <div class="row">
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine No.</mat-label>
                                 <select matNativeControl id="MachineNo" name="MachineNo"
                                     [disabled]="data.Header.MACHINE_SCHEDULEID!=null || notHavePermission"
                                     [(ngModel)]="data.Header.MACHINE_NO" (change)="onMachineNoChange()">
-                                    <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboActiveMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-combo name="MachineNo" placeholder="Machine No."
+                                    [disabled]="data.Header.MACHINE_SCHEDULEID!=null || notHavePermission"
+                                    [datasource]="comboActiveMachine" [showAll]="false"
+                                    [(ngModel)]="data.Header.MACHINE_NO" (change)="onMachineNoChange()">
+                                </flex-combo>
+                            </div>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Name</mat-label>
@@ -467,27 +512,42 @@
                             <div class="col-sm-12 col-lg-6">
                                 <div class="row">
 
-                                    <mat-form-field class="col-sm-6 col-lg-6">
+
+
+                                    <!-- <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Supplier</mat-label>
                                         <select matNativeControl id="Supplier" name="Supplier"
                                             [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.VENDORID">
-                                            <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboSupplier" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
                                         </select>
-                                    </mat-form-field>
+                                    </mat-form-field> -->
 
-                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                    <div class="col-sm-6 col-lg-6">
+                                        <flex-combo placeholder="Supplier" name="Supplier"
+                                            [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.VENDORID"
+                                            [datasource]="comboSupplier">
+                                        </flex-combo>
+                                    </div>
+
+                                    <!-- <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>PO Number</mat-label>
                                         <select matNativeControl id="PONumber" name="PONumber"
                                             [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.POHID">
-                                            <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboPoNumber" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
                                         </select>
-                                    </mat-form-field>
+                                    </mat-form-field> -->
+
+                                    <div class="col-sm-6 col-lg-6">
+                                        <flex-combo matNativeControl placeholder="PO Number" name="PONumber"
+                                            [disabled]="notHavePermission" [(ngModel)]="data.HeaderOverHaul.POHID"
+                                            [datasource]="comboPoNumber">
+                                        </flex-combo>
+                                    </div>
+
                                 </div>
                                 <div class="row">
                                     <mat-form-field class="col-sm-6 col-lg-6">
@@ -656,17 +716,24 @@
                     <div class="col-12">
                         <div class="row">
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine No.</mat-label>
                                 <select matNativeControl id="MachineNo" name="MachineNo"
                                     [(ngModel)]="data.Header.MACHINE_NO"
                                     [disabled]="data.Header.MACHINE_SCHEDULEID!=null || notHavePermission"
                                     (change)="onMachineNoChange()">
-                                    <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboActiveMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-combo placeholder="Machine No." name="MachineNo"
+                                    [(ngModel)]="data.Header.MACHINE_NO"
+                                    [disabled]="data.Header.MACHINE_SCHEDULEID!=null || notHavePermission"
+                                    (change)="onMachineNoChange()" [datasource]="comboActiveMachine">
+                                </flex-combo>
+                            </div>
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Name</mat-label>
@@ -675,16 +742,22 @@
                                     [(ngModel)]="data.Header.MACHINE_NAME" (change)="onMachineNameChange()">
                             </mat-form-field>
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Part Location (Used)</mat-label>
                                 <select matNativeControl id="PartLocation" name="PartLocation"
                                     [disabled]="notHavePermission" [(ngModel)]="data.Header.MACHINE_LOC_CD"
                                     (change)="onPartLocationChange_PM()">
-                                    <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboLocation" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-combo placeholder="Part Location (Used)" name="PartLocation"
+                                    [disabled]="notHavePermission" [(ngModel)]="data.Header.MACHINE_LOC_CD"
+                                    [datasource]="comboLocation" (change)="onPartLocationChange_PM()">
+                                </flex-combo>
+                            </div>
 
                         </div>
 
@@ -765,16 +838,22 @@
                                             [(ngModel)]="data.Header.PERIOD" [disabled]="notHavePermission">
                                     </mat-form-field>
 
-                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                    <!-- <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label></mat-label>
                                         <select matNativeControl id="PeriodId" name="PeriodId"
                                             [(ngModel)]="data.Header.PERIOD_ID" [disabled]="notHavePermission">
-                                            <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboMachinePeriod" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
                                         </select>
-                                    </mat-form-field>
+                                    </mat-form-field> -->
+
+                                    <div class="col-sm-6 col-lg-6">
+                                        <flex-combo placeholder="Period Unit" name="PeriodId"
+                                            [(ngModel)]="data.Header.PERIOD_ID" [disabled]="notHavePermission"
+                                            [datasource]="comboMachinePeriod">
+                                        </flex-combo>
+                                    </div>
 
                                 </div>
 
@@ -874,18 +953,25 @@
 
                 <mat-card-content>
                     <div class="col-12">
-                        <div class="row">
+                        <div class="row btn-addparts">
                             <div class="col-sm-6 col-lg-3">
-                                <mat-form-field *ngIf="!data.Header.CHECK_REPH_ID" class="col-12" floatLabel="always">
+
+                                <!-- <mat-form-field *ngIf="!data.Header.CHECK_REPH_ID" class="col-12" floatLabel="always">
                                     <mat-label>Machine Component</mat-label>
                                     <select matNativeControl id="MachineComponent" name="MachineComponent"
                                         (change)="MachineComponentChange()" [(ngModel)]="selectedMachineComponent"
                                         [disabled]="notHavePermission">
-                                        <!-- <option value=""></option> -->
                                         <option *ngFor="let c of comboMachineComponent" [value]="c.VALUE">{{c.DISPLAY}}
                                         </option>
                                     </select>
-                                </mat-form-field>
+                                </mat-form-field> -->
+
+                                <div *ngIf="!data.Header.CHECK_REPH_ID" class="col-12">
+                                    <flex-combo placeholder="Machine Component" name="MachineComponent"
+                                        (change)="MachineComponentChange()" [(ngModel)]="selectedMachineComponent"
+                                        [disabled]="notHavePermission" [datasource]="comboMachineComponent">
+                                    </flex-combo>
+                                </div>
                             </div>
                             <div class="col-sm-6 col-lg-9" align="end">
                                 <button type="button" mat-flat-button color="primary" (click)="openDialog()"
@@ -1002,7 +1088,8 @@
                                 </ng-container>
                                 <ng-container matColumnDef="ACTION2">
                                     <th mat-header-cell *matHeaderCellDef></th>
-                                    <td mat-cell *matCellDef="let row" class="button-column"  (click)="$event.stopPropagation()">
+                                    <td mat-cell *matCellDef="let row" class="button-column"
+                                        (click)="$event.stopPropagation()">
 
                                         <button type="button" [disabled]="notHavePermission"
                                             class="btn btn-primary btn-sm" (click)="editPart(row)">
@@ -1075,7 +1162,7 @@
 
 
         <mat-card-actions>
-            <button mat-flat-button color="primary" type="submit"
+            <button mat-flat-button color="primary" type="submit" *ngIf="data.Header.STATUSID!=STATUS_DURING_APPROVE"
                 [disabled]="!formPM.valid || isLoading || notHavePermission">Save</button>
             <button mat-flat-button (click)="Back()">Back</button>
         </mat-card-actions>
@@ -1205,16 +1292,23 @@
 
                         <div class="row">
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine No.</mat-label>
                                 <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission"
                                     matNativeControl id="MACHINE_NO" name="MACHINE_NO"
                                     [(ngModel)]="data.Header.MACHINE_NO" (change)="onMachineNoChange()">
-                                    <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboActiveMachine" [value]="c.VALUE">{{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-combo [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission"
+                                    placeholder="Machine No." name="MACHINE_NO" [(ngModel)]="data.Header.MACHINE_NO"
+                                    (change)="onMachineNoChange()" [datasource]="comboActiveMachine">
+                                </flex-combo>
+                            </div>
+
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Machine Name</mat-label>
@@ -1230,7 +1324,7 @@
                                     [(ngModel)]="data.Header.MACHINE_LOC" floatLabel="always">
                             </mat-form-field>
 
-                            <mat-form-field class="col-sm-6 col-lg-3" floatLabel="always">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3" floatLabel="always">
                                 <mat-label>Part Location</mat-label>
                                 <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" required
                                     matNativeControl id="MACHINE_LOC_CD" name="MACHINE_LOC_CD"
@@ -1239,32 +1333,47 @@
                                         {{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3" floatLabel="always">
+                                <flex-combo [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission" required
+                                    placeholder="Part Location" name="MACHINE_LOC_CD"
+                                    [(ngModel)]="data.Header.MACHINE_LOC_CD" [datasource]="comboUserApproveLocation">
+                                </flex-combo>
+                            </div>
 
 
                         </div>
                         <div class="row">
-                            <mat-form-field class="col-sm-6 col-lg-3">
+
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Requester</mat-label>
                                 <select [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission"
                                     matNativeControl id="REQUESTER" name="REQUESTER" [(ngModel)]="data.Header.REQUESTER"
                                     (change)="onRequesterChange()">
-                                    <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                         {{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-combo [disabled]="data.Header.STATUSID!=STATUS_NEW || notHavePermission"
+                                    placeholder="Requester" name="REQUESTER" [(ngModel)]="data.Header.REQUESTER"
+                                    (change)="onRequesterChange()" [datasource]="comboUserWithPosition">
+                                </flex-combo>
+                            </div>
+
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Position</mat-label>
                                 <select disabled matNativeControl id="POSITIONID" name="POSITIONID"
                                     [(ngModel)]="data.Header.POSITIONID">
-                                    <!-- <option value=""></option> -->
                                     <option *ngFor="let c of comboPosition" [value]="c.POSITIONID">
                                         {{c.POSITIONNAME}}
                                     </option>
                                 </select>
                             </mat-form-field>
+
                             <mat-form-field class="col-sm-6 col-lg-6">
                                 <mat-label>Trouble</mat-label>
                                 <textarea rows="{{TEXTAREA_ROWS}}"
@@ -1283,7 +1392,7 @@
 
             <!-- Maintenance Information -->
             <mat-expansion-panel
-                [expanded]="data.Header.STATUSID==STATUS_DURING_ASSIGN || data.Header.STATUSID==STATUS_RECEIVED || data.Header.STATUSID==STATUS_REVISE || data.Header.STATUSID==STATUS_DURING_APPROVE">
+                [expanded]="data.Header.STATUSID==STATUS_DURING_ASSIGN || data.Header.STATUSID==STATUS_RECEIVED || data.Header.STATUSID==STATUS_REVISE">
                 <mat-expansion-panel-header [@.disabled]="true" expandedHeight="54px" collapsedHeight="54px">
                     <mat-panel-title>Maintenance Information </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -1314,12 +1423,12 @@
 
                             <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Complete Date</mat-label>
-                                <input required
+                                <input
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     matInput [matDatepicker]="COMPLETE_DATE" id="COMPLETE_DATE" name="COMPLETE_DATE"
                                     [(ngModel)]="data.Header.COMPLETE_DATE" (dateChange)="onCompleteDateChange()">
                                 <mat-datepicker-toggle matSuffix [for]="COMPLETE_DATE"></mat-datepicker-toggle>
-                                <mat-datepicker required #COMPLETE_DATE></mat-datepicker>
+                                <mat-datepicker #COMPLETE_DATE></mat-datepicker>
                             </mat-form-field>
 
 
@@ -1376,6 +1485,46 @@
 
 
                         <div class="row">
+
+
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="row">
+                                    <mat-form-field class="col-12">
+                                        <mat-label>Cause of Problem</mat-label>
+                                        <textarea rows="{{TEXTAREA_ROWS}}"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                            matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"
+                                            [(ngModel)]="data.Header.PROBLEM_DESC">
+                                            </textarea>
+                                    </mat-form-field>
+                                    <mat-form-field class="col-12">
+                                        <mat-label>Repair Method</mat-label>
+                                        <textarea rows="{{TEXTAREA_ROWS}}"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                            matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"
+                                            [(ngModel)]="data.Header.REPAIR_METHOD">
+                                            </textarea>
+                                    </mat-form-field>
+                                    <mat-form-field class="col-12">
+                                        <mat-label>Preventive Method</mat-label>
+                                        <textarea rows="{{TEXTAREA_ROWS}}"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                            matInput id="PREVENTIVE_METHOD" name="PREVENTIVE_METHOD" type="text"
+                                            [(ngModel)]="data.Header.PREVENTIVE_METHOD">
+                                            </textarea>
+                                    </mat-form-field>
+                                    <mat-form-field class="col-12">
+                                        <mat-label>Cause of Delay</mat-label>
+                                        <textarea rows="{{TEXTAREA_ROWS}}"
+                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
+                                            matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
+                                            [(ngModel)]="data.Header.CAUSE_DELAY">
+                                            </textarea>
+                                    </mat-form-field>
+
+                                </div>
+                            </div>
+
                             <div class="col-sm-12 col-lg-6">
                                 <div class="row">
 
@@ -1404,7 +1553,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <mat-form-field class="col-sm-6 col-lg-6">
+                                    <!-- <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Person In Charge</mat-label>
                                         <select
                                             [disabled]="(data.Header.STATUSID!=STATUS_DURING_ASSIGN) || notHavePermission"
@@ -1414,7 +1563,18 @@
                                                 {{c.DISPLAY}}
                                             </option>
                                         </select>
-                                    </mat-form-field>
+                                    </mat-form-field> -->
+
+                                    <div class="col-sm-6 col-lg-6">
+                                        <flex-combo
+                                            [disabled]="(data.Header.STATUSID!=STATUS_DURING_ASSIGN) || notHavePermission"
+                                            matNativeControl id="PersonInCharge" name="PersonInCharge"
+                                            placeholder="Person In Charge" [(ngModel)]="SelectedPersonInCharge"
+                                            [datasource]="comboUserWithPosition">
+                                        </flex-combo>
+                                    </div>
+
+
                                     <div class="col-sm-6 col-lg-6">
                                         <button
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_DURING_ASSIGN)"
@@ -1447,40 +1607,6 @@
                                             >
                                         </tr>
                                     </table>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12 col-lg-6">
-                                <div class="row">
-                                    <mat-form-field class="col-12">
-                                        <mat-label>Cause of Problem</mat-label>
-                                        <input
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput id="PROBLEM_DESC" name="PROBLEM_DESC" type="text"
-                                            [(ngModel)]="data.Header.PROBLEM_DESC">
-                                    </mat-form-field>
-                                    <mat-form-field class="col-12">
-                                        <mat-label>Repair Method</mat-label>
-                                        <input
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput id="REPAIR_METHOD" name="REPAIR_METHOD" type="text"
-                                            [(ngModel)]="data.Header.REPAIR_METHOD">
-                                    </mat-form-field>
-                                    <mat-form-field class="col-12">
-                                        <mat-label>Preventive Method</mat-label>
-                                        <input
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput id="PREVENTIVE_METHOD" name="PREVENTIVE_METHOD" type="text"
-                                            [(ngModel)]="data.Header.PREVENTIVE_METHOD">
-                                    </mat-form-field>
-                                    <mat-form-field class="col-12">
-                                        <mat-label>Cause of Delay</mat-label>
-                                        <input
-                                            [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput id="CAUSE_DELAY" name="CAUSE_DELAY" type="text"
-                                            [(ngModel)]="data.Header.CAUSE_DELAY">
-                                    </mat-form-field>
-
                                 </div>
                             </div>
                         </div>
@@ -1609,7 +1735,7 @@
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.IN_QTY"
-                                            [ngModelOptions]="{standalone: true}">
+                                            [ngModelOptions]="{standalone: true}" (change)="calculateTools(row)">
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="IN_CLEAN_BOOL">
@@ -1645,7 +1771,7 @@
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
                                             matInput type="number" [(ngModel)]="row.OUT_RETURNQTY"
-                                            [ngModelOptions]="{standalone: true}">
+                                            [ngModelOptions]="{standalone: true}" (change)="calculateTools(row)">
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="OUT_CLEAN_BOOL">
@@ -1709,9 +1835,10 @@
 
                 <mat-card-content>
                     <div class="col-12">
-                        <div class="row">
+                        <div class="row btn-addparts">
                             <div class="col-sm-6 col-lg-3">
-                                <mat-form-field *ngIf="!notHavePermission && isMachineComponentVisible" class="col-12"
+
+                                <!-- <mat-form-field *ngIf="!notHavePermission && isMachineComponentVisible" class="col-12"
                                     floatLabel="always">
                                     <mat-label>Machine Component</mat-label>
                                     <select matNativeControl id="MachineComponent" name="MachineComponent"
@@ -1719,7 +1846,15 @@
                                         <option *ngFor="let c of comboMachineComponent" [value]="c.VALUE">{{c.DISPLAY}}
                                         </option>
                                     </select>
-                                </mat-form-field>
+                                </mat-form-field> -->
+
+                                <div *ngIf="!notHavePermission && isMachineComponentVisible" class="col-12">
+                                    <flex-combo placeholder="Machine Component" name="MachineComponent"
+                                        (change)="MachineComponentChangeCR()" [(ngModel)]="selectedMachineComponent"
+                                        [datasource]="comboMachineComponent">
+                                    </flex-combo>
+                                </div>
+
                             </div>
                             <div class="col-sm-6 col-lg-9" align="end">
                                 <button
@@ -1850,14 +1985,6 @@
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
-                                <!-- <ng-container matColumnDef="OUT_CLEAN_BOOL">
-                                    <th mat-header-cell *matHeaderCellDef>Clean</th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [(ngModel)]="row.OUT_CLEAN_BOOL" [disabled]="notHavePermission"
-                                            [ngModelOptions]="{standalone: true}">
-                                        </mat-checkbox>
-                                    </td>
-                                </ng-container> -->
                                 <ng-container matColumnDef="OUT_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
@@ -1882,7 +2009,7 @@
                                 </ng-container>
                                 <!-- in group -->
                                 <ng-container matColumnDef="header-row-in-group">
-                                    <th mat-header-cell *matHeaderCellDef class="text-center" [attr.colspan]="3">
+                                    <th mat-header-cell *matHeaderCellDef class="text-center" [attr.colspan]="4">
                                         In
                                     </th>
                                 </ng-container>
@@ -1926,7 +2053,8 @@
                                 </ng-container>
                                 <ng-container matColumnDef="ACTION2">
                                     <th mat-header-cell *matHeaderCellDef></th>
-                                    <td mat-cell *matCellDef="let row" class="button-column" (click)="$event.stopPropagation()">
+                                    <td mat-cell *matCellDef="let row" class="button-column"
+                                        (click)="$event.stopPropagation()">
 
                                         <button type="button"
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
@@ -1980,16 +2108,14 @@
                                 <ng-container matColumnDef="IN_CLEAN_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Clean</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox [(ngModel)]="row.IN_CLEAN_BOOL" disabled
-                                            [ngModelOptions]="{standalone: true}">
+                                        <mat-checkbox [checked]="row.IN_CLEAN_BOOL" (click)="cancelEvent($event)">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="IN_APPEARANCE_BOOL">
                                     <th mat-header-cell *matHeaderCellDef>Appearance</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox disabled [(ngModel)]="row.IN_APPEARANCE_BOOL"
-                                            [ngModelOptions]="{standalone: true}">
+                                        <mat-checkbox [checked]="row.IN_APPEARANCE_BOOL">
                                         </mat-checkbox>
                                     </td>
                                 </ng-container>
@@ -2033,7 +2159,7 @@
                                 </ng-container>
                                 <!-- in group -->
                                 <ng-container matColumnDef="header-row-in-group">
-                                    <th mat-header-cell *matHeaderCellDef class="text-center" [attr.colspan]="3">
+                                    <th mat-header-cell *matHeaderCellDef class="text-center" [attr.colspan]="4">
                                         In
                                     </th>
                                 </ng-container>
@@ -2141,7 +2267,7 @@
                                     id="CHECK_MC_ID" name="CHECK_MC_ID" [(ngModel)]="data.Check.CHECK_MC_ID"
                                     [ngModelOptions]="{standalone: true}">
                                     <mat-radio-button class="radio-button-fix" *ngFor="let item of rdoCheckMachineItem"
-                                        [value]="item.VALUE">
+                                        [value]="item.VALUE" (change)="onTemporaryUseChange($event)">
                                         {{item.DISPLAY}}
                                     </mat-radio-button>
                                 </mat-radio-group>
@@ -2149,18 +2275,20 @@
 
                             <mat-form-field class="col-sm-6 col-lg-4">
                                 <mat-label>Period From</mat-label>
-                                <input [disabled]="notHavePermission || data.Check.CHECK_MC_ID!=3" matInput
-                                    [matDatepicker]="CHECK_MC_DATE_FR" id="CHECK_MC_DATE_FR" name="CHECK_MC_DATE_FR"
-                                    [(ngModel)]="data.Check.CHECK_MC_DATE_FR">
+                                <input
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE || data.Check.CHECK_MC_ID!=3"
+                                    matInput [matDatepicker]="CHECK_MC_DATE_FR" id="CHECK_MC_DATE_FR"
+                                    name="CHECK_MC_DATE_FR" [(ngModel)]="data.Check.CHECK_MC_DATE_FR">
                                 <mat-datepicker-toggle matSuffix [for]="CHECK_MC_DATE_FR"></mat-datepicker-toggle>
                                 <mat-datepicker #CHECK_MC_DATE_FR></mat-datepicker>
                             </mat-form-field>
 
                             <mat-form-field class="col-sm-6 col-lg-4">
                                 <mat-label>To</mat-label>
-                                <input [disabled]="notHavePermission || data.Check.CHECK_MC_ID!=3" matInput
-                                    [matDatepicker]="CHECK_MC_DATE_TO" id="CHECK_MC_DATE_TO" name="CHECK_MC_DATE_TO"
-                                    [(ngModel)]="data.Check.CHECK_MC_DATE_TO">
+                                <input
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE || data.Check.CHECK_MC_ID!=3"
+                                    matInput [matDatepicker]="CHECK_MC_DATE_TO" id="CHECK_MC_DATE_TO"
+                                    name="CHECK_MC_DATE_TO" [(ngModel)]="data.Check.CHECK_MC_DATE_TO">
                                 <mat-datepicker-toggle matSuffix [for]="CHECK_MC_DATE_TO"></mat-datepicker-toggle>
                                 <mat-datepicker #CHECK_MC_DATE_TO></mat-datepicker>
                             </mat-form-field>
@@ -2171,7 +2299,7 @@
 
                         <div class="row">
 
-                            <mat-form-field class="col-sm-12 col-lg-4">
+                            <!-- <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Received by</mat-label>
                                 <select [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     matNativeControl id="CHECK_MC_PERSON_C" name="CHECK_MC_PERSON_C"
@@ -2181,7 +2309,18 @@
                                         {{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-12 col-lg-4">
+                                <flex-combo
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    placeholder="Received by" name="CHECK_MC_PERSON_C"
+                                    [(ngModel)]="data.Check.CHECK_MC_PERSON"
+                                    (change)="data.Header.CHECK_MC_POSITIONID=getUserPosition($event.target.value)"
+                                    [datasource]="comboUserWithPosition">
+                                </flex-combo>
+                            </div>
+
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Position</mat-label>
                                 <select disabled matNativeControl id="CHECK_MC_POSITIONID_C"
@@ -2191,6 +2330,7 @@
                                     </option>
                                 </select>
                             </mat-form-field>
+
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Date</mat-label>
                                 <input [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
@@ -2274,8 +2414,10 @@
                                 <mat-radio-group
                                     [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     [(ngModel)]="data.Check.QC_CHECK" [ngModelOptions]="{standalone: true}">
-                                    <mat-radio-button value="N">Not Found Defect</mat-radio-button>
-                                    <mat-radio-button value="Y">Found Defect</mat-radio-button>
+                                    <mat-radio-button value="N" (change)="onDefectFoundChange($event)">Not Found Defect
+                                    </mat-radio-button>
+                                    <mat-radio-button value="Y" (change)="onDefectFoundChange($event)">Found Defect
+                                    </mat-radio-button>
                                 </mat-radio-group>
                             </div>
 
@@ -2293,16 +2435,27 @@
 
                         <div class="row">
 
-                            <mat-form-field class="col-sm-12 col-lg-4">
+                            <!-- <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Received by</mat-label>
-                                <select matNativeControl id="QC_PERSON" name="QC_PERSON" [disabled]="notHavePermission"
+                                <select matNativeControl id="QC_PERSON" name="QC_PERSON"
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     [(ngModel)]="data.Check.QC_PERSON"
                                     (change)="data.Header.QC_POSITIONID=getUserPosition($event.target.value)">
                                     <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                         {{c.DISPLAY}}
                                     </option>
                                 </select>
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-12 col-lg-4">
+                                <flex-combo placeholder="Received by" name="QC_PERSON"
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    [(ngModel)]="data.Check.QC_PERSON"
+                                    (change)="data.Header.QC_POSITIONID=getUserPosition($event.target.value)"
+                                    [datasource]="comboUserWithPosition">
+                                </flex-combo>
+                            </div>
+
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Position</mat-label>
                                 <select disabled matNativeControl id="QC_POSITIONID" name="QC_POSITIONID"
@@ -2315,7 +2468,8 @@
                             <mat-form-field class="col-sm-12 col-lg-4">
                                 <mat-label>Date</mat-label>
                                 <input matInput [matDatepicker]="QC_DATE_C" id="QC_DATE_C" name="QC_DATE_C"
-                                    [disabled]="notHavePermission" [(ngModel)]="data.Check.QC_DATE">
+                                    [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
+                                    [(ngModel)]="data.Check.QC_DATE">
                                 <mat-datepicker-toggle matSuffix [for]="QC_DATE_C"></mat-datepicker-toggle>
                                 <mat-datepicker #QC_DATE_C></mat-datepicker>
                             </mat-form-field>
@@ -2372,8 +2526,10 @@
 
 
         <mat-card-actions>
-            <button mat-flat-button color="primary" type="submit"
+            <button mat-flat-button color="primary" type="submit" *ngIf="data.Header.STATUSID!=STATUS_DURING_APPROVE"
                 [disabled]="notHavePermission || !formCR.valid || isLoading">Save</button>
+            <!-- <button mat-flat-button color="primary" type="submit" 
+                [disabled]="notHavePermission || !formCR.valid || isLoading">Save</button> -->
             <button mat-flat-button (click)="Back()">Back</button>
         </mat-card-actions>
 
@@ -2381,7 +2537,7 @@
 </mat-card>
 
 
-<form *ngIf="tempPmData" (ngSubmit)="SaveChecklist()" #formChecklist="ngForm" autocomplete="off">
+<!-- <form *ngIf="tempPmData" (ngSubmit)="SaveChecklist()" #formChecklist="ngForm" autocomplete="off">
     <mat-card class="animated fadeIn card-margin">
         <mat-card-header>
             <mat-card-title>Edit PM Checklist</mat-card-title>
@@ -2428,5 +2584,5 @@
             <button mat-flat-button type="button" (click)="CloseFormChecklist()">Back</button>
         </mat-card-actions>
     </mat-card>
-</form>
+</form> -->
 <!-- ######################################################################################### -->

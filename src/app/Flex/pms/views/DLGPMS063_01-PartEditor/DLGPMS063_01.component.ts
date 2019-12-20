@@ -62,7 +62,7 @@ export class DLGPMS063_01Component {
             this.dlg.ShowException(error);
         });
 
-        this.combo.GetComboItemUnit_Stock(this.data.PARTS_ITEM_CD, false).subscribe(res => {
+        this.combo.GetComboItemUnit_Stock(this.data.ITEM_CD, false).subscribe(res => {
             this.comboItemUnit = res;
         }, error => {
             this.dlg.ShowException(error);
@@ -85,8 +85,8 @@ export class DLGPMS063_01Component {
         this.dialogRef.close(this.data);
     }
 
-    PartsExists(PARTS_ITEM_CD: string) {
-        let item = this.parts.find(p => p.ITEM_CD == PARTS_ITEM_CD);
+    PartsExists(ITEM_CD: string) {
+        let item = this.parts.find(p => p.ITEM_CD == ITEM_CD);
         if (item)
             return true;
         else
@@ -114,9 +114,9 @@ export class DLGPMS063_01Component {
 
                 this.getInQty(pData);
 
-                row.PARTS_LOC_CD = pData[0].PARTS_LOC_CD;
-                row.PARTS_ITEM_CD = pData[0].PARTS_ITEM_CD;
-                row.PARTS_ITEM_DESC = pData[0].PARTS_ITEM_DESC;
+                // row.LOC_CD = pData[0].PARTS_LOC_CD;
+                row.ITEM_CD = pData[0].PARTS_ITEM_CD;
+                row.ITEM_DESC = pData[0].PARTS_ITEM_DESC;
                 row.IN_QTY = result[0].IN_QTY;
                 row.UNITCODE = pData[0].UNITCODE;
 
@@ -133,7 +133,7 @@ export class DLGPMS063_01Component {
                 //     this.dataSourcePmParts = new MatTableDataSource(this.data.PmParts);
                 // }
 
-                this.combo.GetComboItemUnit_Stock(row.PARTS_ITEM_CD, false).subscribe(res => {
+                this.combo.GetComboItemUnit_Stock(row.ITEM_CD, false).subscribe(res => {
                     this.comboItemUnit = res;
                 }, error => {
                     this.dlg.ShowException(error);
@@ -151,7 +151,7 @@ export class DLGPMS063_01Component {
             let result = [];
             for (let i = 0; i < data.length; i++) {
                 result.push({
-                    PARTS_LOC_CD: this.data.PARTS_LOC_CD,
+                    PARTS_LOC_CD: this.data.LOC_CD,
                     PARTS_ITEM_CD: data[i].ITEM_CD,
                     PARTS_ITEM_DESC: data[i].ITEM_DESC,
                     UNITCODE: data[i].INVENTORY_UNIT,

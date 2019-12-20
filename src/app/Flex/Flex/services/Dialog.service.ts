@@ -96,7 +96,10 @@ export class DiaglogService {
       catch (error) {
         // can't convert to json
         // show error as text
-        this.ShowErrorText(ex.error);
+        if(ex.error.message)
+          this.ShowErrorText(ex.error.message);
+        else
+          this.ShowErrorText(ex.error);
       }
 
     } else {
