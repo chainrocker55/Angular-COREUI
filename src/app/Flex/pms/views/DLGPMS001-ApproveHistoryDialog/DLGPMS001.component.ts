@@ -14,7 +14,7 @@ export class DLGPMS001Component {
 
     CHECK_REPH_ID: any;
     dataSource: any = [];
-    displayedColumns: string[] = ['NO', 'APPROVE_USER', 'APPROVE_LEVEL', 'APPROVE_STATUS'];
+    displayedColumns: string[] = ['NO', 'APPROVE_USER', 'APPROVE_LEVEL', 'APPROVE_STATUS','REMARK'];
 
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

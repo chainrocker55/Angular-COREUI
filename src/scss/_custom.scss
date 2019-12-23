@@ -123,7 +123,7 @@ tr.mat-row:hover {
     padding-right: 2px;
     margin-left: 2px;
     margin-right: 2px;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .checkbox-label
@@ -226,4 +226,9 @@ tr.mat-row:hover {
 .btn-addparts
 {
     min-height: 45px;
+}
+
+.radio-group-with-text
+{
+    margin-left: 10px;
 }

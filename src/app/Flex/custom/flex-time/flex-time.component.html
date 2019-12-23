@@ -1,4 +1,4 @@
 <div class="flex-time-container">
     <div class="flex-time-label">{{label}}</div>
-    <timepicker class="flex-time-picker" [(ngModel)]="value" [showMeridian]="false" [mousewheel]="false" [showSpinners]="false" (change)="onValueChange($event)"></timepicker>
+    <timepicker class="flex-time-picker" [disabled]="disabled" [(ngModel)]="value" [showMeridian]="false" [mousewheel]="false" [showSpinners]="false" (change)="onValueChange($event)"></timepicker>
 </div>

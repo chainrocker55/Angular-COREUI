@@ -49,7 +49,7 @@ export class FlexTime implements ControlValueAccessor {
         let m: moment.Moment;
         if (value) {
             m = moment("1990-01-01 " + value, 'YYYY-MM-DD HH:mm:ss');
-            console.log("1990-01-01 " + value);
+            // console.log("1990-01-01 " + value);
         }
         else {
             m = moment("1990-01-01 ", 'YYYY-MM-DD');

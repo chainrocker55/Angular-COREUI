@@ -1420,13 +1420,21 @@
                             </mat-form-field>
 
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Received Time</mat-label>
                                 <input
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     matInput id="REC_REQUEST_TIME" name="REC_REQUEST_TIME" type="time"
                                     [(ngModel)]="data.Header.REC_REQUEST_TIME">
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-time label="Received Time"
+                                    [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
+                                    id="REC_REQUEST_TIME" name="REC_REQUEST_TIME"
+                                    [(ngModel)]="data.Header.REC_REQUEST_TIME">
+                                </flex-time>
+                            </div>
 
 
                             <mat-form-field class="col-sm-6 col-lg-3">
@@ -1440,19 +1448,27 @@
                             </mat-form-field>
 
 
-                            <mat-form-field class="col-sm-6 col-lg-3">
+                            <!-- <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Complete Time</mat-label>
                                 <input
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     matInput id="COMPLETE_TIME" name="COMPLETE_TIME" type="time"
                                     [(ngModel)]="data.Header.COMPLETE_TIME">
-                            </mat-form-field>
+                            </mat-form-field> -->
+
+                            <div class="col-sm-6 col-lg-3">
+                                <flex-time label="Complete Time"
+                                    [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
+                                    matInput id="COMPLETE_TIME" name="COMPLETE_TIME"
+                                    [(ngModel)]="data.Header.COMPLETE_TIME">
+                                </flex-time>
+                            </div>
                         </div>
 
 
 
                         <div class="row">
-                            <div class="col-sm-6 col-lg-3">
+                            <div class="col-sm-6 col-lg-2">
                                 <mat-checkbox
                                     [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || data.Header.IN_OUT_PROD_LINE!='N'"
                                     labelPosition="before" name="SKIP_APPROVAL" id="SKIP_APPROVAL"
@@ -1461,9 +1477,9 @@
                                     Skip Approval
                                 </mat-checkbox>
                             </div>
-                            <div class="col-sm-6 col-lg-3">
+                            <div class="col-sm-6 col-lg-4">
                                 <mat-label class="radio-group-label">Approve *</mat-label>
-                                <mat-radio-group id="APPROVE_RQ" name="APPROVE_RQ"
+                                <mat-radio-group class="radio-group-with-text" id="APPROVE_RQ" name="APPROVE_RQ"
                                     [disabled]="data.Header.STATUSID!=STATUS_DURING_ASSIGN || notHavePermission"
                                     [(ngModel)]="data.Header.APPROVE_RQ">
                                     <mat-radio-button value="Y">
@@ -1477,7 +1493,7 @@
 
                             <div class="col-sm-12 col-lg-6">
                                 <mat-label class="radio-group-label">Location *</mat-label>
-                                <mat-radio-group required id="IN_OUT_PROD_LINE" name="IN_OUT_PROD_LINE"
+                                <mat-radio-group  class="radio-group-with-text"  required id="IN_OUT_PROD_LINE" name="IN_OUT_PROD_LINE"
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     [(ngModel)]="data.Header.IN_OUT_PROD_LINE" (change)="onCrLocationChange()">
                                     <mat-radio-button value="Y">
@@ -2268,10 +2284,10 @@
                 </mat-expansion-panel-header>
 
                 <mat-card-content>
-                    <div class="col-12">
+                    <div class="col-12_">
                         <div class="row">
-                            <div class="col-sm-12 col-lg-4">
-                                <mat-radio-group
+                            <div class="col-sm-12 col-lg-6 text-right" style="padding-top: 15px;">
+                                <mat-radio-group 
                                     [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     id="CHECK_MC_ID" name="CHECK_MC_ID" [(ngModel)]="data.Check.CHECK_MC_ID"
                                     [ngModelOptions]="{standalone: true}">
@@ -2282,7 +2298,7 @@
                                 </mat-radio-group>
                             </div>
 
-                            <mat-form-field class="col-sm-6 col-lg-4">
+                            <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>Period From</mat-label>
                                 <input
                                     [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE || data.Check.CHECK_MC_ID!=3"
@@ -2292,7 +2308,7 @@
                                 <mat-datepicker #CHECK_MC_DATE_FR></mat-datepicker>
                             </mat-form-field>
 
-                            <mat-form-field class="col-sm-6 col-lg-4">
+                            <mat-form-field class="col-sm-6 col-lg-3">
                                 <mat-label>To</mat-label>
                                 <input
                                     [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE || data.Check.CHECK_MC_ID!=3"
