@@ -560,7 +560,7 @@
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Total Time of Operation (hr.)</mat-label>
                                         <input matInput id="TotalTimeOfOperation" name="TotalTimeOfOperation"
-                                            [disabled]="notHavePermission" type="number"
+                                            [disabled]="notHavePermission" type="number" min="0" [flexMin]="0"
                                             [(ngModel)]="data.HeaderOverHaul.TOTAL_TIME_OPERATION">
                                     </mat-form-field>
 
@@ -632,7 +632,7 @@
         <mat-card-actions>
             <button mat-flat-button color="primary" type="submit"
                 [disabled]="!formOH.valid || isLoading || notHavePermission">Save</button>
-            <button mat-flat-button (click)="Back()">Back</button>
+            <button mat-stroked-button (click)="Back()">Back</button>
         </mat-card-actions>
 
     </form>
@@ -835,7 +835,7 @@
                                 <div class="row">
                                     <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Period</mat-label>
-                                        <input matInput id="Period" name="Period" type="number"
+                                        <input matInput id="Period" name="Period" type="number" min="0" [flexMin]="0"
                                             [(ngModel)]="data.Header.PERIOD" [disabled]="notHavePermission">
                                     </mat-form-field>
 
@@ -1025,7 +1025,7 @@
                                 <ng-container matColumnDef="REQUEST_QTY">
                                     <th mat-header-cell *matHeaderCellDef>Request Qty</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <input matInput type="number" [(ngModel)]="row.REQUEST_QTY"
+                                        <input matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.REQUEST_QTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
@@ -1036,7 +1036,7 @@
                                 <ng-container matColumnDef="USED_QTY">
                                     <th mat-header-cell *matHeaderCellDef>Used Quantity</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <input matInput type="number" [(ngModel)]="row.USED_QTY"
+                                        <input matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.USED_QTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
@@ -1165,7 +1165,7 @@
         <mat-card-actions>
             <button mat-flat-button color="primary" type="submit" *ngIf="data.Header.STATUSID!=STATUS_DURING_APPROVE"
                 [disabled]="!formPM.valid || isLoading || notHavePermission">Save</button>
-            <button mat-flat-button (click)="Back()">Back</button>
+            <button mat-stroked-button (click)="Back()">Back</button>
         </mat-card-actions>
 
     </form>
@@ -1478,7 +1478,7 @@
                                 </mat-checkbox>
                             </div>
                             <div class="col-sm-6 col-lg-4">
-                                <mat-label class="radio-group-label">Approve *</mat-label>
+                                <mat-label class="radio-group-label">Approve <span class="required-mark">*</span></mat-label>
                                 <mat-radio-group class="radio-group-with-text" id="APPROVE_RQ" name="APPROVE_RQ"
                                     [disabled]="data.Header.STATUSID!=STATUS_DURING_ASSIGN || notHavePermission"
                                     [(ngModel)]="data.Header.APPROVE_RQ">
@@ -1492,7 +1492,7 @@
                             </div>
 
                             <div class="col-sm-12 col-lg-6">
-                                <mat-label class="radio-group-label">Location *</mat-label>
+                                <mat-label class="radio-group-label">Location <span class="required-mark">*</span></mat-label>
                                 <mat-radio-group  class="radio-group-with-text"  required id="IN_OUT_PROD_LINE" name="IN_OUT_PROD_LINE"
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     [(ngModel)]="data.Header.IN_OUT_PROD_LINE" (change)="onCrLocationChange()">
@@ -1758,7 +1758,7 @@
                                     <td mat-cell *matCellDef="let row">
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput type="number" [(ngModel)]="row.IN_QTY"
+                                            matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.IN_QTY"
                                             [ngModelOptions]="{standalone: true}" (change)="calculateTools(row)">
                                     </td>
                                 </ng-container>
@@ -1785,7 +1785,7 @@
                                     <td mat-cell *matCellDef="let row">
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput type="number" [(ngModel)]="row.OUT_USEDQTY"
+                                            matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.OUT_USEDQTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
@@ -1794,7 +1794,7 @@
                                     <td mat-cell *matCellDef="let row">
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput type="number" [(ngModel)]="row.OUT_RETURNQTY"
+                                            matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.OUT_RETURNQTY"
                                             [ngModelOptions]="{standalone: true}" (change)="calculateTools(row)">
                                     </td>
                                 </ng-container>
@@ -1962,7 +1962,7 @@
                                     <td mat-cell *matCellDef="let row">
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput type="number" [(ngModel)]="row.REQUEST_QTY"
+                                            matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.REQUEST_QTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
@@ -1995,7 +1995,7 @@
                                     <td mat-cell *matCellDef="let row">
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput type="number" [(ngModel)]="row.OUT_USEDQTY"
+                                            matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.OUT_USEDQTY"
                                             [ngModelOptions]="{standalone: true}"
                                             (change)="row.OUT_RETURNQTY=calCulateReturnQty(row)">
                                     </td>
@@ -2005,7 +2005,7 @@
                                     <td mat-cell *matCellDef="let row">
                                         <input
                                             [disabled]="notHavePermission || (data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE)"
-                                            matInput type="number" [(ngModel)]="row.OUT_RETURNQTY"
+                                            matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.OUT_RETURNQTY"
                                             [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
@@ -2555,7 +2555,7 @@
                 [disabled]="notHavePermission || !formCR.valid || isLoading">Save</button>
             <!-- <button mat-flat-button color="primary" type="submit" 
                 [disabled]="notHavePermission || !formCR.valid || isLoading">Save</button> -->
-            <button mat-flat-button (click)="Back()">Back</button>
+            <button mat-stroked-button (click)="Back()">Back</button>
         </mat-card-actions>
 
     </form>

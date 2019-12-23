@@ -17,6 +17,22 @@ export class AppComponent implements OnInit {
       }
       window.scrollTo(0, 0);
     });
+
+
+    // logout listener
+    window.addEventListener('storage', (event) => {
+      if (event.storageArea == localStorage) {
+        let token = localStorage.getItem('flexToken');
+        if (token == undefined) {
+          // Perform logout
+          //Navigate to login/home
+          window.location.reload();
+          // this.router.navigate(['/login']);
+          // this.router.navigate(['login']);
+        }
+      }
+    });
+
   }
 
   /////////////////////// disable mouse wheel on input number /////////////////////

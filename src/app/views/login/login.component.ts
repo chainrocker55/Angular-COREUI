@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
     this.svc.login(form.value.userCd, form.value.passWord).subscribe((user: UserInfo) => {
       if (user && user.TOKEN) {
         this.dlg.ShowInformationText('Login success');
+        localStorage.removeItem('flexToken');
         localStorage.setItem('flexToken', user.TOKEN);
         localStorage.setItem('flexUserCd', user.USER_CD);
 
