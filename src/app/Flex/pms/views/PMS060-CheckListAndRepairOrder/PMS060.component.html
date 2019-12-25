@@ -468,16 +468,24 @@
                         <div class="row">
                             <div class="col-sm-12 col-lg-6">
                                 <div class="row">
-                                    <mat-form-field class="col-sm-6 col-lg-6">
+
+                                    <!-- <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Person In Charge</mat-label>
                                         <select matNativeControl id="PersonInCharge" name="PersonInCharge"
                                             [disabled]="notHavePermission" [(ngModel)]="SelectedPersonInCharge">
-                                            <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
                                         </select>
-                                    </mat-form-field>
+                                    </mat-form-field> -->
+
+                                    <div class="col-sm-6 col-lg-6">
+                                        <flex-combo id="PersonInCharge" name="PersonInCharge"
+                                            placeholder="Person In Charge" [disabled]="notHavePermission"
+                                            [(ngModel)]="SelectedPersonInCharge" [datasource]="comboUserWithPosition">
+                                        </flex-combo>
+                                    </div>
+
                                     <div class="col-sm-6 col-lg-6">
                                         <button type="button" mat-stroked-button [disabled]="notHavePermission"
                                             (click)="AddPersonIncharge()">Add</button>
@@ -765,16 +773,23 @@
                         <div class="row">
                             <div class="col-sm-12 col-lg-6">
                                 <div class="row">
-                                    <mat-form-field class="col-sm-6 col-lg-6">
+
+                                    <!-- <mat-form-field class="col-sm-6 col-lg-6">
                                         <mat-label>Person In Charge</mat-label>
                                         <select matNativeControl id="PersonInCharge" name="PersonInCharge"
                                             [disabled]="notHavePermission" [(ngModel)]="SelectedPersonInCharge">
-                                            <!-- <option value=""></option> -->
                                             <option *ngFor="let c of comboUserWithPosition" [value]="c.VALUE">
                                                 {{c.DISPLAY}}
                                             </option>
                                         </select>
-                                    </mat-form-field>
+                                    </mat-form-field> -->
+                                    <div class="col-sm-6 col-lg-6">
+                                        <flex-combo id="PersonInCharge" name="PersonInCharge"
+                                            placeholder="Person In Charge" [disabled]="notHavePermission"
+                                            [(ngModel)]="SelectedPersonInCharge" [datasource]="comboUserWithPosition">
+                                        </flex-combo>
+                                    </div>
+
                                     <div class="col-sm-6 col-lg-6">
                                         <button type="button" mat-stroked-button [disabled]="notHavePermission"
                                             (click)="AddPersonIncharge()">Add</button>
@@ -1025,8 +1040,8 @@
                                 <ng-container matColumnDef="REQUEST_QTY">
                                     <th mat-header-cell *matHeaderCellDef>Request Qty</th>
                                     <td mat-cell *matCellDef="let row">
-                                        <input matInput type="number" min="0" [flexMin]="0" [(ngModel)]="row.REQUEST_QTY"
-                                            [ngModelOptions]="{standalone: true}">
+                                        <input matInput type="number" min="0" [flexMin]="0"
+                                            [(ngModel)]="row.REQUEST_QTY" [ngModelOptions]="{standalone: true}">
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="IN_QTY">
@@ -1478,7 +1493,8 @@
                                 </mat-checkbox>
                             </div>
                             <div class="col-sm-6 col-lg-4">
-                                <mat-label class="radio-group-label">Approve <span class="required-mark">*</span></mat-label>
+                                <mat-label class="radio-group-label">Approve <span class="required-mark">*</span>
+                                </mat-label>
                                 <mat-radio-group class="radio-group-with-text" id="APPROVE_RQ" name="APPROVE_RQ"
                                     [disabled]="data.Header.STATUSID!=STATUS_DURING_ASSIGN || notHavePermission"
                                     [(ngModel)]="data.Header.APPROVE_RQ">
@@ -1492,8 +1508,10 @@
                             </div>
 
                             <div class="col-sm-12 col-lg-6">
-                                <mat-label class="radio-group-label">Location <span class="required-mark">*</span></mat-label>
-                                <mat-radio-group  class="radio-group-with-text"  required id="IN_OUT_PROD_LINE" name="IN_OUT_PROD_LINE"
+                                <mat-label class="radio-group-label">Location <span class="required-mark">*</span>
+                                </mat-label>
+                                <mat-radio-group class="radio-group-with-text" required id="IN_OUT_PROD_LINE"
+                                    name="IN_OUT_PROD_LINE"
                                     [disabled]="(data.Header.STATUSID!=STATUS_RECEIVED && data.Header.STATUSID!=STATUS_REVISE) || notHavePermission"
                                     [(ngModel)]="data.Header.IN_OUT_PROD_LINE" (change)="onCrLocationChange()">
                                     <mat-radio-button value="Y">
@@ -2287,7 +2305,7 @@
                     <div class="col-12_">
                         <div class="row">
                             <div class="col-sm-12 col-lg-6 text-right" style="padding-top: 15px;">
-                                <mat-radio-group 
+                                <mat-radio-group
                                     [disabled]="notHavePermission || data.Header.STATUSID!=STATUS_DURING_APPROVE"
                                     id="CHECK_MC_ID" name="CHECK_MC_ID" [(ngModel)]="data.Check.CHECK_MC_ID"
                                     [ngModelOptions]="{standalone: true}">
