@@ -666,12 +666,21 @@
             mat-stroked-button color="basic" [disabled]="isLoading || !isApprover" (click)="onRevisePM()">
             Revise
         </button>
+
+        <button
+            *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL && data.Header.STATUSID!=STATUS_DURING_APPROVE && data.Header.STATUSID!=STATUS_COMPLETE"
+            class="button" mat-stroked-button color="basic" [disabled]="!formPM.valid || isLoading || notHavePermission"
+            (click)="onPrintPM()">
+            Withdrawal Slip
+        </button>
+
         <button
             *ngIf="data.Header.CHECK_REPH_ID && data.Header.STATUSID!=STATUS_CANCEL && data.Header.STATUSID!=STATUS_DURING_APPROVE && data.Header.STATUSID!=STATUS_COMPLETE"
             class="button" mat-flat-button color="warn" [disabled]="!formPM.valid || isLoading || notHavePermission"
             (click)="onCancelPM()">
             Cancel
         </button>
+
     </mat-card-actions>
     <form (keydown.enter)="handleEnterKeyPress($event)" (ngSubmit)="SavePM()" #formPM="ngForm" autocomplete="off">
 
@@ -1214,6 +1223,13 @@
             mat-stroked-button color="basic" [disabled]="!formCR.valid || isLoading || notHavePermission"
             (click)="onReviseCR()">
             Revise
+        </button>
+
+        <button
+            *ngIf="data.Header.CHECK_REPH_ID && (data.Header.STATUSID==STATUS_RECEIVED || data.Header.STATUSID==STATUS_REVISE)"
+            class="button" mat-stroked-button color="basic" [disabled]="isLoading || notHavePermission"
+            (click)="onPrintCR()">
+            Withdrawal Slip
         </button>
 
 

@@ -1986,7 +1986,18 @@ export class PMS060Component implements OnInit {
 
     cancelChecked(event)
     {
-        console.log(event);
         event.source._checked=event.checked==false;
+    }
+
+    onPrintPM()
+    {
+        // console.log("CHECK_REPH_ID = " + this.data.Header.CHECK_REPH_ID);
+        window.open(this.svc.GetWithdrawalSlipPM(this.data.Header.CHECK_REPH_ID));
+    }
+
+    onPrintCR()
+    {
+        // console.log("CHECK_REPH_ID = " + this.data.Header.CHECK_REPH_ID);
+        window.open(this.svc.GetWithdrawalSlipCR(this.data.Header.CHECK_REPH_ID));
     }
 }

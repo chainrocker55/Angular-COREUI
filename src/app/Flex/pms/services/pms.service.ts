@@ -74,7 +74,7 @@ export class PMSService {
 
     async GetInQtyAsync(data: any) {
         return await this.http.post<any[]>(this.baseUrl + 'sp_PMS062_GetInQty', data).toPromise();
-    }     
+    }
 
 
     GetInQty_CR(data: any): Observable<any[]> {
@@ -143,6 +143,22 @@ export class PMSService {
         if (!FILEID)
             FILEID = "0";
         let url = environment.baseUrl + '/file/' + 'DownloadAttachment/' + FILEHID + "/" + FILEID;
+        return url;
+    }
+
+    GetWithdrawalSlipPM(CHECK_REPH_ID: string) {
+        if (!CHECK_REPH_ID)
+            CHECK_REPH_ID = "0";
+
+        let url = this.baseUrl + 'GetWithdrawalSlipPM/' + CHECK_REPH_ID
+        return url;
+    }
+
+    GetWithdrawalSlipCR(CHECK_REPH_ID: string) {
+        if (!CHECK_REPH_ID)
+            CHECK_REPH_ID = "0";
+
+        let url = this.baseUrl + 'GetWithdrawalSlipCR/' + CHECK_REPH_ID
         return url;
     }
 
