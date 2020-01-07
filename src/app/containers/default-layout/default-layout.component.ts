@@ -41,6 +41,21 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
       this.mUser = this.svc.getCurrentUser();
       this.svc.GetMenu().subscribe(data => {
         this.navItems = data;
+        this.navItems.push({
+          ScreenCd: "Test", name: "TestMenu", url: "/test",
+          badge:null,
+          children:{          
+            badge:null,
+            children:null,
+            divider:false,
+            icon:"fa fa-key",
+            name:"Test UI",
+            ScreenCd:"test001",
+            title:false,
+            url:"/test/test001"
+          },
+        
+        })
         localStorage.setItem('flexMenu', JSON.stringify(data));
       }, (error: HttpErrorResponse) => {
         this.dlg.ShowException(error);

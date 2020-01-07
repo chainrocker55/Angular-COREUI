@@ -60,6 +60,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () => import('./Flex/pms/pms.module').then(m => m.PMSModule)
       },
+      {
+        path: 'test',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./Flex/Test/test.module').then(m => m.TestModule)
+      },
     ]
   },
   { path: '**', component: P404Component }

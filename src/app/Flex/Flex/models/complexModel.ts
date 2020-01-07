@@ -6,7 +6,6 @@ export class UserInfo {
     LANG_CD: string;
     TOKEN: string;
 }
-
 export class Notify {
     InfoDateTime: Date;
     Title: string;
