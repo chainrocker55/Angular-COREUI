@@ -9,14 +9,20 @@ import { TestRoutingModule } from './test-routing.module';
 import { FlexModule } from '../Flex/flex.module';
 import {Test001Component} from './views/Test-View/Test001.component'
 
-
 @NgModule({
   imports: [
     TestRoutingModule,
     FlexModule,
+   
   ],
   declarations: [
     Test001Component,
+    // FlexCombo,
+    // FlexTime,
+  ],
+  entryComponents: [
+    // FlexCombo,
+    // FlexTime
   ],
 })
 export class TestModule { }

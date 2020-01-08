@@ -44,7 +44,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
         this.navItems.push({
           ScreenCd: "Test", name: "TestMenu", url: "/test",
           badge:null,
-          children:{          
+          children:[{          
             badge:null,
             children:null,
             divider:false,
@@ -53,9 +53,9 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
             ScreenCd:"test001",
             title:false,
             url:"/test/test001"
-          },
+          }],
         
-        })
+        });
         localStorage.setItem('flexMenu', JSON.stringify(data));
       }, (error: HttpErrorResponse) => {
         this.dlg.ShowException(error);

@@ -25,6 +25,8 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FlexMinDirective } from '../custom/directive/flex-min-validator.directive';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { FlexCombo } from '../custom/flex-combo/flex-combo.component';
+import { FlexTime } from '../custom/flex-time/flex-time.component';
 
 @NgModule({
   imports: [
@@ -50,7 +52,10 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
   ],
   declarations: [
     FlexLabelDirective,
-    FlexMinDirective
+    FlexMinDirective,
+
+    FlexCombo,
+    FlexTime
   ],
   exports: [
     FlexLabelDirective,
@@ -78,7 +83,10 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     MatRadioModule,
     DropDownsModule,
     NgSelectModule,
-    TimepickerModule
+    TimepickerModule,
+
+    FlexCombo,
+    FlexTime
   ]
 })
 export class FlexModule { }

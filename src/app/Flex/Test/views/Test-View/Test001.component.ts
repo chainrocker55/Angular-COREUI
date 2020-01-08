@@ -3,8 +3,8 @@ import { TestService } from '../../services/test.service';
 import { DiaglogService } from '../../../Flex/services/Dialog.service';
 import { TZ_USER_GROUP_MS } from '../../../Flex/models/tableModel';
 import { FlexService } from '../../../Flex/services/flex.service';
-
-
+import { ComboStringValue, ComboIntValue } from '../../../Flex/models/complexModel';
+import { ComboService } from '../../../Flex/services/combo.service';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -38,14 +38,13 @@ export interface Food {
 export class Test001Component implements OnInit {
 
   obj: any;
-
+  comboFoods: ComboStringValue[]= [
+    {VALUE: 'steak-0', DISPLAY: 'Steak',CODE: 'Steak'},
+    {VALUE: 'pizza-1', DISPLAY: 'Pizza',CODE: 'Steak'},
+    {VALUE: 'tacos-2', DISPLAY: 'Tacos',CODE: 'Steak'}
+  ];
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
-  foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
 
   constructor(private svc: TestService, private dlg: DiaglogService, private flex: FlexService) {
     this.obj = {};
