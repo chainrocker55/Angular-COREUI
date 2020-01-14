@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Test001Component} from './views/Test-View/Test001.component';
+import {Daily_CheckListComponent} from './views/Daily_CheckList/Daily_CheckList.component'
 
 const routes: Routes = [
   {
@@ -18,6 +19,13 @@ const routes: Routes = [
         component: Test001Component,
         data: {
           title: 'Test path'
+        }
+      },
+      {
+        path: 'DailyCheckList',
+        component: Daily_CheckListComponent,
+        data: {
+          title: 'Daily CheckList'
         }
       },
     ]

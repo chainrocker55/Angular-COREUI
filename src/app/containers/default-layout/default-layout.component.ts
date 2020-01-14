@@ -43,18 +43,29 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
         this.navItems = data;
         this.navItems.push({
           ScreenCd: "Test", name: "TestMenu", url: "/test",
-          badge:null,
-          children:[{          
-            badge:null,
-            children:null,
-            divider:false,
-            icon:"fa fa-key",
-            name:"Test UI",
-            ScreenCd:"test001",
-            title:false,
-            url:"/test/test001"
-          }],
-        
+          badge: null,
+          children: [{
+            badge: null,
+            children: null,
+            divider: false,
+            icon: "fa fa-key",
+            name: "Test UI",
+            ScreenCd: "test001",
+            title: false,
+            url: "/test/test001"
+          },
+          {
+            badge: null,
+            children: null,
+            divider: false,
+            icon: "fa fa-key",
+            name: "Daily CheckList",
+            ScreenCd: "DailyCheckList",
+            title: false,
+            url: "/test/DailyCheckList"
+          }
+          ],
+
         });
         localStorage.setItem('flexMenu', JSON.stringify(data));
       }, (error: HttpErrorResponse) => {
@@ -88,13 +99,13 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
           this.noti = [];
         }
         const n = this.noti;
-        const r = res.filter(function(value) {
+        const r = res.filter(function (value) {
           return value.HasRead === false;
         });
         const n_new = [];
-        r.forEach(function(value) {
+        r.forEach(function (value) {
           let found = false;
-          n.forEach(function(valuen) {
+          n.forEach(function (valuen) {
             if (value.Seq === valuen.Seq) {
               found = true;
             }
@@ -105,15 +116,15 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
         });
         const d = this.dlg;
         if (n_new.length > 0) {
-          n_new.forEach(function(value) {
+          n_new.forEach(function (value) {
             d.ShowInformationText(value.Description);
           });
         }
       }
-      this.noti = res.filter(function(value) {
+      this.noti = res.filter(function (value) {
         return value.HasRead === false;
       });
-      this.notiRead = res.filter(function(value) {
+      this.notiRead = res.filter(function (value) {
         return value.HasRead === true;
       });
     }, (error: HttpErrorResponse) => {
@@ -124,7 +135,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   Response(n: Notify) {
     this.svc.ResponseNotify(n).subscribe(res => {
       if (res) {
-        this.noti = this.noti.filter(function(value) {
+        this.noti = this.noti.filter(function (value) {
           return value !== n;
         });
         n.HasRead = true;

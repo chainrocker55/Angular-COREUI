@@ -31,8 +31,6 @@ import { DLGPMS002Component } from './views/DLGPMS002-MachineAttachment/DLGPMS00
     DLGPMS063_01Component,
     DLGPMS001Component,
     DLGPMS002Component
-    // FlexCombo,
-    // FlexTime
   ],
   entryComponents: [
     DLG045Component,
@@ -41,8 +39,6 @@ import { DLGPMS002Component } from './views/DLGPMS002-MachineAttachment/DLGPMS00
     DLGPMS063_01Component,
     DLGPMS001Component,
     DLGPMS002Component
-    // FlexCombo,
-    // FlexTime
   ],
 })
 export class PMSModule { }
