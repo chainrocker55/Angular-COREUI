@@ -21,14 +21,16 @@ import { PMS060_Search_Criteria } from '../../models/PMS060_Search_Criteria';
 export class Daily_CheckListComponent implements OnInit {
 
     criteria: PMS060_Search_Criteria = new PMS060_Search_Criteria();
+    machineList: PMS060_Search_Criteria[];
+    isShowMachineList:Boolean;
     obj: any;
     isLoading:boolean
     data: any;
     notHavePermission: boolean = false;
     SpecialPermissionOH: any;
 
-    comboShift: ComboStringValue[];
-    comboLine: ComboStringValue[];
+    comboShift: ComboIntValue[];
+    comboLine: ComboIntValue[];
     comboMachineNo: ComboStringValue[];
     comboStatus: ComboStringValue[];
 
@@ -64,6 +66,7 @@ export class Daily_CheckListComponent implements OnInit {
     }
 
     InitialCriteria() {
+        this.isShowMachineList = false;
 
         this.criteria.CUR_PERSON = '';
         this.criteria.PERSONINCHARGE = '';
@@ -78,28 +81,28 @@ export class Daily_CheckListComponent implements OnInit {
     }
     InitialCombo() {
 
-        this.combo.GetComboUserWithPosition().subscribe(res => {
-            res.splice(0, 0, this.comboStringAllItem);   
+        this.combo.GetComboMachinePeriod().subscribe(res => {
+            res.splice(0, 0, this.comboIntAllItem);   
             this.comboShift = res;      
         }, error => {
             this.dlg.ShowException(error);
         });
 
-        this.combo.GetComboLocation().subscribe(res => {
-            res.splice(0, 0, this.comboStringAllItem);
+        this.combo.GetComboMachinePeriod().subscribe(res => {
+            res.splice(0, 0, this.comboIntAllItem);
             this.comboLine = res;
         }, error => {
             this.dlg.ShowException(error);
         });
 
-        this.combo.GetComboLocation().subscribe(res => {
+        this.combo.GetComboMachine(true).subscribe(res => {
             res.splice(0, 0, this.comboStringAllItem);
             this.comboMachineNo = res;
         }, error => {
             this.dlg.ShowException(error);
         });
 
-        this.combo.GetComboLocation().subscribe(res => {
+        this.combo.GetComboMachineStatus().subscribe(res => {
             res.splice(0, 0, this.comboStringAllItem);
             this.comboStatus = res;
         }, error => {
@@ -112,6 +115,10 @@ export class Daily_CheckListComponent implements OnInit {
 
     LoadData() {
         console.log("Load Data");
+        this.isShowMachineList = true;
+    }
+    LoadMachine() {
+        console.log("Load Machine");
     }
 
     OnEdit(data: TZ_USER_GROUP_MS) {
@@ -126,6 +133,14 @@ export class Daily_CheckListComponent implements OnInit {
         // }, error => {
         //     this.dlg.ShowException(error);
         // });
+    }
+    OnClear() {
+        this.criteria = new PMS060_Search_Criteria();
+        this.machineList = null;
+        this.InitialCriteria();
+    }
+    OnAddNew(){
+        this.isShowMachineList = true;
     }
     OnEditScreen(data) {
         console.log("Edit Screen");
