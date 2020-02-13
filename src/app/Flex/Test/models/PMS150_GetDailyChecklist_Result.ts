@@ -1,7 +1,7 @@
 export class PMS150_GetDailyChecklist_Result{
         DAILY_CHECKLIST_HID:Number;
-        DAILY_CHECKLIST_NO:String;
-        LINEID:Number;
+        DAILY_CHECKLIST_NO:String;       
+        LINEID:Number
         CHECK_DATE:Date;
         SHIFTID:Number;
         SHIFT_DESC:String;

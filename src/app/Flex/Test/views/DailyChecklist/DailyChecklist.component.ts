@@ -10,6 +10,7 @@ import { PMSDailyChecklistService } from '../../services/PMS_DailyChecklist.serv
 import { PMS150_GetDailyChecklist_Result } from '../../models/PMS150_GetDailyChecklist_Result';
 import { Validators } from '@angular/forms';
 import { isNull } from 'util';
+import { PMS151_GetDailyChecklist_Detail } from '../../models/PMS151_GetDailyChecklist_Detail';
 
 @Component({
     selector: 'app-sfm006',
@@ -24,6 +25,7 @@ export class DailyChecklistComponent implements OnInit {
 
     criteria: PMS150_Search_Criteria = new PMS150_Search_Criteria();
     checklist: PMS150_GetDailyChecklist_Result[];
+    machineList: PMS151_GetDailyChecklist_Detail[];
     obj: any;
     isLoading: boolean
     data: any;
@@ -168,8 +170,20 @@ export class DailyChecklistComponent implements OnInit {
             this.dlg.ShowErrorText('Please input data');
             return;
         }
+    
 
-        console.log("PASS!!")
+        this.svc.GetDailyChecklist_Detail(this.criteriaHeader.DAILY_CHECKLIST_HID).subscribe(res => {
+            // console.log(res);
+            if (!res || res.length === 0) {
+                this.dlg.ShowInformation('INF0001');
+            }
+            this.isLoading = false;
+            this.machineList = res;
+        }, error => {
+            this.dlg.ShowException(error);
+            this.isLoading = false;
+        });
+
        
     }
 
@@ -178,6 +192,8 @@ export class DailyChecklistComponent implements OnInit {
         if (!data) { return; }
         this.criteriaHeader =  data
         this.disableControl = true;
+
+        this.LoadMachine();
 
     }
     OnClear() {
@@ -189,6 +205,9 @@ export class DailyChecklistComponent implements OnInit {
     OnAddNew() {
         this.disableControl = false;
         this.criteriaHeader =  new PMS150_GetDailyChecklist_Result();
+    }
+    BackToSearch(){
+        this.criteriaHeader = null;
     }
     OnEditScreen(data) {
         console.log("Edit Screen");
