@@ -91,4 +91,17 @@ export class ComboService {
   GetComboUnit(showCode): Observable<ComboStringValue[]> {
     return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboUnit?SHOW_CODE='+showCode);
   }
+
+  GetComboShiftTypeDayNight(): Observable<ComboIntValue[]> {
+    return this.http.get<ComboIntValue[]>(this.baseUrl + 'GetComboShiftTypeDayNight');
+  }
+
+  GetComboLineCode(): Observable<ComboIntValue[]> {
+    return this.http.get<ComboIntValue[]>(this.baseUrl + 'GetComboLineCode');
+  }
+
+  
+  GetCombotDailyChecklistStatus(): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetCombotDailyChecklistStatus');
+  }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Test001Component} from './views/Test-View/Test001.component';
-import {Daily_CheckListComponent} from './views/Daily_CheckList/Daily_CheckList.component'
+import {DailyChecklistComponent} from './views/DailyChecklist/DailyChecklist.component';
 
 const routes: Routes = [
   {
@@ -22,10 +22,10 @@ const routes: Routes = [
         }
       },
       {
-        path: 'DailyCheckList',
-        component: Daily_CheckListComponent,
+        path: 'DailyChecklist',
+        component: DailyChecklistComponent,
         data: {
-          title: 'Daily CheckList'
+          title: 'Daily Checklist'
         }
       },
     ]

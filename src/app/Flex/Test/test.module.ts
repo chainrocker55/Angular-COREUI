@@ -8,7 +8,7 @@ import { TestRoutingModule } from './test-routing.module';
 
 import { FlexModule } from '../Flex/flex.module';
 import {Test001Component} from './views/Test-View/Test001.component'
-import {Daily_CheckListComponent} from './views/Daily_CheckList/Daily_CheckList.component'
+import {DailyChecklistComponent} from './views/DailyChecklist/DailyChecklist.component'
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ import {Daily_CheckListComponent} from './views/Daily_CheckList/Daily_CheckList.
   ],
   declarations: [
     Test001Component,
-    Daily_CheckListComponent,
+    DailyChecklistComponent,
     // FlexCombo,
     // FlexTime,
   ],

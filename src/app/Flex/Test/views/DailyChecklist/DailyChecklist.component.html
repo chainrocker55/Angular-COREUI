@@ -1,0 +1,192 @@
+<!-- ######################################################################################### -->
+<!-- Daily Checklist -->
+<mat-card *ngIf="!criteriaHeader" class="animated fadeIn card-margin">
+  <div class="row">
+    <div class="col-lg-12">
+      <h2>
+        <span class="flex-title" [flexLabel]="'lblHeader'">Daily Checklist</span>
+      </h2>
+    </div>
+  </div>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header [@.disabled]="true" expandedHeight="54px" collapsedHeight="54px">
+      <mat-panel-title>Search Criteria</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-card-content>
+      <!--
+                ################ Criteria ################
+            -->
+      <form (ngSubmit)="LoadData()" #criteriaForm="ngForm" autocomplete="off">
+        <div class="col-12">
+          <div class="row">
+
+            <div class="col-sm-6 col-lg-3">
+              <flex-combo name="Shift" placeholder="Shift" [datasource]="comboShift" [(ngModel)]="criteria.SHIFTID">
+              </flex-combo>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+
+              <flex-combo name="Line" placeholder="Line" [datasource]="comboLine" [(ngModel)]="criteria.LINEID">
+              </flex-combo>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+
+              <flex-combo name="MachineNo" placeholder="Machine No." [datasource]="comboMachineNo"
+                [(ngModel)]="criteria.MACHINE_NO">
+              </flex-combo>
+            </div>
+
+            <mat-form-field class="col-sm-6 col-lg-3">
+              <mat-label>Machine Name</mat-label>
+              <input matInput id="MachineName" name="MachineName" type="text" [(ngModel)]="criteria.MACHINE_NAME">
+            </mat-form-field>
+          </div>
+
+
+          <div class="row">
+
+            <mat-form-field class="col-sm-6 col-lg-3">
+              <mat-label>Check Date-From</mat-label>
+              <input matInput [matDatepicker]="CheckDateFrom" id="CheckDateFrom" name="CheckDateFrom"
+                [(ngModel)]="criteria.CHECK_DATE_FROM">
+              <mat-datepicker-toggle matSuffix [for]="CheckDateFrom"></mat-datepicker-toggle>
+              <mat-datepicker #CheckDateFrom></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="col-sm-6 col-lg-3">
+              <mat-label>Check Date-To</mat-label>
+              <input matInput [matDatepicker]="CheckDateTo" id="CheckDateTo" name="CheckDateTo"
+                [(ngModel)]="criteria.CHECK_DATE_TO">
+              <mat-datepicker-toggle matSuffix [for]="CheckDateTo"></mat-datepicker-toggle>
+              <mat-datepicker #CheckDateTo></mat-datepicker>
+            </mat-form-field>
+
+            <div class="col-sm-6 col-lg-3">
+
+              <flex-combo name="Status" placeholder="Status" [datasource]="comboStatus" [(ngModel)]="criteria.STATUSID">
+              </flex-combo>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <button mat-flat-button color="primary" type="submit"
+                [disabled]="!criteriaForm.valid || isLoading">Search</button>
+              <button mat-stroked-button type="button" [disabled]="isLoading" (click)="OnAddNew()">Add
+                New</button>
+              <button mat-stroked-button type="button" [disabled]="isLoading" (click)="OnClear()">Clear</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-expansion-panel>
+
+
+  <mat-expansion-panel [expanded]="true" *ngIf="checklist">
+    <mat-expansion-panel-header [@.disabled]="true" expandedHeight="54px" collapsedHeight="54px">
+      <mat-panel-title>Search Result</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-card-content>
+      <mat-list *ngIf="dataList">
+        <mat-list-item>Result: {{checklist?.length}} rows</mat-list-item>
+      </mat-list>
+      <mat-list *ngIf="checklist">
+        <mat-list-item *ngFor="let row of checklist" (click)="OnEdit(row)">
+          <mat-icon mat-list-icon>folder</mat-icon>
+          <h4 mat-line>Checklist No. : {{row.DAILY_CHECKLIST_NO}}</h4>
+          <small mat-line mat-line>Shift : {{row.SHIFT_DESC}}</small>
+          <small mat-line>Line : {{row.LINEID}}</small>
+          <small mat-line>Check Date : {{row.CHECK_DATE | date: 'dd/MMM/yyyy'}}</small>
+          <small mat-line>Status : {{row.STATUS_DESC}}</small>
+          <!-- <p mat-line> {{row.updated | date}} </p> -->
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-expansion-panel>
+</mat-card>
+
+<!-- ######################################################################################### -->
+<!-- Daily Checklist By Line -->
+<mat-card *ngIf="criteriaHeader" class="animated fadeIn card-margin">
+  <div class="row">
+    <div class="col-lg-12">
+      <h2>
+        <span class="flex-title" [flexLabel]="'lblHeader'">Daily Checklist By Line</span>
+      </h2>
+    </div>
+  </div>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header [@.disabled]="true" expandedHeight="54px" collapsedHeight="54px">
+      <mat-panel-title>Daily Checklist By Line Information</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-card-content>
+      <!--
+                ################ Criteria Header ################
+            -->
+      <form (ngSubmit)="LoadMachine()" #criteriaHeaderForm="ngForm" autocomplete="off">
+        <div class="col-12">
+          <div class="row">
+            <mat-form-field class="col-sm-6 col-lg-3">
+              <mat-label>Checklist No.</mat-label>
+              <input matInput [disabled]="disbleBox" id="ChecklistNo" name="ChecklistNo" type="text"
+                [(ngModel)]="criteriaHeader.DAILY_CHECKLIST_NO">
+            </mat-form-field>
+
+            <div class="col-sm-6 col-lg-3">
+
+              <flex-combo required name="LineByLine" placeholder="Line" [datasource]="comboLineByLine" [(ngModel)]="criteriaHeader.LINEID" 
+              [disabled]="disableControl">
+              </flex-combo>
+            </div>
+
+            <mat-form-field class="col-sm-6 col-lg-3">
+              <mat-label>Check Date-From</mat-label>
+              <input matInput required [matDatepicker]="CheckDate" id="CheckDate" name="CheckDate" [disabled]="disableControl"
+                [(ngModel)]="criteriaHeader.CHECK_DATE">
+              <mat-datepicker-toggle matSuffix [for]="CheckDate"></mat-datepicker-toggle>
+              <mat-datepicker #CheckDate></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+
+            <div class="col-sm-6 col-lg-3">
+              <flex-combo name="ShiftByLine" required placeholder="Shift" [datasource]="comboShiftByLine" [disabled]="disableControl"
+                [(ngModel)]="criteriaHeader.SHIFTID">
+              </flex-combo>
+            </div>
+
+
+            <mat-form-field class="col-sm-6 col-lg-3">
+              <mat-label>Checker</mat-label>
+              <input matInput id="Checker"  [disabled]="disbleBox"  name="Checker" type="text" [(ngModel)]="criteriaHeader.CHECKER">
+            </mat-form-field>
+
+            <div class="col-sm-6 col-lg-3">
+              <button mat-flat-button color="primary" type="submit" [disabled]="disableControl&&!criteriaHeaderForm.valid">Load Machine</button>
+            </div>
+
+          </div>
+
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-expansion-panel>
+<!--   
+                ################ Table information machine list ################
+            -->
+
+  <mat-expansion-panel [expanded]="true" *ngIf="criteriaHeader">
+    <mat-expansion-panel-header [@.disabled]="true" expandedHeight="54px" collapsedHeight="54px">
+      <mat-panel-title>Component Structor</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-card-content>
+
+
+    </mat-card-content>
+  </mat-expansion-panel>
+</mat-card>

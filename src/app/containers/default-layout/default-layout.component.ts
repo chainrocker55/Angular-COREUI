@@ -59,10 +59,10 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
             children: null,
             divider: false,
             icon: "fa fa-key",
-            name: "Daily CheckList",
-            ScreenCd: "DailyCheckList",
+            name: "Daily Checklist",
+            ScreenCd: "DailyChecklist",
             title: false,
-            url: "/test/DailyCheckList"
+            url: "/test/DailyChecklist"
           }
           ],
 
