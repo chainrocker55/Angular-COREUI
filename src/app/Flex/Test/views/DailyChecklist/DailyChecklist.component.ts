@@ -11,6 +11,12 @@ import { PMS150_GetDailyChecklist_Result } from '../../models/PMS150_GetDailyChe
 import { Validators } from '@angular/forms';
 import { isNull } from 'util';
 import { PMS151_GetDailyChecklist_Detail } from '../../models/PMS151_GetDailyChecklist_Detail';
+import { MatTableDataSource } from '@angular/material/table';
+import { PMS151_GetDailyChecklist_Detail_Item } from '../../models/PMS151_GetDailyChecklist_Detail_Item';
+import { DLGPMS151_MachineItem } from '../../views/DLGPMS151_MachineItem/DLGPMS151_MachineItem.component'
+import { from } from 'rxjs';
+import { Direction } from 'ngx-bootstrap/carousel/carousel.component';
+
 
 @Component({
     selector: 'app-sfm006',
@@ -26,6 +32,8 @@ export class DailyChecklistComponent implements OnInit {
     criteria: PMS150_Search_Criteria = new PMS150_Search_Criteria();
     checklist: PMS150_GetDailyChecklist_Result[];
     machineList: PMS151_GetDailyChecklist_Detail[];
+    machineItemList: PMS151_GetDailyChecklist_Detail_Item[];
+    item : PMS151_GetDailyChecklist_Detail_Item[];
     obj: any;
     isLoading: boolean
     data: any;
@@ -42,7 +50,10 @@ export class DailyChecklistComponent implements OnInit {
     comboMachineNo: ComboStringValue[];
     comboStatus: ComboStringValue[];
 
+    dataSourceMachine: MatTableDataSource<any>;
+    dataSourceMachineItem: MatTableDataSource<any>;
 
+    displayedColumnsMachine: string[] = ['NO', 'MACHINE_NO', 'MACHINE_NAME', 'NOT_USED', 'OK', 'NG', 'REPAIR_REQUEST'];
 
     comboStringAllItem: ComboStringValue = {
         VALUE: '',
@@ -152,25 +163,25 @@ export class DailyChecklistComponent implements OnInit {
 
 
     }
-    ValidateCriteriaHeader():boolean{
+    ValidateCriteriaHeader(): boolean {
 
-        if(this.criteriaHeader.LINEID == null || 
-           this.criteriaHeader.SHIFTID == null||
-           this.criteriaHeader.CHECK_DATE == null||
-           !this.criteriaHeader
-            ){
-                return false;
-            }
+        if (this.criteriaHeader.LINEID == null ||
+            this.criteriaHeader.SHIFTID == null ||
+            this.criteriaHeader.CHECK_DATE == null ||
+            !this.criteriaHeader
+        ) {
+            return false;
+        }
 
         return true;
     }
     LoadMachine() {
 
-        if(!this.ValidateCriteriaHeader()){
+        if (!this.ValidateCriteriaHeader()) {
             this.dlg.ShowErrorText('Please input data');
             return;
         }
-    
+
 
         this.svc.GetDailyChecklist_Detail(this.criteriaHeader.DAILY_CHECKLIST_HID).subscribe(res => {
             // console.log(res);
@@ -179,18 +190,40 @@ export class DailyChecklistComponent implements OnInit {
             }
             this.isLoading = false;
             this.machineList = res;
+            this.dataSourceMachine = new MatTableDataSource(this.machineList);
+            this.LoadMachineItems();
         }, error => {
             this.dlg.ShowException(error);
             this.isLoading = false;
         });
 
-       
+
+    }
+    LoadMachineItems() {
+        if (!this.ValidateCriteriaHeader()) {
+            this.dlg.ShowErrorText('Please input data');
+            return;
+        }
+
+        this.svc.GetDailyChecklist_Detail_Item(this.criteriaHeader.DAILY_CHECKLIST_HID).subscribe(res => {
+            // console.log(res);
+            if (!res || res.length === 0) {
+                this.dlg.ShowInformation('INF0001');
+            }
+            this.isLoading = false;
+            this.machineItemList = res;
+            this.dataSourceMachineItem = new MatTableDataSource(this.machineItemList);
+        }, error => {
+            this.dlg.ShowException(error);
+            this.isLoading = false;
+        });
+
     }
 
     OnEdit(data: PMS150_GetDailyChecklist_Result) {
 
         if (!data) { return; }
-        this.criteriaHeader =  data
+        this.criteriaHeader = data
         this.disableControl = true;
 
         this.LoadMachine();
@@ -204,9 +237,9 @@ export class DailyChecklistComponent implements OnInit {
     }
     OnAddNew() {
         this.disableControl = false;
-        this.criteriaHeader =  new PMS150_GetDailyChecklist_Result();
+        this.criteriaHeader = new PMS150_GetDailyChecklist_Result();
     }
-    BackToSearch(){
+    BackToSearch() {
         this.criteriaHeader = null;
     }
     OnEditScreen(data) {
@@ -230,5 +263,27 @@ export class DailyChecklistComponent implements OnInit {
         //   }, error => {
         //       this.dlg.ShowException(error);
         //   });
+    }
+    CheckByItem(row: PMS151_GetDailyChecklist_Detail) {
+        this.item = this.machineItemList.filter(e=>e.MACHINE_NO==row.MACHINE_NO)
+        const dialogRef = this.popup.open(DLGPMS151_MachineItem, {
+            maxWidth: '1200px',
+            minHeight: '400px',
+            width: '1000px',
+            height: '500px',
+            disableClose: false,
+            position:{left:'250px'},
+            data: {item:this.item}
+        }
+
+
+        );
+        // dialogRef.afterClosed().subscribe(result => {
+        //     if (result) {
+        //         // let data = new PMS151_GetDailyChecklist_Detail_Item[];
+        //         Object.assign(this.machineItemList, result)
+        //         console.log(this.machineItemList)
+        //     }
+        // });
     }
 }
