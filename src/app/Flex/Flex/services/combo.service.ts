@@ -104,4 +104,8 @@ export class ComboService {
   GetCombotDailyChecklistStatus(): Observable<ComboStringValue[]> {
     return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetCombotDailyChecklistStatus');
   }
+
+  GetComboByClsInfoCD(cls_info): Observable<ComboStringValue[]> {
+    return this.http.get<ComboStringValue[]>(this.baseUrl + 'GetComboByClsInfoCD?cls_info='+cls_info);
+  }
 }

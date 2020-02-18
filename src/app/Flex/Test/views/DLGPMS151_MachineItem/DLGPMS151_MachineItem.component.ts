@@ -6,7 +6,7 @@ import { DiaglogService } from '../../../Flex/services/Dialog.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PMSDailyChecklistService } from '../../services/PMS_DailyChecklist.service';
 import { PMS151_GetDailyChecklist_Detail_Item } from '../../models/PMS151_GetDailyChecklist_Detail_Item';
-import { ComboIntValue } from '../../../Flex/models/complexModel';
+import { ComboIntValue, ComboStringValue } from '../../../Flex/models/complexModel';
 import { ComboService } from '../../../Flex/services/combo.service';
 
 @Component({
@@ -24,13 +24,9 @@ export class DLGPMS151_MachineItem {
     displayedColumns: string[] = ['NO', 'CHECKLISTITEM_DESC','OK','NG', 'NG_REASON','REMARK'];
     dataSourceMachineItem: MatTableDataSource<any>;
 
-    comboNGReason: ComboIntValue[];
+    comboNGReason: ComboStringValue[];
 
-    comboIntAllItem: ComboIntValue = {
-        VALUE: -1,
-        CODE: undefined,
-        DISPLAY: 'Select NG Reason'
-    };
+
 
     constructor(
         private svc: PMSDailyChecklistService,
@@ -56,8 +52,8 @@ export class DLGPMS151_MachineItem {
     }
     InitialCombo() {
 
-        this.combo.GetComboShiftTypeDayNight().subscribe(res => {
-            res.splice(0, 0, this.comboIntAllItem);
+        this.combo.GetComboByClsInfoCD("NG_REASON").subscribe(res => {
+            //res.splice(0, 0, this.comboIntAllItem);
             this.comboNGReason = res;
         }, error => {
             this.dlg.ShowException(error);

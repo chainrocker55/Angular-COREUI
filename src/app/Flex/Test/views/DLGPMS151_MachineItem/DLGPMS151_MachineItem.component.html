@@ -46,11 +46,22 @@
         <ng-container matColumnDef="NG_REASON">
           <th mat-header-cell *matHeaderCellDef>NG Reason</th>
           <td mat-cell *matCellDef="let row">
+            <!-- <mat-label>NG Reason</mat-label>
             <select [disabled]="notHavePermission" matNativeControl [(ngModel)]="row.NG_REASON"
               [ngModelOptions]="{standalone: true}">
+              
               <option *ngFor="let c of comboNGReason" [value]="c.VALUE">{{c.DISPLAY}}
               </option>
-            </select>
+            </select> -->
+
+      
+              <mat-select [disabled]="notHavePermission" matNativeControl [(ngModel)]="row.NG_REASON"
+              [ngModelOptions]="{standalone: true}" aria-placeholder="NG Reason">
+                <mat-option *ngFor="let c of comboNGReason" [value]="c.VALUE">
+                  {{c.DISPLAY}}
+                </mat-option>
+              </mat-select>
+         
           </td>
         </ng-container>
 

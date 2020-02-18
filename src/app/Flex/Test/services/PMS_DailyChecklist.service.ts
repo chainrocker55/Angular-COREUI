@@ -7,6 +7,8 @@ import { PMS150_GetDailyChecklist_Result } from '../models/PMS150_GetDailyCheckl
 import { PMS151_GetDailyChecklist_Detail } from '../models/PMS151_GetDailyChecklist_Detail';
 import { PMS151_GetDailyChecklist_Detail_Item } from '../models/PMS151_GetDailyChecklist_Detail_Item';
 import { TB_CLASS_LIST_MS_PMS } from '../models/TB_CLASS_LIST_MS_PMS';
+import { PMS151_PrepareDailyChecklist_Result } from '../models/PMS151_PrepareDailyChecklist_Result';
+import { PMS150_SaveDailyChecklist } from '../models/PMS150_SaveDailyChecklist';
 
 
 @Injectable({ providedIn: 'root' })
@@ -28,5 +30,21 @@ export class PMSDailyChecklistService {
   }
   GetComboByClsInfoCD(cls_info: String): Observable<TB_CLASS_LIST_MS_PMS[]> {
     return this.http.post<TB_CLASS_LIST_MS_PMS[]>(this.baseUrl + 'GetComboByClsInfoCD', {StringValue: cls_info});
+  }
+  ValidateBeforePrepareDailyChecklist(lineCode: number, checkDate:Date, shift:number): Observable<string> {
+    return this.http.post<string>(this.baseUrl + 'ValidateBeforePrepareDailyChecklist', {LineCode:lineCode, CheckDate:checkDate,Shift:shift});
+  }
+  PrepareDailyChecklist(lineCode: number, checkDate:Date, shift:number, checker:String, status: String, userID:String): Observable<PMS151_PrepareDailyChecklist_Result> {
+    return this.http.post<PMS151_PrepareDailyChecklist_Result>(this.baseUrl + 'PrepareDailyChecklist', 
+    {LineCode:lineCode, 
+      CheckDate:checkDate,
+      Shift:shift,
+      Checker:checker,
+      Status:status,
+      UserID:userID
+    });
+  }
+  SaveDailyChecklist(data:PMS150_SaveDailyChecklist):Observable<boolean>{
+    return this.http.post<boolean>(this.baseUrl+'SaveDailyChecklist',data)
   }
 }
