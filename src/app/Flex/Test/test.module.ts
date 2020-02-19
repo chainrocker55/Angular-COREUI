@@ -11,12 +11,14 @@ import {Test001Component} from './views/Test-View/Test001.component'
 import {DailyChecklistComponent} from './views/DailyChecklist/DailyChecklist.component'
 import { DLGPMS151_MachineItem } from './views/DLGPMS151_MachineItem/DLGPMS151_MachineItem.component';
 import { DailyChecklistByLineComponent } from './views/DailyChecklistByLine/DailyChecklistByLine.component';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatToolbarModule} from '@angular/material/toolbar';
 @NgModule({
   imports: [
     TestRoutingModule,
     FlexModule,
-    
+    MatTooltipModule,
+    MatToolbarModule
    
   ],
   declarations: [

@@ -12,7 +12,7 @@ import { ComboService } from '../../../Flex/services/combo.service';
 @Component({
     selector: 'app-dlg151PMS',
     templateUrl: './DLGPMS151_MachineItem.component.html',
-    // styleUrls: ['./dialog-box.component.css']
+    styleUrls:['../Style.css']
 })
 export class DLGPMS151_MachineItem {
 
@@ -47,7 +47,6 @@ export class DLGPMS151_MachineItem {
         if (this.dataList) {
             this.dataSourceMachineItem = new MatTableDataSource(this.dataList);
             this.InitialCombo()
-            console.log(this.dataSourceMachineItem)
         }
     }
     InitialCombo() {

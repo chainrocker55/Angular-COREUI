@@ -16,7 +16,8 @@ import { DailyChecklistByLineComponent } from '../DailyChecklistByLine/DailyChec
     providers: [
         { provide: DateAdapter, useClass: AppDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
-    ]
+    ],
+    styleUrls: ['../Style.css'],
 })
 
 export class DailyChecklistComponent implements OnInit  {

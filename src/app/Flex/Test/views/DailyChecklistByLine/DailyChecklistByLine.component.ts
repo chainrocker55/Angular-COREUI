@@ -14,9 +14,12 @@ import { PMS151_GetDailyChecklist_Detail } from '../../models/PMS151_GetDailyChe
 import { MatTableDataSource } from '@angular/material/table';
 import { PMS151_GetDailyChecklist_Detail_Item } from '../../models/PMS151_GetDailyChecklist_Detail_Item';
 import { DLGPMS151_MachineItem } from '../../views/DLGPMS151_MachineItem/DLGPMS151_MachineItem.component'
-import { from } from 'rxjs';
+import { from, Observable, observable, BehaviorSubject } from 'rxjs';
 import { Direction } from 'ngx-bootstrap/carousel/carousel.component';
 import { ThrowStmt } from '@angular/compiler';
+import { PMSService } from '../../../pms/services/pms.service';
+import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
+import { async } from '@angular/core/testing';
 
 
 @Component({
@@ -25,7 +28,8 @@ import { ThrowStmt } from '@angular/compiler';
     providers: [
         { provide: DateAdapter, useClass: AppDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
-    ]
+    ],
+    styleUrls:['../Style.css']
 })
 
 export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
@@ -92,9 +96,6 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
         this.disbleBox = true;
     }
     InitialCombo() {
-
-
-
         this.combo.GetComboShiftTypeDayNight().subscribe(res => {
             this.comboShiftByLine = res;
         }, error => {
@@ -103,14 +104,6 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
 
         this.combo.GetComboLineCode().subscribe(res => {
             this.comboLineByLine = res;
-        }, error => {
-            this.dlg.ShowException(error);
-        });
-
-
-        this.combo.GetCombotDailyChecklistStatus().subscribe(res => {
-            res.splice(0, 0, this.comboStringAllItem);
-            this.comboStatus = res;
         }, error => {
             this.dlg.ShowException(error);
         });
@@ -129,18 +122,65 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
 
         return true;
     }
+    CreateChecklist(){
+        if (!this.ValidateCriteriaHeader()) {
+            this.dlg.ShowErrorText('Please input data');
+            return;
+        }
+
+        this.svc.ValidateBeforePrepareDailyChecklist(this.criteriaHeader.LINEID,this.criteriaHeader.CHECK_DATE,this.criteriaHeader.SHIFTID)
+        .subscribe(res=>{
+            if (!res) {
+                this.svc.PrepareDailyChecklist(this.criteriaHeader.LINEID,this.criteriaHeader.CHECK_DATE,this.criteriaHeader.SHIFTID)
+                .subscribe(result =>{
+                    console.log("PASS");
+                });
+                
+            }
+            this.dlg.ShowInformation(res);    
+        },error=>{
+            this.dlg.ShowException(error);
+        }).
+
+        
+        // if(valid){
+        //     this.dlg.ShowErrorText('Success');
+        //     console.log("Pass")
+        // }
+
+
+    }
+    ValidateBeforePrepair(){
+        this.svc.ValidateBeforePrepareDailyChecklist(this.criteriaHeader.LINEID,this.criteriaHeader.CHECK_DATE,this.criteriaHeader.SHIFTID)
+        .subscribe(res=>{
+            console.log(res)
+            if (!res) {
+                return true;
+            }
+            console.log("Not Pass")
+            this.dlg.ShowInformation(res);
+            return false;      
+        },error=>{
+            this.dlg.ShowException(error);
+            return false
+        })
+        return false;
+
+    }
     LoadMachine() {
 
         if (!this.ValidateCriteriaHeader()) {
             this.dlg.ShowErrorText('Please input data');
             return;
         }
+        
 
 
         this.svc.GetDailyChecklist_Detail(this.criteriaHeader.DAILY_CHECKLIST_HID).subscribe(res => {
             // console.log(res);
             if (!res || res.length === 0) {
                 this.dlg.ShowInformation('INF0001');
+                return;
             }
             this.isLoading = false;
             this.machineList = res;
@@ -206,6 +246,8 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
     }
     OnAddNew() {
         this.OnClear();
+        // this.InitialCriteria();
+        // this.InitialCombo();
         this.criteriaHeader = new PMS150_GetDailyChecklist_Result
         this.disableControl = false;
     }
@@ -217,7 +259,8 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
             minHeight: '400px',
             width: '1000px',
             height: '500px',
-            disableClose: false,
+            disableClose: true,
+            autoFocus:false,
             position:{left:'250px'},
             data: {item:this.item}
         });

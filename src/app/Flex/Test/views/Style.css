@@ -1,0 +1,20 @@
+.button-daily{
+    background-color: #20a8d8 !important;
+    font-weight: 500;
+    color:white;
+}
+.button-daily:hover{
+    background-color: #1E96C1 !important;
+    font-weight: 500;
+}
+.margin-checklist-col{
+    margin-right: 10px;
+    margin-bottom: 4px;
+}
+@media (min-width: 1000px){
+    .col-ck-4 {
+        flex: 0 0 32.3%; 
+        max-width: 32.3%;
+    }
+    
+}

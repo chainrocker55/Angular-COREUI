@@ -73,11 +73,11 @@
 
           <div class="row">
             <div class="col-12">
-              <button mat-flat-button color="primary" type="submit"
+              <button class="btn button-daily" mat-flat-button type="submit"
                 [disabled]="!criteriaForm.valid || isLoading">Search</button>
-              <button mat-stroked-button type="button" [disabled]="isLoading" (click)="DailyChecklistByLine.OnAddNew()">Add
+              <button class="btn" mat-stroked-button type="button" [disabled]="isLoading" (click)="DailyChecklistByLine.OnAddNew()">Add
                 New</button>
-              <button mat-stroked-button type="button" [disabled]="isLoading" (click)="OnClear()">Clear</button>
+              <button class="btn" mat-stroked-button type="button" [disabled]="isLoading" (click)="OnClear()">Clear</button>
             </div>
           </div>
         </div>
@@ -96,8 +96,9 @@
       </mat-list>
 
       <mat-list *ngIf="checklist">
-        <mat-list-item  *ngFor="let row of checklist" (click)="DailyChecklistByLine.OnEdit(row)">
-          <mat-icon mat-list-icon>folder</mat-icon>
+       <div class = "row">
+        <mat-list-item class="col-ck-4 margin-checklist-col"  *ngFor="let row of checklist" (click)="DailyChecklistByLine.OnEdit(row)">
+          <mat-icon mat-list-icon>description</mat-icon>
           <h4 mat-line>Checklist No. : {{row.DAILY_CHECKLIST_NO}}</h4>
           <small mat-line mat-line>Shift : {{row.SHIFT_DESC}}</small>
           <small mat-line>Line : {{row.LINEID}}</small>
@@ -105,6 +106,7 @@
           <small mat-line>Status : {{row.STATUS_DESC}}</small>
           <!-- <p mat-line> {{row.updated | date}} </p> -->
         </mat-list-item>
+       </div>
       </mat-list>
     </mat-card-content>
   </mat-expansion-panel>
