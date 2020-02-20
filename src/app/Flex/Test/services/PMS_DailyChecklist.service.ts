@@ -33,11 +33,12 @@ export class PMSDailyChecklistService {
     return this.http.post<TB_CLASS_LIST_MS_PMS[]>(this.baseUrl + 'GetComboByClsInfoCD', {StringValue: cls_info});
   }
   ValidateBeforePrepareDailyChecklist(lineCode: Number, checkDate:Date, shift:Number): Observable<string> {
-    return this.http.post<string>(this.baseUrl + 'ValidateBeforePrepareDailyChecklist', {LineCode:lineCode, CheckDate:checkDate,Shift:shift});
+    return this.http.post(this.baseUrl + 'ValidateBeforePrepareDailyChecklist', {LineCode:lineCode, CheckDate:checkDate,Shift:shift},{responseType: 'text'});
   }
   PrepareDailyChecklist(lineCode: Number, checkDate:Date, shift:Number, checker:String, status: String, userID:String): Observable<PMS151_PrepareDailyChecklist_Result> {
     return this.http.post<PMS151_PrepareDailyChecklist_Result>(this.baseUrl + 'PrepareDailyChecklist', 
-    {LineCode:lineCode, 
+    {
+      LineCode:lineCode, 
       CheckDate:checkDate,
       Shift:shift,
       Checker:checker,

@@ -34,6 +34,14 @@ import { async } from '@angular/core/testing';
 
 export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
 
+    STATUS_NEW = "L01"; // New Checklist
+    STATUS_DURING = "L02"; // During Checking
+    STATUS_COMPLETED = "L04"; // Completed Repair
+    STATUS_CANCEL = "L05"; // Cancel Checklist
+    STATUS_ISSUED_APPROVED = "L06"; // Issued Repair Order/Approved
+    STATUS_COMPLETED_APPROVED = "L07"; // Completed Repair/Approved
+    STATUS_IN_PROGRESS = "L99"; // In-Progress
+
     machineList: PMS151_GetDailyChecklist_Detail[];
     machineItemList: PMS151_GetDailyChecklist_Detail_Item[];
     item : PMS151_GetDailyChecklist_Detail_Item[];
@@ -43,6 +51,7 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
     criteriaHeader: PMS150_GetDailyChecklist_Result;
     disbleBox: Boolean = true;
     disableControl: Boolean;
+
 
     comboShiftByLine: ComboIntValue[];
     comboLineByLine: ComboIntValue[];
@@ -127,27 +136,39 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
             this.dlg.ShowErrorText('Please input data');
             return;
         }
-
+        
         this.svc.ValidateBeforePrepareDailyChecklist(this.criteriaHeader.LINEID,this.criteriaHeader.CHECK_DATE,this.criteriaHeader.SHIFTID)
-        .subscribe(res=>{
+        .subscribe((res: string)=>{
             if (!res) {
-                this.svc.PrepareDailyChecklist(this.criteriaHeader.LINEID,this.criteriaHeader.CHECK_DATE,this.criteriaHeader.SHIFTID)
+                console.log("criteriaHeader", this.criteriaHeader);
+                this.svc.PrepareDailyChecklist(
+                    this.criteriaHeader.LINEID,
+                    this.criteriaHeader.CHECK_DATE,
+                    this.criteriaHeader.SHIFTID,
+                    this.flex.getCurrentUser().USER_CD,
+                    this.STATUS_NEW,
+                    this.flex.getCurrentUser().USER_CD
+                    )
                 .subscribe(result =>{
-                    console.log("PASS");
+                    console.log("criteriaHeader", this.criteriaHeader);
+                    this.criteriaHeader.CHECKER = this.flex.getCurrentUser().USER_CD;
+                    this.criteriaHeader.DAILY_CHECKLIST_HID = result.DAILY_CHECKLIST_HID;
+                    this.criteriaHeader.DAILY_CHECKLIST_NO = result.DAILY_CHECKLIST_NO;
+                    this.LoadMachine();
+                    this.disableControl = true;
+                    
+                },error => {
+                    this.dlg.ShowException(error);
                 });
                 
+            }else{
+                this.dlg.ShowInformation(res);    
+                //console.log(res)
             }
-            this.dlg.ShowInformation(res);    
+            
         },error=>{
             this.dlg.ShowException(error);
-        }).
-
-        
-        // if(valid){
-        //     this.dlg.ShowErrorText('Success');
-        //     console.log("Pass")
-        // }
-
+        })
 
     }
     ValidateBeforePrepair(){
