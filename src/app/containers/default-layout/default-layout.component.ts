@@ -44,6 +44,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
         this.navItems.push({
           ScreenCd: "Test", name: "TestMenu", url: "/test",
           badge: null,
+          icon:'icon-book-open',
           children: [{
             badge: null,
             children: null,
@@ -63,6 +64,16 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
             ScreenCd: "DailyChecklist",
             title: false,
             url: "/test/DailyChecklist"
+          },
+          {
+            badge: null,
+            children: null,
+            divider: false,
+            icon: "fa fa-key",
+            name: "Dashboard",
+            ScreenCd: "Dashboard",
+            title: false,
+            url: "/test/Dashboard"
           }
           ],
 

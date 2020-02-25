@@ -13,19 +13,23 @@ import { DLGPMS151_MachineItem } from './views/DLGPMS151_MachineItem/DLGPMS151_M
 import { DailyChecklistByLineComponent } from './views/DailyChecklistByLine/DailyChecklistByLine.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { Dashboard } from './views/TestDashboard/Dashboard.component';
+import { ChartsModule } from 'ng2-charts';
 @NgModule({
   imports: [
     TestRoutingModule,
     FlexModule,
     MatTooltipModule,
-    MatToolbarModule
+    MatToolbarModule,
+    ChartsModule
    
   ],
   declarations: [
     Test001Component,
     DailyChecklistComponent,
     DailyChecklistByLineComponent,
-    DLGPMS151_MachineItem
+    DLGPMS151_MachineItem,
+    Dashboard
     // FlexCombo,
     // FlexTime,
   ],

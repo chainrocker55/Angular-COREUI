@@ -26,7 +26,8 @@ export class DLGPMS151_MachineItem {
 
     comboNGReason: ComboStringValue[];
 
-
+    disabledNG: Boolean = true;
+    checkall: Boolean ;
 
     constructor(
         private svc: PMSDailyChecklistService,
@@ -47,6 +48,7 @@ export class DLGPMS151_MachineItem {
         if (this.dataList) {
             this.dataSourceMachineItem = new MatTableDataSource(this.dataList);
             this.InitialCombo()
+           // this.ValidateCheckAll();
         }
     }
     InitialCombo() {
@@ -61,12 +63,60 @@ export class DLGPMS151_MachineItem {
 
 
     }
-
+    BackToSearch(){
+        //this.dataList = null;
+        this.dialogRef.close({ event: 'Cancel'});
+    }
    
 
-    closeDialog() {
-        this.dialogRef.close({ event: 'Cancel' });
+    Onsave() {
+        this.dialogRef.close({data:this.dataList, event: 'Save' });
     }
+
+    OnCheckAll() {
+        if (this.checkall == true) {    
+            this.dataList.map(e => { e.OK = true, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = "O" })
+        } 
+
+
+        // if((isOK||isNOT_USED||data.NG) == false){
+        //     data.CHECK_FLAG = null
+        //     this.machineItemList.map(e => { e.OK = false, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = null })
+        // }
+    }
+    ValidateCheckAll() {
+        var flag = this.dataList.find(e => e.OK == false)
+        if (!flag) {
+            this.checkall = true;
+        }
+        else{
+            this.checkall = false;
+        }
+    }
+    OnCheckedOK(row:PMS151_GetDailyChecklist_Detail_Item){
+        if(row.OK == true){
+            row.NG = false;
+            row.NG_REASON = null;
+            row.OK = true;
+            row.CHECK_FLAG = 'O';
+        }else{
+            row.NG = false;
+            row.NG_REASON = null;
+            row.OK = false;
+            row.CHECK_FLAG = null;
+        }
+        this.ValidateCheckAll();
+
+    }
+    OnCheckedNG(row:PMS151_GetDailyChecklist_Detail_Item){
+        if(row.NG_REASON){
+            row.OK = false;
+            row.NG = true;
+            this.dataList.map(e => e.CHECK_FLAG = 'G')
+        }
+        this.ValidateCheckAll();
+    }
+
 
 
 }

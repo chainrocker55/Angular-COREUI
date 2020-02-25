@@ -11,7 +11,7 @@ import { PMS150_GetDailyChecklist_Result } from '../../models/PMS150_GetDailyChe
 import { DailyChecklistByLineComponent } from '../DailyChecklistByLine/DailyChecklistByLine.component';
 
 @Component({
-    selector: 'app-sfm006',
+    selector: 'app-pms001',
     templateUrl: './DailyChecklist.component.html',
     providers: [
         { provide: DateAdapter, useClass: AppDateAdapter },

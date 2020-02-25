@@ -5,21 +5,13 @@ import { ComboStringValue, ComboIntValue } from '../../../Flex/models/complexMod
 import { ComboService } from '../../../Flex/services/combo.service';
 import { DateAdapter, MAT_DATE_FORMATS, MatDialog } from '@angular/material';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../../Flex/components/format-datepicker';
-import { PMS150_Search_Criteria } from '../../models/PMS150_Search_Criteria';
 import { PMSDailyChecklistService } from '../../services/PMS_DailyChecklist.service';
 import { PMS150_GetDailyChecklist_Result } from '../../models/PMS150_GetDailyChecklist_Result';
-import { Validators } from '@angular/forms';
-import { isNull } from 'util';
 import { PMS151_GetDailyChecklist_Detail } from '../../models/PMS151_GetDailyChecklist_Detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { PMS151_GetDailyChecklist_Detail_Item } from '../../models/PMS151_GetDailyChecklist_Detail_Item';
 import { DLGPMS151_MachineItem } from '../../views/DLGPMS151_MachineItem/DLGPMS151_MachineItem.component'
-import { from, Observable, observable, BehaviorSubject } from 'rxjs';
-import { Direction } from 'ngx-bootstrap/carousel/carousel.component';
-import { ThrowStmt } from '@angular/compiler';
-import { PMSService } from '../../../pms/services/pms.service';
-import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
-import { async } from '@angular/core/testing';
+
 
 
 @Component({
@@ -29,10 +21,10 @@ import { async } from '@angular/core/testing';
         { provide: DateAdapter, useClass: AppDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
     ],
-    styleUrls:['../Style.css']
+    styleUrls: ['../Style.css']
 })
 
-export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
+export class DailyChecklistByLineComponent implements OnInit, OnDestroy {
 
     STATUS_NEW = "L01"; // New Checklist
     STATUS_DURING = "L02"; // During Checking
@@ -44,13 +36,14 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
 
     machineList: PMS151_GetDailyChecklist_Detail[];
     machineItemList: PMS151_GetDailyChecklist_Detail_Item[];
-    item : PMS151_GetDailyChecklist_Detail_Item[];
     obj: any;
     isLoading: boolean
     notHavePermission: boolean = false;
     criteriaHeader: PMS150_GetDailyChecklist_Result;
     disbleBox: Boolean = true;
     disableControl: Boolean;
+    disabledNG: Boolean = true;
+    checkall: Boolean ;
 
 
     comboShiftByLine: ComboIntValue[];
@@ -95,7 +88,7 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
 
     }
     ngOnDestroy(): void {
-       
+
         this.OnClear();
     }
 
@@ -131,60 +124,60 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
 
         return true;
     }
-    CreateChecklist(){
+    CreateChecklist() {
         if (!this.ValidateCriteriaHeader()) {
             this.dlg.ShowErrorText('Please input data');
             return;
         }
-        
-        this.svc.ValidateBeforePrepareDailyChecklist(this.criteriaHeader.LINEID,this.criteriaHeader.CHECK_DATE,this.criteriaHeader.SHIFTID)
-        .subscribe((res: string)=>{
-            if (!res) {
-                console.log("criteriaHeader", this.criteriaHeader);
-                this.svc.PrepareDailyChecklist(
-                    this.criteriaHeader.LINEID,
-                    this.criteriaHeader.CHECK_DATE,
-                    this.criteriaHeader.SHIFTID,
-                    this.flex.getCurrentUser().USER_CD,
-                    this.STATUS_NEW,
-                    this.flex.getCurrentUser().USER_CD
-                    )
-                .subscribe(result =>{
+
+        this.svc.ValidateBeforePrepareDailyChecklist(this.criteriaHeader.LINEID, this.criteriaHeader.CHECK_DATE, this.criteriaHeader.SHIFTID)
+            .subscribe((res: string) => {
+                if (!res) {
                     console.log("criteriaHeader", this.criteriaHeader);
-                    this.criteriaHeader.CHECKER = this.flex.getCurrentUser().USER_CD;
-                    this.criteriaHeader.DAILY_CHECKLIST_HID = result.DAILY_CHECKLIST_HID;
-                    this.criteriaHeader.DAILY_CHECKLIST_NO = result.DAILY_CHECKLIST_NO;
-                    this.LoadMachine();
-                    this.disableControl = true;
-                    
-                },error => {
-                    this.dlg.ShowException(error);
-                });
-                
-            }else{
-                this.dlg.ShowInformation(res);    
-                //console.log(res)
-            }
-            
-        },error=>{
-            this.dlg.ShowException(error);
-        })
+                    this.svc.PrepareDailyChecklist(
+                        this.criteriaHeader.LINEID,
+                        this.criteriaHeader.CHECK_DATE,
+                        this.criteriaHeader.SHIFTID,
+                        this.flex.getCurrentUser().USER_CD,
+                        this.STATUS_NEW,
+                        this.flex.getCurrentUser().USER_CD
+                    )
+                        .subscribe(result => {
+                            console.log("criteriaHeader", this.criteriaHeader);
+                            this.criteriaHeader.CHECKER = this.flex.getCurrentUser().USER_CD;
+                            this.criteriaHeader.DAILY_CHECKLIST_HID = result.DAILY_CHECKLIST_HID;
+                            this.criteriaHeader.DAILY_CHECKLIST_NO = result.DAILY_CHECKLIST_NO;
+                            this.LoadMachine();
+                            this.disableControl = true;
+
+                        }, error => {
+                            this.dlg.ShowException(error);
+                        });
+
+                } else {
+                    this.dlg.ShowInformation(res);
+                    //console.log(res)
+                }
+
+            }, error => {
+                this.dlg.ShowException(error);
+            })
 
     }
-    ValidateBeforePrepair(){
-        this.svc.ValidateBeforePrepareDailyChecklist(this.criteriaHeader.LINEID,this.criteriaHeader.CHECK_DATE,this.criteriaHeader.SHIFTID)
-        .subscribe(res=>{
-            console.log(res)
-            if (!res) {
-                return true;
-            }
-            console.log("Not Pass")
-            this.dlg.ShowInformation(res);
-            return false;      
-        },error=>{
-            this.dlg.ShowException(error);
-            return false
-        })
+    ValidateBeforePrepair() {
+        this.svc.ValidateBeforePrepareDailyChecklist(this.criteriaHeader.LINEID, this.criteriaHeader.CHECK_DATE, this.criteriaHeader.SHIFTID)
+            .subscribe(res => {
+                console.log(res)
+                if (!res) {
+                    return true;
+                }
+                console.log("Not Pass")
+                this.dlg.ShowInformation(res);
+                return false;
+            }, error => {
+                this.dlg.ShowException(error);
+                return false
+            })
         return false;
 
     }
@@ -194,7 +187,7 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
             this.dlg.ShowErrorText('Please input data');
             return;
         }
-        
+
 
 
         this.svc.GetDailyChecklist_Detail(this.criteriaHeader.DAILY_CHECKLIST_HID).subscribe(res => {
@@ -205,7 +198,9 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
             }
             this.isLoading = false;
             this.machineList = res;
+            this.ValidateCheckAll();
             this.dataSourceMachine = new MatTableDataSource(this.machineList);
+
             this.LoadMachineItems();
         }, error => {
             this.dlg.ShowException(error);
@@ -227,6 +222,7 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
             }
             this.isLoading = false;
             this.machineItemList = res;
+           
             this.dataSourceMachineItem = new MatTableDataSource(this.machineItemList);
         }, error => {
             this.dlg.ShowException(error);
@@ -245,17 +241,72 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
         this.OnClear();
         this.criteriaHeader = null;
     }
+    OnCheckAll() {
+        if (this.checkall == true) {
+            this.machineList.map(e => { e.CHECK_FLAG = 'O', e.NOT_USED = false, e.NG = false, e.OK = true })
+            this.machineItemList.map(e => { e.OK = true, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = null })
+        } else {
+            this.machineList.map(e => { e.CHECK_FLAG = null, e.NOT_USED = false, e.NG = false, e.OK = false })
+            this.machineItemList.map(e => { e.OK = false, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = null })
+        }
 
-    OnChecked(data) {
-        console.log("Check Data");
-        //   data.CAN_EXECUTE = data.CAN_EXECUTE === true ? 1 : 0;
-        //   data.GROUP_CD = this.obj.SelectedData.GROUP_CD;
-        //   this.svc.UpdatePermission(data).subscribe(res => {
-        //       this.dlg.ShowProcessComplete();
-        //   }, error => {
-        //       this.dlg.ShowException(error);
-        //   });
-    } 
+
+        // if((isOK||isNOT_USED||data.NG) == false){
+        //     data.CHECK_FLAG = null
+        //     this.machineItemList.map(e => { e.OK = false, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = null })
+        // }
+    }
+    ValidateCheckAll() {
+        var flag = this.machineList.find(e => e.OK == false)
+        if (!flag) {
+            this.checkall = true;
+        }
+        else{
+            this.checkall = false;
+        }
+    }
+
+    OnCheckedNOT_USED(data: PMS151_GetDailyChecklist_Detail) {
+        
+        var isOK = data.OK;
+        var isNG = data.NG;
+        var isNOT_USED = data.NOT_USED;
+ 
+
+        if (isNOT_USED == true) {
+            data.OK = false;
+            data.NG = false;
+            data.CHECK_FLAG = "G"
+            this.machineItemList.filter(i => i.MACHINE_NO == data.MACHINE_NO).map(e => { e.OK = false, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = null })
+        }
+
+        if ((isOK || isNOT_USED || isNG) == false) {
+            data.CHECK_FLAG = null
+            this.machineItemList.filter(i => i.MACHINE_NO == data.MACHINE_NO).map(e => { e.OK = false, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = null })
+        }
+
+        this.ValidateCheckAll() 
+    }
+
+    OnCheckedOK(data: PMS151_GetDailyChecklist_Detail) {
+      
+        var isOK = data.OK;
+        var isNG = data.NG;
+        var isNOT_USED = data.NOT_USED;
+      
+        if (isOK == true) {
+            data.NG = false;
+            data.NOT_USED = false;
+            data.CHECK_FLAG = "O"
+            this.machineItemList.filter(i => i.MACHINE_NO == data.MACHINE_NO).map(e => { e.OK = true, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = "O" })
+
+        }
+        if ((isOK || isNOT_USED || data.NG) == false) {
+            data.CHECK_FLAG = null
+            this.machineItemList.filter(i => i.MACHINE_NO == data.MACHINE_NO).map(e => { e.OK = false, e.REMARK = null, e.NG = false, e.NG_REASON = null, e.CHECK_FLAG = null })
+        }
+        this.ValidateCheckAll() 
+    }
     OnEdit(data: PMS150_GetDailyChecklist_Result) {
 
         if (!data) { return; }
@@ -272,8 +323,14 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
         this.criteriaHeader = new PMS150_GetDailyChecklist_Result
         this.disableControl = false;
     }
+    
     CheckByItem(row: PMS151_GetDailyChecklist_Detail) {
-        this.item = this.machineItemList.filter(e=>e.MACHINE_NO==row.MACHINE_NO)
+
+        let item = this.machineItemList
+        .filter(e => e.MACHINE_NO == row.MACHINE_NO)
+        .map(x => Object.assign({}, x));
+        let machineNo = row.MACHINE_NO;
+
 
         const dialogRef = this.popup.open(DLGPMS151_MachineItem, {
             maxWidth: '1200px',
@@ -281,10 +338,36 @@ export class DailyChecklistByLineComponent implements OnInit,OnDestroy {
             width: '1000px',
             height: '500px',
             disableClose: true,
-            autoFocus:false,
-            position:{left:'250px'},
-            data: {item:this.item}
+            autoFocus: false,
+            position: {},
+            data: { item: item }
         });
+        dialogRef.afterClosed().subscribe((result)=>{
+
+            if(result){
+                if(result.event === "Save"){
+
+                    this.machineItemList = this.machineItemList
+                    .filter(e => e.MACHINE_NO != machineNo)
+                    this.machineItemList = this.machineItemList.concat(result.data)
+
+
+                    var checkFlag = this.machineItemList.filter(e=>e.MACHINE_NO == machineNo)[0].CHECK_FLAG
+
+
+                    if(checkFlag === 'O'){
+                        this.machineList.filter(i => i.MACHINE_NO == machineNo).map(e => {e.NOT_USED = false, e.OK = true, e.NG = false, e.CHECK_FLAG = "O" })
+                    }else if(checkFlag === 'G'){
+                        this.machineList.filter(i => i.MACHINE_NO == machineNo).map(e => { e.NOT_USED = false, e.OK = false, e.NG = true, e.CHECK_FLAG = "G" })
+                    }else{
+                        this.machineList.filter(i => i.MACHINE_NO == machineNo).map(e => { e.NOT_USED = false, e.OK = false, e.NG = false, e.CHECK_FLAG = null })
+                    }
+
+                }
+            }
+
+            
+        })
         // dialogRef.afterClosed().subscribe(result => {
         //     if (result) {
         //         // let data = new PMS151_GetDailyChecklist_Detail_Item[];

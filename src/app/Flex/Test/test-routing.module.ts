@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Test001Component} from './views/Test-View/Test001.component';
 import {DailyChecklistComponent} from './views/DailyChecklist/DailyChecklist.component';
+import { Dashboard } from './views/TestDashboard/Dashboard.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,14 @@ const routes: Routes = [
         component: DailyChecklistComponent,
         data: {
           title: 'Daily Checklist'
+        }
+      },
+
+      {
+        path: 'Dashboard',
+        component: Dashboard,
+        data: {
+          title: 'Dashboard'
         }
       },
     ]
