@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { Test001Component} from './views/Test-View/Test001.component';
 import {DailyChecklistComponent} from './views/DailyChecklist/DailyChecklist.component';
 import { Dashboard } from './views/TestDashboard/Dashboard.component';
 
@@ -8,19 +7,12 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Maintenance'
+      title: 'DailyChecklist'
     },
     children: [
       {
         path: '',
-        redirectTo: 'test001'
-      },
-      {
-        path: 'test001',
-        component: Test001Component,
-        data: {
-          title: 'Test path'
-        }
+        redirectTo: 'DailyChecklist'
       },
       {
         path: 'DailyChecklist',
@@ -45,4 +37,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TestRoutingModule {}
+export class ChecklistRoutingModule {}

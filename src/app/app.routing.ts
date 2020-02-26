@@ -61,9 +61,9 @@ export const routes: Routes = [
         loadChildren: () => import('./Flex/pms/pms.module').then(m => m.PMSModule)
       },
       {
-        path: 'test',
+        path: 'checklist',
         canActivate: [AuthGuard],
-        loadChildren: () => import('./Flex/Test/test.module').then(m => m.TestModule)
+        loadChildren: () => import('./Flex/DailyChecklist/checklist.module').then(m => m.ChecklistModule)
       },
     ]
   },

@@ -1,0 +1,119 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        Report Pie Chart
+      </div>
+      <div class="card-body">
+        <div class="container">
+          <div class="row">
+
+            <div class="col">
+              <div class="row">
+                <div class="col">
+                  <flex-combo name="LineByLine" placeholder="Line" [datasource]="comboLineByLine"
+                    [(ngModel)]="criteriaPieChart.LINEID">
+                  </flex-combo>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <flex-combo name="ShiftByLine" placeholder="Shift" [datasource]="comboShiftByLine"
+                    [(ngModel)]="criteriaPieChart.SHIFTID">
+                  </flex-combo>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="chart-wrapper">
+                <canvas baseChart [colors]="pieChartColors" [data]="pieChartData" [labels]="pieChartLabels"
+                  [chartType]="pieChartType" [options]="pieChartOptions" [plugins]="pieChartPlugins"
+                  [legend]="pieChartLegend">
+                </canvas>
+              </div>
+            </div>
+            <div class="col">
+              <div class="progress-group mb-5">
+                <div class="progress-group-header">
+                  <i class="icon-like progress-group-icon"></i>
+                  <div>OK</div>
+                  <div class="ml-auto font-weight-bold">37%</div>
+                </div>
+                <div class="progress-group-bars">
+                  <div class="progress progress-xs">
+                    <div class="progress-bar bg-blue" role="progressbar" style="width: 43%" aria-valuenow="43"
+                      aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="progress-group mb-5">
+                <div class="progress-group-header">
+                  <i class="icon-wrench progress-group-icon"></i>
+                  <div>NG</div>
+                  <div class="ml-auto font-weight-bold">37%</div>
+                </div>
+                <div class="progress-group-bars">
+                  <div class="progress progress-xs">
+                    <div class="progress-bar bg-red" role="progressbar" style="width: 43%" aria-valuenow="43"
+                      aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="progress-group mb-5">
+                <div class="progress-group-header">
+                  <i class="icon-ban progress-group-icon"></i>
+                  <div>NOT USED</div>
+                  <div class="ml-auto font-weight-bold">37%</div>
+                </div>
+                <div class="progress-group-bars">
+                  <div class="progress progress-xs">
+                    <div class="progress-bar bg-dark" role="progressbar" style="width: 43%" aria-valuenow="43"
+                      aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        Report Bar Chart
+      </div>
+      <div class="card-body">
+        <div class="container">
+
+
+          <div class="row justify-content-center">
+            <div class="col-10 align-self-center">
+              <div>
+                <div style="display: block">
+                  <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+                    [legend]="barChartLegend" [chartType]="barChartType" 
+                    (chartClick)="chartClicked($event)"></canvas>
+                </div>
+                <button mat-button mat-raised-button color="primary" (click)="randomize()">{{typeChart}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

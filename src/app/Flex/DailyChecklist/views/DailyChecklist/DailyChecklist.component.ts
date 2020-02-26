@@ -121,6 +121,7 @@ export class DailyChecklistComponent implements OnInit  {
     LoadData() {
         this.isLoading = true;
         this.checklist = null;
+
         this.svc.GetDailyChecklist(this.criteria).subscribe(res => {
             // console.log(res);
             if (!res || res.length === 0) {
@@ -141,6 +142,11 @@ export class DailyChecklistComponent implements OnInit  {
         this.checklist = null;
     
         this.InitialCriteria();
+    }
+    OnRefresh(state:Boolean){
+        if(state==true){
+            this.LoadData()
+        }
     }
 
 

@@ -42,28 +42,19 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
       this.svc.GetMenu().subscribe(data => {
         this.navItems = data;
         this.navItems.push({
-          ScreenCd: "Test", name: "TestMenu", url: "/test",
+          ScreenCd: "Checklist", name: "Daily Checklist", url: "/checklist",
           badge: null,
           icon:'icon-book-open',
-          children: [{
-            badge: null,
-            children: null,
-            divider: false,
-            icon: "fa fa-key",
-            name: "Test UI",
-            ScreenCd: "test001",
-            title: false,
-            url: "/test/test001"
-          },
+          children: [
           {
             badge: null,
             children: null,
             divider: false,
             icon: "fa fa-key",
-            name: "Daily Checklist",
+            name: "Checklist",
             ScreenCd: "DailyChecklist",
             title: false,
-            url: "/test/DailyChecklist"
+            url: "/checklist/DailyChecklist"
           },
           {
             badge: null,
@@ -73,7 +64,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
             name: "Dashboard",
             ScreenCd: "Dashboard",
             title: false,
-            url: "/test/Dashboard"
+            url: "/checklist/Dashboard"
           }
           ],
 

@@ -9,11 +9,11 @@
           <mat-icon>keyboard_return</mat-icon>Close
         </button>
   
-        <button class="btn button-daily" mat-raised-button  type="button" (click)="BackToSearch()">
+        <button class="btn button-daily" mat-raised-button  type="button" (click)="OnSaveAndNew()">
           <mat-icon>create_new_folder</mat-icon> Save&New
         </button>
 
-        <button class="btn button-daily" mat-raised-button  type="button" (click)="BackToSearch()">
+        <button class="btn button-daily" mat-raised-button  type="button" (click)="OnSaveAndClose()">
           <mat-icon>save</mat-icon> Save&Close
         </button>
 
@@ -21,7 +21,7 @@
           <mat-icon>send</mat-icon> Send To Approve
         </button>
 
-        <button class="btn button-daily" mat-raised-button color="" type="button" (click)="BackToSearch()">
+        <button class="btn button-daily" mat-raised-button color="" type="button" (click)=" OnCancel()">
           <mat-icon>cancel</mat-icon> Cancel
         </button>
        </div>
@@ -75,8 +75,7 @@
               <flex-combo name="ShiftByLine" required placeholder="Shift" [datasource]="comboShiftByLine"
                 [disabled]="disableControl" [(ngModel)]="criteriaHeader.SHIFTID">
               </flex-combo>
-            </div>
-
+            </div>   
 
             <mat-form-field class="col-sm-6 col-lg-3">
               <mat-label>Checker</mat-label>
